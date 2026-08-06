@@ -1,0 +1,15 @@
+services:
+  db-agent:
+    build: .
+    image: db-agent:2.0.0
+    container_name: db-agent
+    ports:
+      - "8000:8000"
+    volumes:
+      - dbagent-data:/app/data
+    environment:
+      - DBAGENT_DATA_DIR=/app/data
+    restart: unless-stopped
+
+volumes:
+  dbagent-data:
