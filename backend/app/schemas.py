@@ -283,3 +283,13 @@ class AgentChartCreate(BaseModel):
     y_column: str = ""
     aggregation: str = "none"
     options: str = "{}"
+
+class AIConfigTestRequest(BaseModel):
+    """模型连通性测试：config_id 优先（可叠加覆盖字段），否则使用请求体临时参数。"""
+    config_id: Optional[int] = None
+    provider: Optional[str] = None
+    api_key: Optional[str] = None
+    api_base: Optional[str] = None
+    model_name: Optional[str] = None
+    max_tokens: Optional[int] = None
+    temperature: Optional[float] = None

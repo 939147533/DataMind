@@ -34,14 +34,18 @@ class BaseLLMProvider(ABC):
     @abstractmethod
     async def stream(self, messages: list[dict]) -> AsyncIterator[str]: ...
 
+    @abstractmethod
+    async def ping(self) -> dict:
+        """最小请求验证模型连通性，返回 {"model": ...}，失败抛 LLMError。"""
+
 
 class OpenAICompatProvider(BaseLLMProvider):
     """OpenAI 官方 API 与 OpenAI 兼容网关（含 Ollama /v1）。"""
 
-    async def _client(self):
+    async def _client(self, timeout: float | None = None):
         from openai import AsyncOpenAI
 
-        return AsyncOpenAI(api_key=self._api_key() or "sk-no-key", base_url=self.config.api_base or None)
+        return AsyncOpenAI(api_key=self._api_key() or "sk-no-key", base_url=self.config.api_base or None, timeout=timeout)
 
     async def chat(self, messages: list[dict], json_mode: bool = False) -> str:
         client = await self._client()
@@ -77,12 +81,24 @@ class OpenAICompatProvider(BaseLLMProvider):
         except Exception as exc:  # noqa: BLE001
             raise LLMError(f"模型流式调用失败: {exc}") from exc
 
+    async def ping(self) -> dict:
+        client = await self._client(timeout=20)
+        try:
+            resp = await client.chat.completions.create(
+                model=self.model_name,
+                messages=[{"role": "user", "content": "ping"}],
+                max_tokens=8,
+            )
+            return {"model": getattr(resp, "model", None) or self.model_name}
+        except Exception as exc:  # noqa: BLE001
+            raise LLMError(f"模型连通性测试失败: {exc}") from exc
+
 
 class ClaudeProvider(BaseLLMProvider):
-    async def _client(self):
+    async def _client(self, timeout: float | None = None):
         from anthropic import AsyncAnthropic
 
-        return AsyncAnthropic(api_key=self._api_key())
+        return AsyncAnthropic(api_key=self._api_key(), timeout=timeout)
 
     def _split(self, messages: list[dict]) -> tuple[str, list[dict]]:
         system = "\n".join(m["content"] for m in messages if m["role"] == "system")
@@ -119,6 +135,18 @@ class ClaudeProvider(BaseLLMProvider):
                     yield text
         except Exception as exc:  # noqa: BLE001
             raise LLMError(f"模型流式调用失败: {exc}") from exc
+
+    async def ping(self) -> dict:
+        client = await self._client(timeout=20)
+        try:
+            await client.messages.create(
+                model=self.model_name,
+                messages=[{"role": "user", "content": "ping"}],
+                max_tokens=8,
+            )
+            return {"model": self.model_name}
+        except Exception as exc:  # noqa: BLE001
+            raise LLMError(f"模型连通性测试失败: {exc}") from exc
 
 
 def get_llm_provider(config: AIConfig) -> BaseLLMProvider:

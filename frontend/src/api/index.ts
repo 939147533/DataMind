@@ -279,6 +279,15 @@ export const configApi = {
   updateAi: (id: number, data: Record<string, unknown>) => http.put<AIConfig>(`/api/config/ai/${id}`, data),
   deleteAi: (id: number) => http.del(`/api/config/ai/${id}`),
   setDefaultAi: (id: number) => http.put(`/api/config/ai/${id}/default`),
+  testAi: (data: {
+    config_id?: number;
+    provider?: string;
+    api_key?: string;
+    api_base?: string;
+    model_name?: string;
+    max_tokens?: number;
+    temperature?: number;
+  }) => http.post<{ success: boolean; message: string; latency_ms?: number; model?: string }>("/api/config/ai/test", data),
   settings: () => http.get<{ values: Record<string, string> }>("/api/config/settings"),
   saveSettings: (values: Record<string, string>) => http.put("/api/config/settings", { values }),
   drivers: () => http.get<Record<string, unknown>[]>("/api/config/drivers"),

@@ -12,6 +12,7 @@
                 <div class="card-actions">
                   <n-tag v-if="c.is_default" size="tiny" type="primary">默认</n-tag>
                   <n-tag v-if="!c.is_active" size="tiny">停用</n-tag>
+                  <n-button size="tiny" text :loading="testingAiId === c.id" @click="testAi(c.id)">测试</n-button>
                   <n-button size="tiny" text @click="openAiEdit(c)">编辑</n-button>
                   <n-button v-if="!c.is_default" size="tiny" text @click="setDefault(c.id)">设为默认</n-button>
                   <n-popconfirm @positive-click="removeAi(c.id)">
@@ -94,8 +95,12 @@
           <n-switch v-model:value="aiForm.is_default" />
         </n-form-item>
       </n-form>
+      <n-alert v-if="aiTestResult" :type="aiTestResult.ok ? 'success' : 'error'" style="margin-top: 12px">
+        {{ aiTestResult.text }}
+      </n-alert>
       <template #footer>
-        <div style="display: flex; justify-content: flex-end">
+        <div style="display: flex; justify-content: flex-end; gap: 8px">
+          <n-button :loading="testingForm" @click="testAiForm">测试连通性</n-button>
           <n-button type="primary" :loading="aiSaving" @click="saveAi">保存</n-button>
         </div>
       </template>
@@ -134,6 +139,9 @@ const driverLoading = ref(false);
 const aiModal = ref(false);
 const aiSaving = ref(false);
 const editingAi = ref<AIConfig | null>(null);
+const testingAiId = ref<number | null>(null);
+const testingForm = ref(false);
+const aiTestResult = ref<{ ok: boolean; text: string } | null>(null);
 const driverModal = ref(false);
 const savingPrefs = ref(false);
 
@@ -184,12 +192,14 @@ async function loadDrivers() {
 
 function openAiCreate() {
   editingAi.value = null;
+  aiTestResult.value = null;
   Object.assign(aiForm, { provider: "openai", api_base: "", model_name: "", api_key: "", max_tokens: 4096, temperature: 0.7, is_active: true, is_default: false });
   aiModal.value = true;
 }
 
 function openAiEdit(c: AIConfig) {
   editingAi.value = c;
+  aiTestResult.value = null;
   Object.assign(aiForm, {
     provider: c.provider,
     api_base: c.api_base,
@@ -201,6 +211,46 @@ function openAiEdit(c: AIConfig) {
     is_default: c.is_default,
   });
   aiModal.value = true;
+}
+
+async function testAi(id: number) {
+  testingAiId.value = id;
+  try {
+    const r = await configApi.testAi({ config_id: id });
+    const text = r.message + (r.latency_ms != null ? `（${r.latency_ms} ms）` : "");
+    if (r.success) message.success(text);
+    else message.error(text);
+  } catch (e) {
+    message.error((e as Error).message);
+  } finally {
+    testingAiId.value = null;
+  }
+}
+
+async function testAiForm() {
+  if (!aiForm.model_name.trim()) {
+    message.warning("请输入模型名称");
+    return;
+  }
+  testingForm.value = true;
+  aiTestResult.value = null;
+  try {
+    const r = await configApi.testAi({
+      ...(editingAi.value ? { config_id: editingAi.value.id } : {}),
+      provider: aiForm.provider,
+      api_key: aiForm.api_key || undefined,
+      api_base: aiForm.api_base,
+      model_name: aiForm.model_name,
+      max_tokens: aiForm.max_tokens,
+      temperature: aiForm.temperature,
+    });
+    aiTestResult.value = { ok: r.success, text: r.message + (r.latency_ms != null ? `（${r.latency_ms} ms）` : "") };
+    if (r.success) message.success(aiTestResult.value.text);
+  } catch (e) {
+    aiTestResult.value = { ok: false, text: (e as Error).message };
+  } finally {
+    testingForm.value = false;
+  }
 }
 
 async function saveAi() {

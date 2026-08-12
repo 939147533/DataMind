@@ -36,7 +36,7 @@ class OracleAdapter(BaseDBAdapter):
             cols = [d[0] for d in cur.description] if cur.description else []
             rows = []
             for r in cur.fetchall():
-                rows.append({cols[i]: v for i, v in enumerate(r)})
+                rows.append({cols[i].lower(): v for i, v in enumerate(r)})
             cur.close()
             return rows
         except Exception as exc:  # noqa: BLE001
@@ -63,14 +63,14 @@ class OracleAdapter(BaseDBAdapter):
         rows = self._query(
             "SELECT column_name AS name, data_type AS data_type, nullable, "
             "data_default AS default_value, column_id "
-            "FROM all_tab_columns WHERE owner=:owner AND table_name=:table ORDER BY column_id",
-            {"owner": owner, "table": table.upper()},
+            "FROM all_tab_columns WHERE owner=:owner AND table_name=:tname ORDER BY column_id",
+            {"owner": owner, "tname": table.upper()},
         )
         pk_rows = self._query(
             "SELECT cols.column_name AS name FROM all_constraints cons "
             "JOIN all_cons_columns cols ON cons.constraint_name=cols.constraint_name "
-            "WHERE cons.owner=:owner AND cons.table_name=:table AND cons.constraint_type='P'",
-            {"owner": owner, "table": table.upper()},
+            "WHERE cons.owner=:owner AND cons.table_name=:tname AND cons.constraint_type='P'",
+            {"owner": owner, "tname": table.upper()},
         )
         pk_cols = {r["name"] for r in pk_rows}
         return [
@@ -91,8 +91,8 @@ class OracleAdapter(BaseDBAdapter):
         rows = self._query(
             "SELECT i.index_name AS name, i.uniqueness, c.column_name "
             "FROM all_indexes i JOIN all_ind_columns c ON i.index_name=c.index_name AND i.owner=c.index_owner "
-            "WHERE i.table_owner=:owner AND i.table_name=:table ORDER BY i.index_name, c.column_position",
-            {"owner": owner, "table": table.upper()},
+            "WHERE i.table_owner=:owner AND i.table_name=:tname ORDER BY i.index_name, c.column_position",
+            {"owner": owner, "tname": table.upper()},
         )
         grouped: dict[str, dict] = {}
         for r in rows:
@@ -120,7 +120,7 @@ class OracleAdapter(BaseDBAdapter):
             "WHERE rn > :offset",
             {"max": page * size, "offset": (page - 1) * size},
         )
-        columns = list(rows[0].keys()) if rows else [c["name"] for c in self.get_table_columns(table)]
+        columns = [k.upper() for k in rows[0].keys()] if rows else [c["name"] for c in self.get_table_columns(table)]
         return {"columns": columns, "rows": [list(r.values()) for r in rows], "total": total, "page": page, "page_size": size}
 
     def get_views(self, schema: str = "") -> list[str]:
@@ -174,7 +174,7 @@ class OracleAdapter(BaseDBAdapter):
     def get_sequences(self, schema: str = "") -> list[dict]:
         owner = (schema or self.conn.username).upper()
         rows = self._query(
-            "SELECT sequence_name AS name, last_number AS current_value, increment_by AS increment, "
+            "SELECT sequence_name AS name, last_number AS current_value, increment_by AS incr, "
             "min_value, max_value, cache_size "
             "FROM all_sequences WHERE sequence_owner=:owner ORDER BY sequence_name",
             {"owner": owner},
@@ -183,7 +183,7 @@ class OracleAdapter(BaseDBAdapter):
             {
                 "name": r["name"],
                 "current_value": r["current_value"],
-                "increment": r["increment"],
+                "increment": r["incr"],
                 "min_value": r["min_value"],
                 "max_value": r["max_value"],
                 "cache_size": r["cache_size"],

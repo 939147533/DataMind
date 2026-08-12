@@ -1,4 +1,5 @@
 """系统管理路由：AI 配置、JDBC 驱动、系统设置。"""
+import time
 from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile
@@ -10,8 +11,9 @@ from ..database import get_db
 from ..models import AIConfig, JdbcDriver, Setting, User
 from ..permissions import require_permission
 from ..response import ok
-from ..schemas import AIConfigCreate, AIConfigUpdate, SettingsUpdate
+from ..schemas import AIConfigCreate, AIConfigTestRequest, AIConfigUpdate, SettingsUpdate
 from ..security import decrypt_text, encrypt_text
+from ..services.llm_providers import LLMError, get_llm_provider
 
 router = APIRouter(prefix="/api/config", tags=["系统管理"])
 
@@ -31,6 +33,59 @@ def _ai_out(c: AIConfig) -> dict:
 
 
 # ---------- AI 配置 ----------
+@router.post("/ai/test")
+async def test_ai_connectivity(data: AIConfigTestRequest, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
+    """模型连通性测试：已保存配置（config_id）或表单临时参数，均不落库。"""
+    stored = None
+    if data.config_id:
+        stored = (await db.execute(select(AIConfig).where(AIConfig.id == data.config_id))).scalar_one_or_none()
+        if stored is None:
+            raise HTTPException(status_code=404, detail="AI 配置不存在")
+
+    def _field(name, fallback):
+        value = getattr(data, name, None)
+        if value is None:
+            return getattr(stored, name) if stored else fallback
+        return value
+
+    api_key_plain = ""
+    if data.api_key:
+        api_key_plain = data.api_key
+    elif stored:
+        api_key_plain = decrypt_text(stored.api_key)
+    test_cfg = AIConfig(
+        provider=_field("provider", "openai") or "openai",
+        api_key=encrypt_text(api_key_plain),
+        api_base=_field("api_base", "") or "",
+        model_name=_field("model_name", "") or "",
+        max_tokens=_field("max_tokens", 4096) or 4096,
+        temperature=_field("temperature", 0.7),
+        is_active=True,
+    )
+    if not test_cfg.model_name:
+        raise HTTPException(status_code=400, detail="缺少模型名称")
+
+    provider = get_llm_provider(test_cfg)
+    validate = getattr(provider, "validate", None)
+    if validate is not None:
+        try:
+            validate()
+        except LLMError as exc:
+            return ok({"success": False, "message": str(exc), "latency_ms": 0}, message="测试失败")
+    start = time.perf_counter()
+    try:
+        result = await provider.ping()
+        latency_ms = int((time.perf_counter() - start) * 1000)
+        model = result.get("model") or test_cfg.model_name
+        return ok(
+            {"success": True, "message": f"连接成功，模型 {model} 响应正常", "latency_ms": latency_ms, "model": model},
+            message="测试成功",
+        )
+    except LLMError as exc:
+        latency_ms = int((time.perf_counter() - start) * 1000)
+        return ok({"success": False, "message": str(exc), "latency_ms": latency_ms}, message="测试失败")
+
+
 @router.get("/ai")
 async def list_ai_configs(db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
     rows = (await db.execute(select(AIConfig).order_by(AIConfig.id.desc()))).scalars().all()
