@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { agentApi } from "../api";
-import type { AgentMessage, AgentSession, SqlResult } from "../api";
+import type { AgentMessage, AgentSession, SmartChartConfig, SqlResult } from "../api";
 
 export interface ChatItem {
   role: string;
@@ -16,6 +16,7 @@ export interface ChatItem {
     preview: string;
     session_id?: number;
   };
+  chart?: SmartChartConfig | null;
   streaming?: boolean;
 }
 
@@ -40,7 +41,18 @@ export const useAgentStore = defineStore("agent", {
     async selectSession(id: number) {
       this.activeSessionId = id;
       const msgs = await agentApi.messages(id);
-      this.items = msgs.map((m) => ({ role: m.role, type: m.message_type, content: m.content }));
+      this.items = msgs.map((m) => {
+        if (m.message_type === "chart") {
+          let chart: SmartChartConfig | null = null;
+          try {
+            chart = JSON.parse(m.content) as SmartChartConfig;
+          } catch {
+            chart = null;
+          }
+          return { role: m.role, type: "chart", content: "", chart };
+        }
+        return { role: m.role, type: m.message_type, content: m.content };
+      });
     },
     async deleteSession(id: number) {
       await agentApi.deleteSession(id);
@@ -129,6 +141,14 @@ export const useAgentStore = defineStore("agent", {
         }
         case "result":
           this.items.push({ role: "assistant", type: "result", content: "", result: event.content as SqlResult });
+          break;
+        case "chart":
+          this.items.push({
+            role: "assistant",
+            type: "chart",
+            content: "",
+            chart: (event.content as SmartChartConfig) || null,
+          });
           break;
         case "text":
           assistant.content += String(event.content || "");

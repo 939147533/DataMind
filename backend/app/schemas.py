@@ -272,3 +272,14 @@ class RoleUpdate(BaseModel):
 
 class RoleUsersUpdate(BaseModel):
     user_ids: list[int] = []
+
+class AgentChartCreate(BaseModel):
+    """Agent 生成图表后保存为报表。"""
+    name: str
+    datasource_id: Optional[int] = None
+    sql_text: str = ""
+    chart_type: str = "bar"
+    x_column: str = ""
+    y_column: str = ""
+    aggregation: str = "none"
+    options: str = "{}"

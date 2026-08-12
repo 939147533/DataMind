@@ -39,7 +39,7 @@
                   v-for="item in group.items"
                   :key="item.code"
                   :checked="detail.permissions.includes(item.code)"
-                  @update:checked="(v) => togglePerm(item.code, v)"
+                  @update:checked="(v: boolean) => togglePerm(item.code, v)"
                 >
                   {{ item.name }}
                   <span class="perm-desc">{{ item.desc }}</span>
@@ -77,7 +77,7 @@
         </n-form-item>
         <n-form-item label="权限">
           <div class="create-perms">
-            <n-checkbox v-for="item in allPermItems" :key="item.code" :checked="createForm.permissions.includes(item.code)" @update:checked="(v) => toggleCreatePerm(item.code, v)">
+            <n-checkbox v-for="item in allPermItems" :key="item.code" :checked="createForm.permissions.includes(item.code)" @update:checked="(v: boolean) => toggleCreatePerm(item.code, v)">
               {{ item.name }}
             </n-checkbox>
           </div>

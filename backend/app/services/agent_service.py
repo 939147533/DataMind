@@ -25,11 +25,13 @@ SYSTEM_TEMPLATE = """你是数据库 Agent 助手，运行在数据库查询工�
 {schema}
 
 请严格输出 JSON（不要包含其他内容、不要使用 Markdown 代码块），格式：
-{{"thought": "你的推理过程（中文）", "sql": "需要执行的SQL；无需SQL时为空字符串", "answer": "无需SQL时的直接回答（中文）"}}
+{{"thought": "你的推理过程（中文）", "sql": "需要执行的SQL；无需SQL时为空字符串", "answer": "无需SQL时的直接回答（中文）", "chart": "可选：用户要求生成图表时输出图表配置，否则省略该字段"}}
+chart 配置格式：{{"type": "bar|line|pie", "title": "图表标题", "x_column": "X 轴列名", "y_column": "数值列名", "aggregation": "none|sum|count|avg|max|min"}}
 规则：
 - 用户要求查询或操作数据时生成 SQL，否则 answer 直接回答
 - SQL 必须针对上述 Schema 中存在的表名与列名
-- 查询使用 SELECT；写操作（INSERT/UPDATE/DELETE 或 DDL）也生成完整 SQL，将由系统安全确认后执行"""
+- 查询使用 SELECT；写操作（INSERT/UPDATE/DELETE 或 DDL）也生成完整 SQL，将由系统安全确认后执行
+- 用户要求可视化/图表时，SQL 使用 GROUP BY 聚合查询，并同时输出 chart 配置，x_column/y_column 必须是查询结果中的列名"""
 
 SUMMARY_TEMPLATE = """你是数据库 Agent 助手。用户提问：{question}
 你执行的 SQL：{sql}
@@ -164,6 +166,33 @@ def _truncate_result(columns: list, rows: list) -> tuple[list, list, int, bool]:
     return columns, rows, total, truncated
 
 
+CHART_TYPES = ("bar", "line", "pie")
+AGGREGATIONS = ("none", "sum", "count", "avg", "max", "min")
+
+
+def _parse_chart(raw) -> dict | None:
+    """校验并规范化模型输出的图表配置，非法则返回 None。"""
+    if not isinstance(raw, dict):
+        return None
+    chart_type = str(raw.get("type") or "").lower()
+    if chart_type not in CHART_TYPES:
+        return None
+    x_column = str(raw.get("x_column") or "").strip()
+    y_column = str(raw.get("y_column") or "").strip()
+    if not x_column or not y_column:
+        return None
+    aggregation = str(raw.get("aggregation") or "none").lower()
+    if aggregation not in AGGREGATIONS:
+        aggregation = "none"
+    return {
+        "chart_type": chart_type,
+        "title": str(raw.get("title") or "").strip(),
+        "x_column": x_column,
+        "y_column": y_column,
+        "aggregation": aggregation,
+    }
+
+
 async def agent_chat(
     db: AsyncSession,
     session_id: int | None,
@@ -216,6 +245,7 @@ async def agent_chat(
     thought = str(parsed.get("thought") or "").strip()
     sql = str(parsed.get("sql") or "").strip()
     answer = str(parsed.get("answer") or "").strip()
+    chart = None
 
     if thought:
         yield {"type": "thought", "content": thought}
@@ -256,6 +286,9 @@ async def agent_chat(
             },
             "truncated": truncated,
         }
+        chart = _parse_chart(parsed.get("chart"))
+        if chart:
+            yield {"type": "chart", "content": chart}
         summary_messages = build_messages(
             "",
             [],
@@ -280,6 +313,9 @@ async def agent_chat(
             final_text = "查询已完成。"
         db.add(AgentMessage(session_id=session.id, role="assistant", content=sql, message_type="sql"))
         db.add(AgentMessage(session_id=session.id, role="assistant", content=final_text, message_type="text"))
+        if chart:
+            db.add(AgentMessage(session_id=session.id, role="assistant", content=json.dumps(chart, ensure_ascii=False), message_type="chart"))
+            session.message_count = (session.message_count or 0) + 1
         session.message_count = (session.message_count or 0) + 2
         await db.commit()
         yield {"type": "done"}
@@ -365,3 +401,39 @@ async def _record_audit(db: AsyncSession, user_id: int, action_type: str, sql: s
         )
     )
     await db.commit()
+
+
+async def save_chart(db: AsyncSession, user_id: int, data) -> dict:
+    """保存 Agent 生成的图表到可视化报表模块。"""
+    from ..models import Chart
+
+    if data.datasource_id:
+        ds = (await db.execute(select(DataSource).where(DataSource.id == data.datasource_id))).scalar_one_or_none()
+        if ds is None:
+            raise HTTPException(status_code=404, detail="数据源不存在")
+    chart = Chart(
+        name=data.name,
+        datasource_id=data.datasource_id,
+        sql_text=data.sql_text,
+        chart_type=data.chart_type,
+        x_column=data.x_column,
+        y_column=data.y_column,
+        aggregation=data.aggregation,
+        options=data.options or "{}",
+    )
+    db.add(chart)
+    await db.commit()
+    await db.refresh(chart)
+    await _record_audit(db, user_id, "chart_manage", data.sql_text, "CHART", data.datasource_id, "success", "")
+    return {
+        "id": chart.id,
+        "name": chart.name,
+        "datasource_id": chart.datasource_id,
+        "sql_text": chart.sql_text,
+        "chart_type": chart.chart_type,
+        "x_column": chart.x_column,
+        "y_column": chart.y_column,
+        "aggregation": chart.aggregation,
+        "options": chart.options,
+        "created_at": chart.created_at.isoformat() if chart.created_at else None,
+    }

@@ -19,7 +19,7 @@ async def export_result(
     data: ExportResultRequest,
     format: str = Query("csv"),
     db: AsyncSession = Depends(get_db),
-    user: User = Depends(require_any_permission("workspace", "reports")),
+    user: User = Depends(require_any_permission("workspace", "reports", "ai_query")),
 ):
     ds = await get_datasource(db, data.datasource_id)
     content, filename = export_service.export_result_file(ds, data.sql, format, data.sheet_name)

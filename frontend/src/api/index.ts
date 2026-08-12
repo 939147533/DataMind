@@ -58,6 +58,7 @@ export const PERMISSION_GROUPS = [
     group: "工作台",
     items: [
       { code: "workspace", name: "SQL 工作台", desc: "访问 SQL 工作台并执行只读查询" },
+      { code: "ai_query", name: "智能查询", desc: "自然语言查询数据、导出结果、生成图表" },
       { code: "sql_write", name: "写操作 (DML)", desc: "执行 INSERT/UPDATE/DELETE 等写操作" },
       { code: "sql_ddl", name: "结构变更 (DDL)", desc: "执行 CREATE/ALTER/DROP 等结构变更" },
       { code: "agent", name: "AI Agent", desc: "使用 AI 智能助手" },
@@ -175,6 +176,14 @@ export const connectionApi = {
   connect: (id: number) => http.post<{ status: string; schemas: string[] }>(`/api/connections/${id}/connect`),
 };
 
+export interface SmartChartConfig {
+  chart_type: string;
+  title: string;
+  x_column: string;
+  y_column: string;
+  aggregation: string;
+}
+
 // SQL
 export interface SqlResult {
   need_confirm: boolean;
@@ -251,6 +260,16 @@ export const agentApi = {
   deleteSession: (id: number) => http.del(`/api/agent/sessions/${id}`),
   messages: (id: number) => http.get<AgentMessage[]>(`/api/agent/sessions/${id}/messages`),
   confirm: (execution_id: string, confirmed: boolean) => http.post<SqlResult>("/api/agent/confirm", { execution_id, confirmed }),
+  saveChart: (data: {
+    name: string;
+    datasource_id?: number | null;
+    sql_text?: string;
+    chart_type: string;
+    x_column: string;
+    y_column: string;
+    aggregation?: string;
+    options?: string;
+  }) => http.post<Chart>("/api/agent/charts", data),
 };
 
 // AI 配置 / 设置 / 驱动

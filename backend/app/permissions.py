@@ -12,6 +12,7 @@ from .models import Role, User
 # 功能权限码
 PERMISSIONS = [
     {"code": "workspace", "name": "SQL 工作台", "group": "工作台", "description": "访问 SQL 工作台并执行只读查询"},
+    {"code": "ai_query", "name": "智能查询", "group": "工作台", "description": "自然语言查询数据、导出结果、生成图表"},
     {"code": "sql_write", "name": "写操作 (DML)", "group": "工作台", "description": "执行 INSERT/UPDATE/DELETE 等写操作"},
     {"code": "sql_ddl", "name": "结构变更 (DDL)", "group": "工作台", "description": "执行 CREATE/ALTER/DROP 等结构变更"},
     {"code": "agent", "name": "AI Agent", "group": "工作台", "description": "使用 AI 智能助手"},
@@ -38,25 +39,25 @@ BUILTIN_ROLES = [
         "code": "tech_manager",
         "name": "技术管理",
         "description": "技术类功能全面管理：SQL 工作台（含写操作与结构变更）、连接、报表、系统设置、审计",
-        "permissions": ["workspace", "sql_write", "sql_ddl", "agent", "connections", "connections_manage", "reports", "reports_manage", "settings", "audit"],
+        "permissions": ["workspace", "ai_query", "sql_write", "sql_ddl", "agent", "connections", "connections_manage", "reports", "reports_manage", "settings", "audit"],
     },
     {
         "code": "tech_query",
         "name": "技术查询",
         "description": "技术类查询：SQL 工作台（含写操作，禁止结构变更）、AI Agent、连接查看、报表查看、审计",
-        "permissions": ["workspace", "sql_write", "agent", "connections", "reports", "audit"],
+        "permissions": ["workspace", "ai_query", "sql_write", "agent", "connections", "reports", "audit"],
     },
     {
         "code": "biz_manager",
         "name": "业务管理",
         "description": "业务类管理：报表维护、SQL 只读查询、连接查看、审计",
-        "permissions": ["workspace", "connections", "reports", "reports_manage", "audit"],
+        "permissions": ["workspace", "ai_query", "connections", "reports", "reports_manage", "audit"],
     },
     {
         "code": "biz_query",
         "name": "业务查询",
         "description": "业务类查询：报表查看、SQL 只读查询、连接查看",
-        "permissions": ["workspace", "connections", "reports"],
+        "permissions": ["workspace", "ai_query", "connections", "reports"],
     },
 ]
 
@@ -94,12 +95,17 @@ def require_permission(feature: str):
 
 def require_any_permission(*features: str):
     async def _checker(db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
-        perms = await get_user_permissions(db, user)
-        if "*" in perms or any(f in perms for f in features):
-            return user
-        raise HTTPException(status_code=403, detail="无权限执行该操作")
+        await check_any_permission(db, user, features)
+        return user
 
     return _checker
+
+
+async def check_any_permission(db: AsyncSession, user, features) -> None:
+    perms = await get_user_permissions(db, user)
+    if "*" in perms or any(f in perms for f in features):
+        return
+    raise HTTPException(status_code=403, detail="无权限执行该操作")
 
 
 async def check_sql_permission(db: AsyncSession, user_id, op_type: str) -> None:
@@ -108,5 +114,7 @@ async def check_sql_permission(db: AsyncSession, user_id, op_type: str) -> None:
     user = (await db.execute(select(User).where(User.id == user_id))).scalar_one_or_none()
     if user is None:
         raise HTTPException(status_code=401, detail="用户不存在")
-    needed = OP_TO_PERMISSION.get(op_type, "workspace")
-    await check_permission(db, user, needed)
+    if op_type == "READ":
+        await check_any_permission(db, user, ("workspace", "ai_query"))
+        return
+    await check_permission(db, user, OP_TO_PERMISSION.get(op_type, "workspace"))

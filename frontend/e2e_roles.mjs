@@ -31,7 +31,11 @@ async function login(u, pwd) {
   await page.getByPlaceholder("admin", { exact: true }).fill(u);
   await page.getByPlaceholder("admin123", { exact: true }).fill(pwd);
   await page.getByRole("button", { name: "登 录" }).click();
-  await page.waitForURL("**/workspace", { timeout: 20000 });
+  // 登录后默认落地页按权限可能是 /smart-query 或 /workspace
+  await page.waitForFunction(() => !location.pathname.includes("/login"), null, { timeout: 20000 });
+  if (!page.url().includes("/workspace")) {
+    await page.goto(BASE + "/workspace", { waitUntil: "domcontentloaded" });
+  }
   await page.waitForSelector(".workspace-view", { timeout: 20000 });
 }
 

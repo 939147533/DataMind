@@ -43,7 +43,7 @@ async function doLogin() {
   try {
     await auth.login(username.value, password.value);
     message.success("登录成功");
-    router.push(String(route.query.redirect || "/workspace"));
+    router.push(String(route.query.redirect || "/" + (auth.defaultHome() || "workspace")));
   } catch (e) {
     message.error((e as Error).message);
   } finally {

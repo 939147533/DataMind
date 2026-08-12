@@ -9,9 +9,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..database import get_db
 from ..deps import get_client_ip
 from ..models import User
-from ..permissions import require_permission
+from ..permissions import require_any_permission, require_permission
 from ..response import ok
-from ..schemas import AgentChatRequest, AgentConfirmRequest, AgentSessionCreate, ExplainRequest
+from ..schemas import AgentChatRequest, AgentChartCreate, AgentConfirmRequest, AgentSessionCreate, ExplainRequest
 from ..services import agent_service
 
 router = APIRouter(prefix="/api/agent", tags=["AI Agent"])
@@ -29,29 +29,29 @@ def sse(gen):
 
 
 @router.post("/sessions")
-async def create_session(data: AgentSessionCreate, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("agent"))):
+async def create_session(data: AgentSessionCreate, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("agent", "ai_query"))):
     session = await agent_service.create_session(db, data.datasource_id, data.model_config_id, data.title)
     return ok({"id": session.id, "title": session.title, "datasource_id": session.datasource_id, "model_config_id": session.model_config_id})
 
 
 @router.get("/sessions")
-async def list_sessions(db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("agent"))):
+async def list_sessions(db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("agent", "ai_query"))):
     return ok(await agent_service.list_sessions(db))
 
 
 @router.delete("/sessions/{session_id}")
-async def delete_session(session_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("agent"))):
+async def delete_session(session_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("agent", "ai_query"))):
     await agent_service.delete_session(db, session_id)
     return ok(message="已删除")
 
 
 @router.get("/sessions/{session_id}/messages")
-async def session_messages(session_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("agent"))):
+async def session_messages(session_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("agent", "ai_query"))):
     return ok(await agent_service.list_messages(db, session_id))
 
 
 @router.post("/chat")
-async def chat(data: AgentChatRequest, request: Request, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("agent"))):
+async def chat(data: AgentChatRequest, request: Request, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("agent", "ai_query"))):
     gen = agent_service.agent_chat(
         db,
         data.session_id,
@@ -78,3 +78,8 @@ async def explain(data: ExplainRequest, request: Request, db: AsyncSession = Dep
 @router.post("/optimize")
 async def optimize(data: ExplainRequest, request: Request, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("agent"))):
     return sse(agent_service.optimize_sql(db, data.datasource_id, data.sql, user.id))
+
+@router.post("/charts")
+async def save_agent_chart(data: AgentChartCreate, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("ai_query", "reports_manage"))):
+    chart = await agent_service.save_chart(db, user.id, data)
+    return ok(chart, "图表已保存")

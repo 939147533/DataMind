@@ -38,5 +38,19 @@ export const useAuthStore = defineStore("auth", {
       if (perms.includes("*")) return true;
       return permissions.some((p) => perms.includes(p));
     },
+    defaultHome(): string {
+      const routePerm: Record<string, string> = {
+        "smart-query": "ai_query",
+        workspace: "workspace",
+        reports: "reports",
+        connections: "connections",
+        settings: "settings",
+        users: "users",
+        roles: "roles",
+        audit: "audit",
+      };
+      const order = ["smart-query", "workspace", "reports", "connections", "settings", "users", "roles", "audit"];
+      return order.find((r) => this.hasPermission(routePerm[r])) || "";
+    },
   },
 });

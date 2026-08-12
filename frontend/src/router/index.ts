@@ -16,7 +16,8 @@ const router = createRouter({
       path: "/",
       component: () => import("../components/AppLayout.vue"),
       children: [
-        { path: "", redirect: "/workspace" },
+        { path: "", redirect: "/smart-query" },
+        { path: "smart-query", name: "smart-query", component: () => import("../views/SmartQueryView.vue"), meta: { permission: "ai_query" } },
         { path: "workspace", name: "workspace", component: () => import("../views/WorkspaceView.vue"), meta: { permission: "workspace" } },
         { path: "connections", name: "connections", component: () => import("../views/ConnectionsView.vue"), meta: { permission: "connections" } },
         { path: "reports", name: "reports", component: () => import("../views/ReportsView.vue"), meta: { permission: "reports" } },
@@ -36,11 +37,12 @@ router.beforeEach(async (to) => {
     return { path: "/login", query: { redirect: to.fullPath } };
   }
   if (to.path === "/login" && auth.isLoggedIn) {
-    return { path: "/workspace" };
+    return { path: "/" + (auth.defaultHome() || "workspace") };
   }
   const permission = to.meta.permission;
   if (permission && !auth.hasPermission(permission)) {
-    return { path: "/workspace" };
+    const home = auth.defaultHome();
+    return { path: home ? "/" + home : "/login" };
   }
   return true;
 });

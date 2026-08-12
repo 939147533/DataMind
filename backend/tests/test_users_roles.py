@@ -271,7 +271,11 @@ async def test_confirm_permission_denied(auth_client, demo_ds_id):
 
 
 async def test_agent_permission(auth_client):
-    uid = await _create_user(auth_client, "no_agent_user", role="biz_query")
+    # 既无 agent 也无 ai_query 的角色不能访问 Agent 会话接口
+    await auth_client.post(
+        "/api/roles", json={"code": "no_agent_role", "name": "无Agent", "description": "t", "permissions": ["workspace"]}
+    )
+    uid = await _create_user(auth_client, "no_agent_user", role="no_agent_role")
     client = await _new_client()
     try:
         await _login(client, "no_agent_user", "test1234")
