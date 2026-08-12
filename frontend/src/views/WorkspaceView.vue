@@ -220,8 +220,17 @@ async function formatSql() {
   }
 }
 
+function quoteIdentifier(name: string, dbType?: string): string {
+  const mysqlLike = dbType === "mysql" || dbType === "oceanbase" || dbType === "goldendb";
+  if (mysqlLike) {
+    return `\`${name.replace(/`/g, "``")}\``;
+  }
+  return `"${name.replace(/"/g, '""')}"`;
+}
+
 function openTable(name: string, schema?: string) {
-  const sql = `SELECT * FROM "${name}" LIMIT 100;`;
+  const conn = connections.list.find((c) => c.id === dsId.value);
+  const sql = `SELECT * FROM ${quoteIdentifier(name, conn?.db_type)} LIMIT 100;`;
   const tab = workspace.addTab(sql, name);
   if (dsId.value) runTab(tab.id);
 }

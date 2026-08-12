@@ -146,12 +146,14 @@ class AIConfigCreate(BaseModel):
 
 
 class AIConfigUpdate(BaseModel):
+    provider: Optional[str] = None
     api_key: Optional[str] = None
     api_base: Optional[str] = None
     model_name: Optional[str] = None
     max_tokens: Optional[int] = None
     temperature: Optional[float] = None
     is_active: Optional[bool] = None
+    is_default: Optional[bool] = None
 
 
 class AIConfigOut(BaseModel):

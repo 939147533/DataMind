@@ -11,13 +11,7 @@ class SQLiteAdapter(BaseDBAdapter):
     supports_ddl_generate = True
 
     def _db_path(self) -> Path:
-        name = (self.conn.database_name or "").strip()
-        if not name:
-            return config.DEMO_DB_PATH
-        p = Path(name)
-        if not p.is_absolute():
-            p = config.DEMO_DB_PATH.parent / p
-        return p
+        return config.resolve_data_path(self.conn.database_name or "")
 
     def connect(self):
         path = self._db_path()

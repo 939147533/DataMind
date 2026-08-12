@@ -11,9 +11,9 @@ from .security import encrypt_text, hash_password
 
 
 def _ensure_demo_db() -> str:
-    """创建（如不存在）演示 SQLite 数据库，返回数据库文件路径。"""
+    """创建（如不存在）演示 SQLite 数据库，返回相对数据目录的文件名。"""
     if DEMO_DB_PATH.exists():
-        return str(DEMO_DB_PATH)
+        return DEMO_DB_PATH.name
     conn = sqlite3.connect(str(DEMO_DB_PATH))
     cur = conn.cursor()
     cur.executescript(
@@ -120,7 +120,7 @@ def _ensure_demo_db() -> str:
     )
     conn.commit()
     conn.close()
-    return str(DEMO_DB_PATH)
+    return DEMO_DB_PATH.name
 
 
 async def seed_all(db: AsyncSession) -> None:
@@ -140,7 +140,7 @@ async def seed_all(db: AsyncSession) -> None:
     # 演示数据库文件
     demo_path = _ensure_demo_db()
 
-    # 演示连接
+    # 演示连接（database_name 存相对数据目录的文件名，项目目录改名/移动后依然可用）
     ds = (await db.execute(select(DataSource).where(DataSource.name == "本地演示库 (SQLite)"))).scalar_one_or_none()
     if ds is None:
         db.add(
@@ -153,6 +153,9 @@ async def seed_all(db: AsyncSession) -> None:
                 description="内置演示数据库：用户/商品/订单等表，含视图与触发器",
             )
         )
+        await db.commit()
+    elif (ds.database_name or "").strip() != demo_path:
+        ds.database_name = demo_path
         await db.commit()
 
     # 默认 AI 配置（OpenAI 兼容，密钥留空由用户填写）

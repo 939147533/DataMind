@@ -5,8 +5,11 @@ from fastapi import HTTPException
 from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from pathlib import Path
+
 from ..adapters import test_connection
-from ..models import DataSource
+from ..config import DRIVERS_DIR, normalize_database_name, resolve_data_path, to_data_relative
+from ..models import DataSource, JdbcDriver
 from ..schemas import ConnectionCreate, ConnectionUpdate, TestConnectionRequest
 from ..security import decrypt_text, encrypt_text
 from .sql_service import build_connection_info
@@ -46,7 +49,7 @@ async def create_connection(db: AsyncSession, data: ConnectionCreate) -> DataSou
         port=data.port,
         username=data.username,
         encrypted_password=encrypt_text(data.password),
-        database_name=data.database_name,
+        database_name=normalize_database_name(data.db_type, data.database_name),
         ssh_enabled=data.ssh_enabled,
         ssh_host=data.ssh_host,
         ssh_port=data.ssh_port,
@@ -90,6 +93,7 @@ async def update_connection(db: AsyncSession, connection_id: int, data: Connecti
     ds = await get_connection(db, connection_id)
     for field in ("name", "db_type", "host", "port", "username", "database_name", "ssh_enabled", "ssh_host", "ssh_port", "ssh_user", "ssh_auth_type", "environment", "description"):
         setattr(ds, field, getattr(data, field))
+    ds.database_name = normalize_database_name(ds.db_type, ds.database_name)
     if data.password:
         ds.encrypted_password = encrypt_text(data.password)
     if data.ssh_private_key:
@@ -104,6 +108,38 @@ async def delete_connection(db: AsyncSession, connection_id: int) -> None:
     ds = await get_connection(db, connection_id)
     await db.delete(ds)
     await db.commit()
+
+
+async def repair_stored_paths(db: AsyncSession) -> int:
+    """启动时修复历史数据源/驱动路径：指向数据目录的绝对路径统一改写为相对路径（项目改名后自动修复）。"""
+    changed = 0
+    rows = (await db.execute(select(DataSource).where(DataSource.db_type == "sqlite"))).scalars().all()
+    for ds in rows:
+        name = (ds.database_name or "").strip()
+        if not name or not Path(name).is_absolute():
+            continue
+        resolved = resolve_data_path(name)
+        if not resolved.exists():
+            continue
+        new_name = to_data_relative(resolved)
+        if new_name != name:
+            ds.database_name = new_name
+            changed += 1
+    drivers = (await db.execute(select(JdbcDriver))).scalars().all()
+    for drv in drivers:
+        fp = (drv.file_path or "").strip()
+        if not fp or not Path(fp).is_absolute():
+            continue
+        resolved = Path(fp) if Path(fp).exists() else DRIVERS_DIR / Path(fp).name
+        if not resolved.exists():
+            continue
+        new_fp = to_data_relative(resolved)
+        if new_fp != fp:
+            drv.file_path = new_fp
+            changed += 1
+    if changed:
+        await db.commit()
+    return changed
 
 
 async def clone_connection(db: AsyncSession, connection_id: int) -> DataSource:
@@ -140,7 +176,7 @@ def test_connection_params(data: TestConnectionRequest) -> tuple[bool, str]:
             port=data.port,
             username=data.username,
             encrypted_password=encrypt_text(data.password),
-            database_name=data.database_name,
+            database_name=normalize_database_name(data.db_type, data.database_name),
             ssh_enabled=data.ssh_enabled,
             ssh_host=data.ssh_host,
             ssh_port=data.ssh_port,

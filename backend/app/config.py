@@ -38,3 +38,41 @@ DEFAULT_PORTS = {
 def ensure_dirs() -> None:
     for d in (DATA_DIR, DRIVERS_DIR, EXPORTS_DIR):
         d.mkdir(parents=True, exist_ok=True)
+
+
+def resolve_data_path(path: str | Path) -> Path:
+    """将入库路径解析为绝对路径：相对路径按数据目录解析，失效的旧绝对路径按文件名回退定位（项目改名后自动修复）。"""
+    name = str(path or "").strip()
+    if not name:
+        return DEMO_DB_PATH
+    p = Path(name)
+    if not p.is_absolute():
+        return DATA_DIR / p
+    if p.exists():
+        return p
+    alt = DATA_DIR / p.name
+    if alt.exists():
+        return alt
+    return p
+
+
+def to_data_relative(path: str | Path) -> str:
+    """将路径转为相对数据目录的路径；数据目录之外的绝对路径保持不变。"""
+    name = str(path or "").strip()
+    if not name:
+        return name
+    p = Path(name)
+    if not p.is_absolute():
+        return name
+    try:
+        return str(p.resolve().relative_to(DATA_DIR.resolve()))
+    except ValueError:
+        return name
+
+
+def normalize_database_name(db_type: str, name: str) -> str:
+    """SQLite 连接入库前规范化：数据目录内的路径统一存储为相对路径。"""
+    if (db_type or "").lower() != "sqlite":
+        return name or ""
+    return to_data_relative(name) if (name or "").strip() else ""
+

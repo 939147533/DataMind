@@ -81,6 +81,7 @@ docker compose up -d --build
 
 - 默认账户：`admin / admin123`（首次登录后建议在系统设置中修改密码）
 - 内置演示数据源「本地演示库 (SQLite)」：`users / products / categories / orders / order_logs` 5 张表 + 视图 + 触发器 + 约 100 条订单数据
+- 路径全部相对化：SQLite 连接与驱动文件统一按相对 `data/` 目录存储，项目目录改名/移动后无需修改任何配置（启动时自动修复历史绝对路径）
 - 首次启动自动建表并种入：管理员、演示库、演示连接、默认 OpenAI 兼容 AI 配置（Key 留空）
 - 手动重建演示数据：`python scripts/init_demo.py`
 

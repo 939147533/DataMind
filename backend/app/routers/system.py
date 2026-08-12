@@ -135,7 +135,7 @@ async def upload_driver(
         db_type=db_type,
         driver_class=driver_class,
         version=version,
-        file_path=str(target),
+        file_path=str(Path("drivers") / safe_name),
         file_name=safe_name,
         file_size=len(content),
     )
