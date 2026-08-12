@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from .config import BACKEND_DIR
 from .database import SessionLocal, init_db
 from .response import http_exception_handler, validation_exception_handler
-from .routers import agent, audit, auth, charts, connections, export, metadata, sql, system
+from .routers import agent, audit, auth, charts, connections, export, metadata, roles, sql, system, users
 from .seed import seed_all
 from .services.connection_service import repair_stored_paths
 from .services.ssh_tunnel import close_all
@@ -50,6 +50,8 @@ app.include_router(export.router)
 app.include_router(charts.router)
 app.include_router(system.router)
 app.include_router(audit.router)
+app.include_router(users.router)
+app.include_router(roles.router)
 
 
 @app.get("/api/health")

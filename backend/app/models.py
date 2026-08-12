@@ -167,3 +167,13 @@ class Setting(Base):
     key = Column(String(100), primary_key=True)
     value = Column(Text, default="")
     updated_at = Column(DateTime, default=now, onupdate=now)
+
+class Role(Base):
+    __tablename__ = "roles"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    code = Column(String(50), unique=True, nullable=False)
+    name = Column(String(100), nullable=False)
+    description = Column(Text, default="")
+    permissions = Column(Text, default="[]")
+    is_builtin = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=now)

@@ -3,8 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_db
-from ..deps import get_current_user
 from ..models import User
+from ..permissions import require_any_permission
 from ..response import ok
 from ..schemas import AlterTableRequest, FavoriteRequest
 from ..services import metadata_service
@@ -16,27 +16,27 @@ router = APIRouter(prefix="/api/metadata", tags=["元数据"])
 
 
 @router.get("/{ds_id}/schemas")
-async def schemas(ds_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def schemas(ds_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("workspace", "reports"))):
     return ok(await metadata_service.get_schemas(db, ds_id))
 
 
 @router.get("/{ds_id}/tables")
-async def tables(ds_id: int, schema: str = "", db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def tables(ds_id: int, schema: str = "", db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("workspace", "reports"))):
     return ok(await metadata_service.get_tables(db, ds_id, schema))
 
 
 @router.get("/{ds_id}/tables/{table}/columns")
-async def columns(ds_id: int, table: str, schema: str = "", db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def columns(ds_id: int, table: str, schema: str = "", db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("workspace", "reports"))):
     return ok(await metadata_service.get_table_columns(db, ds_id, table, schema))
 
 
 @router.get("/{ds_id}/tables/{table}/indexes")
-async def indexes(ds_id: int, table: str, schema: str = "", db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def indexes(ds_id: int, table: str, schema: str = "", db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("workspace", "reports"))):
     return ok(await metadata_service.get_table_indexes(db, ds_id, table, schema))
 
 
 @router.get("/{ds_id}/tables/{table}/ddl")
-async def table_ddl(ds_id: int, table: str, schema: str = "", db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def table_ddl(ds_id: int, table: str, schema: str = "", db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("workspace", "reports"))):
     return ok({"ddl": await metadata_service.get_table_ddl(db, ds_id, table, schema)})
 
 
@@ -48,13 +48,13 @@ async def table_data(
     page: int = Query(1, ge=1),
     size: int = Query(100, ge=1, le=1000),
     db: AsyncSession = Depends(get_db),
-    user: User = Depends(get_current_user),
+    user: User = Depends(require_any_permission("workspace", "reports")),
 ):
     return ok(await metadata_service.get_table_data(db, ds_id, table, schema, page, size))
 
 
 @router.post("/{ds_id}/tables/{table}/alter")
-async def alter_table(ds_id: int, table: str, data: AlterTableRequest, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def alter_table(ds_id: int, table: str, data: AlterTableRequest, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("workspace", "reports"))):
     ddl = data.ddl.strip()
     if not ddl and data.changes.strip():
         config = await resolve_model_config(db, None, None)
@@ -87,17 +87,17 @@ async def alter_table(ds_id: int, table: str, data: AlterTableRequest, db: Async
 
 # ---------- 收藏（须在通用 /{ds_id}/{kind} 之前声明） ----------
 @router.get("/{ds_id}/favorites")
-async def favorites(ds_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def favorites(ds_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("workspace", "reports"))):
     return ok(await metadata_service.list_favorites(db, ds_id))
 
 
 @router.post("/{ds_id}/favorites")
-async def add_favorite(ds_id: int, data: FavoriteRequest, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def add_favorite(ds_id: int, data: FavoriteRequest, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("workspace", "reports"))):
     return ok(await metadata_service.add_favorite(db, ds_id, data.schema_name, data.table_name))
 
 
 @router.delete("/{ds_id}/favorites/{table_name}")
-async def remove_favorite(ds_id: int, table_name: str, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def remove_favorite(ds_id: int, table_name: str, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("workspace", "reports"))):
     return ok(await metadata_service.remove_favorite(db, ds_id, table_name))
 
 
@@ -108,7 +108,7 @@ async def object_list(
     kind: str,
     schema: str = "",
     db: AsyncSession = Depends(get_db),
-    user: User = Depends(get_current_user),
+    user: User = Depends(require_any_permission("workspace", "reports")),
 ):
     return ok(await metadata_service.get_object_list(db, ds_id, kind, schema))
 
@@ -120,6 +120,6 @@ async def object_ddl(
     name: str,
     schema: str = "",
     db: AsyncSession = Depends(get_db),
-    user: User = Depends(get_current_user),
+    user: User = Depends(require_any_permission("workspace", "reports")),
 ):
     return ok({"ddl": await metadata_service.get_object_ddl(db, ds_id, kind, name, schema)})

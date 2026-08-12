@@ -7,8 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import DRIVERS_DIR
 from ..database import get_db
-from ..deps import get_current_user
 from ..models import AIConfig, JdbcDriver, Setting, User
+from ..permissions import require_permission
 from ..response import ok
 from ..schemas import AIConfigCreate, AIConfigUpdate, SettingsUpdate
 from ..security import decrypt_text, encrypt_text
@@ -32,13 +32,13 @@ def _ai_out(c: AIConfig) -> dict:
 
 # ---------- AI 配置 ----------
 @router.get("/ai")
-async def list_ai_configs(db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def list_ai_configs(db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
     rows = (await db.execute(select(AIConfig).order_by(AIConfig.id.desc()))).scalars().all()
     return ok([_ai_out(c) for c in rows])
 
 
 @router.post("/ai")
-async def create_ai_config(data: AIConfigCreate, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def create_ai_config(data: AIConfigCreate, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
     if data.is_default:
         await db.execute(update(AIConfig).values(is_default=False))
     config = AIConfig(
@@ -58,7 +58,7 @@ async def create_ai_config(data: AIConfigCreate, db: AsyncSession = Depends(get_
 
 
 @router.put("/ai/{config_id}")
-async def update_ai_config(config_id: int, data: AIConfigUpdate, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def update_ai_config(config_id: int, data: AIConfigUpdate, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
     config = (await db.execute(select(AIConfig).where(AIConfig.id == config_id))).scalar_one_or_none()
     if config is None:
         raise HTTPException(status_code=404, detail="AI 配置不存在")
@@ -75,7 +75,7 @@ async def update_ai_config(config_id: int, data: AIConfigUpdate, db: AsyncSessio
 
 
 @router.delete("/ai/{config_id}")
-async def delete_ai_config(config_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def delete_ai_config(config_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
     config = (await db.execute(select(AIConfig).where(AIConfig.id == config_id))).scalar_one_or_none()
     if config is None:
         raise HTTPException(status_code=404, detail="AI 配置不存在")
@@ -85,7 +85,7 @@ async def delete_ai_config(config_id: int, db: AsyncSession = Depends(get_db), u
 
 
 @router.put("/ai/{config_id}/default")
-async def set_default_ai(config_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def set_default_ai(config_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
     config = (await db.execute(select(AIConfig).where(AIConfig.id == config_id))).scalar_one_or_none()
     if config is None:
         raise HTTPException(status_code=404, detail="AI 配置不存在")
@@ -97,7 +97,7 @@ async def set_default_ai(config_id: int, db: AsyncSession = Depends(get_db), use
 
 # ---------- JDBC 驱动 ----------
 @router.get("/drivers")
-async def list_drivers(db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def list_drivers(db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
     rows = (await db.execute(select(JdbcDriver).order_by(JdbcDriver.id.desc()))).scalars().all()
     return ok(
         [
@@ -122,7 +122,7 @@ async def upload_driver(
     driver_class: str = "",
     version: str = "",
     db: AsyncSession = Depends(get_db),
-    user: User = Depends(get_current_user),
+    user: User = Depends(require_permission("settings")),
 ):
     DRIVERS_DIR.mkdir(parents=True, exist_ok=True)
     if not (file.filename or "").lower().endswith(".jar"):
@@ -146,7 +146,7 @@ async def upload_driver(
 
 
 @router.delete("/drivers/{driver_id}")
-async def delete_driver(driver_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def delete_driver(driver_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
     driver = (await db.execute(select(JdbcDriver).where(JdbcDriver.id == driver_id))).scalar_one_or_none()
     if driver is None:
         raise HTTPException(status_code=404, detail="驱动不存在")
@@ -166,7 +166,7 @@ DEFAULT_SETTINGS = {
 
 
 @router.get("/settings")
-async def get_settings(db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def get_settings(db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
     rows = (await db.execute(select(Setting))).scalars().all()
     values = {r.key: r.value for r in rows}
     merged = {**DEFAULT_SETTINGS, **values}
@@ -174,7 +174,7 @@ async def get_settings(db: AsyncSession = Depends(get_db), user: User = Depends(
 
 
 @router.put("/settings")
-async def update_settings(data: SettingsUpdate, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def update_settings(data: SettingsUpdate, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("settings"))):
     for key, value in data.values.items():
         setting = (await db.execute(select(Setting).where(Setting.key == key))).scalar_one_or_none()
         if setting is None:

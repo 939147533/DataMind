@@ -29,7 +29,64 @@ export interface User {
   username: string;
   display_name: string;
   role: string;
+  is_active: boolean;
+  permissions: string[];
+  last_login?: string | null;
+  created_at?: string | null;
 }
+
+export interface Role {
+  id: number;
+  code: string;
+  name: string;
+  description: string;
+  permissions: string[];
+  is_builtin: boolean;
+  user_count: number;
+}
+
+export interface RoleMember {
+  id: number;
+  username: string;
+  display_name: string;
+  is_active: boolean;
+  last_login?: string | null;
+}
+
+export const PERMISSION_GROUPS = [
+  {
+    group: "工作台",
+    items: [
+      { code: "workspace", name: "SQL 工作台", desc: "访问 SQL 工作台并执行只读查询" },
+      { code: "sql_write", name: "写操作 (DML)", desc: "执行 INSERT/UPDATE/DELETE 等写操作" },
+      { code: "sql_ddl", name: "结构变更 (DDL)", desc: "执行 CREATE/ALTER/DROP 等结构变更" },
+      { code: "agent", name: "AI Agent", desc: "使用 AI 智能助手" },
+    ],
+  },
+  {
+    group: "连接",
+    items: [
+      { code: "connections", name: "连接管理-查看", desc: "查看数据源连接、测试连接" },
+      { code: "connections_manage", name: "连接管理-维护", desc: "新增/编辑/删除数据源连接" },
+    ],
+  },
+  {
+    group: "报表",
+    items: [
+      { code: "reports", name: "报表-查看", desc: "查看图表与仪表盘" },
+      { code: "reports_manage", name: "报表-维护", desc: "新增/编辑/删除图表与仪表盘" },
+    ],
+  },
+  {
+    group: "系统",
+    items: [
+      { code: "settings", name: "系统设置", desc: "AI 配置、JDBC 驱动、偏好设置" },
+      { code: "audit", name: "审计日志", desc: "查看操作审计日志" },
+      { code: "users", name: "用户管理", desc: "管理用户账号" },
+      { code: "roles", name: "角色管理", desc: "管理角色与功能权限" },
+    ],
+  },
+];
 
 export interface ColumnInfo {
   name: string;
@@ -266,4 +323,31 @@ export const exportApi = {
     return body.data as { task_id: string };
   },
   poll: async (taskId: string) => http.get<{ status: string; download_url?: string; file_name?: string; error?: string }>(`/api/export/database/status/${taskId}`),
+};
+// 用户管理
+export const userApi = {
+  list: (params: { search?: string; role?: string; page?: number; page_size?: number }) => {
+    const q = new URLSearchParams();
+    if (params.search) q.set("search", params.search);
+    if (params.role) q.set("role", params.role);
+    q.set("page", String(params.page || 1));
+    q.set("page_size", String(params.page_size || 20));
+    return http.get<PageResult<User>>(`/api/users?${q}`);
+  },
+  get: (id: number) => http.get<User>(`/api/users/${id}`),
+  create: (data: Record<string, unknown>) => http.post<User>("/api/users", data),
+  update: (id: number, data: Record<string, unknown>) => http.put<User>(`/api/users/${id}`, data),
+  remove: (id: number) => http.del(`/api/users/${id}`),
+  resetPassword: (id: number, password: string) => http.post(`/api/users/${id}/reset-password`, { password }),
+};
+
+// 角色管理
+export const roleApi = {
+  list: () => http.get<Role[]>("/api/roles"),
+  get: (id: number) => http.get<Role>(`/api/roles/${id}`),
+  create: (data: Record<string, unknown>) => http.post<Role>("/api/roles", data),
+  update: (id: number, data: Record<string, unknown>) => http.put<Role>(`/api/roles/${id}`, data),
+  remove: (id: number) => http.del(`/api/roles/${id}`),
+  users: (id: number) => http.get<RoleMember[]>(`/api/roles/${id}/users`),
+  setUsers: (id: number, user_ids: number[]) => http.put(`/api/roles/${id}/users`, { user_ids }),
 };

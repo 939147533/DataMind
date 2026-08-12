@@ -11,6 +11,7 @@ from ..database import get_db
 from ..deps import SESSION_COOKIE, get_client_ip, get_current_user
 from ..models import AuditLog, Session as SessionModel
 from ..models import User
+from ..permissions import get_user_permissions
 from ..response import ok
 from ..schemas import LoginRequest
 from ..security import generate_token, verify_password
@@ -18,13 +19,14 @@ from ..security import generate_token, verify_password
 router = APIRouter(prefix="/api/auth", tags=["认证"])
 
 
-def _user_dict(user: User) -> dict:
+def _user_dict(user: User, permissions: list | None = None) -> dict:
     return {
         "id": user.id,
         "username": user.username,
         "display_name": user.display_name,
         "role": user.role,
         "last_login": user.last_login.isoformat() if user.last_login else None,
+        "permissions": permissions or [],
     }
 
 
@@ -53,7 +55,8 @@ async def login(data: LoginRequest, request: Request, db: AsyncSession = Depends
         )
     )
     await db.commit()
-    response = JSONResponse(content=ok({"token": token, "user": _user_dict(user)}, "登录成功"))
+    perms = await get_user_permissions(db, user)
+    response = JSONResponse(content=ok({"token": token, "user": _user_dict(user, sorted(perms))}, "登录成功"))
     response.set_cookie(SESSION_COOKIE, token, httponly=True, max_age=SESSION_TTL_SECONDS, samesite="lax")
     return response
 
@@ -72,5 +75,6 @@ async def logout(request: Request, db: AsyncSession = Depends(get_db)):
 
 
 @router.get("/me")
-async def me(user: User = Depends(get_current_user)):
-    return ok(_user_dict(user))
+async def me(user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)):
+    perms = await get_user_permissions(db, user)
+    return ok(_user_dict(user, sorted(perms)))

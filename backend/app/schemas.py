@@ -235,3 +235,40 @@ class AuditLogOut(ORMModel):
     status: str = ""
     client_ip: str = ""
     created_at: Optional[datetime] = None
+
+# ---------- 用户管理 ----------
+class UserCreate(BaseModel):
+    username: str
+    password: str = "123456"
+    display_name: str = ""
+    role: str = "tech_query"
+    is_active: bool = True
+
+
+class UserUpdate(BaseModel):
+    display_name: Optional[str] = None
+    password: Optional[str] = None
+    role: Optional[str] = None
+    is_active: Optional[bool] = None
+
+
+class UserResetPassword(BaseModel):
+    password: str = "123456"
+
+
+# ---------- 角色管理 ----------
+class RoleCreate(BaseModel):
+    code: str
+    name: str
+    description: str = ""
+    permissions: list = []
+
+
+class RoleUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    permissions: Optional[list] = None
+
+
+class RoleUsersUpdate(BaseModel):
+    user_ids: list[int] = []

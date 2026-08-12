@@ -43,13 +43,18 @@ const auth = useAuthStore();
 const settings = useSettingsStore();
 const collapsed = ref(false);
 
-const menuOptions = [
-  { label: "SQL 工作台", key: "workspace", icon: () => h(NIcon, null, { default: () => "🖥️" }) },
-  { label: "连接管理", key: "connections", icon: () => h(NIcon, null, { default: () => "🔌" }) },
-  { label: "可视化报表", key: "reports", icon: () => h(NIcon, null, { default: () => "📊" }) },
-  { label: "系统设置", key: "settings", icon: () => h(NIcon, null, { default: () => "⚙️" }) },
-  { label: "审计日志", key: "audit", icon: () => h(NIcon, null, { default: () => "📜" }) },
+const menuItems = [
+  { label: "SQL 工作台", key: "workspace", permission: "workspace", icon: () => h(NIcon, null, { default: () => "🖥️" }) },
+  { label: "连接管理", key: "connections", permission: "connections", icon: () => h(NIcon, null, { default: () => "🔌" }) },
+  { label: "可视化报表", key: "reports", permission: "reports", icon: () => h(NIcon, null, { default: () => "📊" }) },
+  { label: "用户管理", key: "users", permission: "users", icon: () => h(NIcon, null, { default: () => "👥" }) },
+  { label: "角色管理", key: "roles", permission: "roles", icon: () => h(NIcon, null, { default: () => "🛡️" }) },
+  { label: "系统设置", key: "settings", permission: "settings", icon: () => h(NIcon, null, { default: () => "⚙️" }) },
+  { label: "审计日志", key: "audit", permission: "audit", icon: () => h(NIcon, null, { default: () => "📜" }) },
 ];
+const menuOptions = computed(() =>
+  menuItems.filter((m) => auth.hasPermission(m.permission)).map((m) => ({ label: m.label, key: m.key, icon: m.icon })),
+);
 
 const activeKey = computed(() => String(route.name || "workspace"));
 const pageTitle = computed(() => {
@@ -57,6 +62,8 @@ const pageTitle = computed(() => {
     workspace: "SQL 工作台",
     connections: "连接管理",
     reports: "可视化报表",
+    users: "用户管理",
+    roles: "角色管理",
     settings: "系统设置",
     audit: "审计日志",
   };

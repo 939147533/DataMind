@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
 import { authApi } from "../api";
 import type { User } from "../api";
 
@@ -9,6 +8,7 @@ export const useAuthStore = defineStore("auth", {
   }),
   getters: {
     isLoggedIn: (s) => !!s.user,
+    permissions: (s): string[] => s.user?.permissions || [],
   },
   actions: {
     async login(username: string, password: string) {
@@ -28,6 +28,15 @@ export const useAuthStore = defineStore("auth", {
       } finally {
         this.user = null;
       }
+    },
+    hasPermission(permission: string): boolean {
+      const perms = this.permissions;
+      return perms.includes("*") || perms.includes(permission);
+    },
+    hasAnyPermission(...permissions: string[]): boolean {
+      const perms = this.permissions;
+      if (perms.includes("*")) return true;
+      return permissions.some((p) => perms.includes(p));
     },
   },
 });

@@ -12,6 +12,7 @@ from ..adapters import AdapterError, get_adapter
 from ..adapters.base import ConnectionInfo
 from ..config import EXECUTION_CONFIRM_TIMEOUT, MAX_ROWS_PER_PAGE
 from ..models import AuditLog, DataSource, QueryHistory
+from ..permissions import check_sql_permission
 from ..security import decrypt_text
 from .ssh_tunnel import get_local_port
 
@@ -310,6 +311,7 @@ async def execute_sql(db: AsyncSession, ds: DataSource, sql: str, user_id: int |
         raise HTTPException(status_code=400, detail="SQL 为空")
     classes = [classify_statement(s) for s in statements]
     op_type = "DDL" if "DDL" in classes else ("DML" if "DML" in classes else "READ")
+    await check_sql_permission(db, user_id, op_type)
     adapter = build_adapter(ds)
     start = time.time()
 
@@ -350,6 +352,11 @@ async def confirm_execution(db: AsyncSession, execution_id: str, confirmed: bool
     if not confirmed:
         await _record_audit(db, entry.get("user_id"), "execute_sql", entry["sql"], entry["operation_type"], entry.get("datasource_id"), "rejected", client_ip)
         return {"status": "cancelled", "message": "已取消执行", "session_id": entry.get("session_id")}
+    try:
+        await check_sql_permission(db, entry.get("user_id"), entry["operation_type"])
+    except HTTPException:
+        await _record_audit(db, entry.get("user_id"), "execute_sql", entry["sql"], entry["operation_type"], entry.get("datasource_id"), "denied", client_ip)
+        raise
     ds = await get_datasource(db, entry["datasource_id"])
     adapter = build_adapter(ds)
     start = time.time()

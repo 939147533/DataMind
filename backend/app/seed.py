@@ -1,4 +1,5 @@
-"""启动种子：默认账户、演示 SQLite 库、演示连接、默认 AI 配置、系统设置。"""
+"""启动种子：默认账户、内置角色、演示 SQLite 库、演示连接、默认 AI 配置、系统设置。"""
+import json
 import sqlite3
 from datetime import datetime, timedelta
 
@@ -6,7 +7,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .config import DEFAULT_PASSWORD, DEFAULT_USERNAME, DEMO_DB_PATH
-from .models import AIConfig, DataSource, Setting, User
+from .models import AIConfig, DataSource, Role, Setting, User
+from .permissions import BUILTIN_ROLES
 from .security import encrypt_text, hash_password
 
 
@@ -124,6 +126,25 @@ def _ensure_demo_db() -> str:
 
 
 async def seed_all(db: AsyncSession) -> None:
+    # 内置角色（固定 5 个：管理员/技术管理/技术查询/业务管理/业务查询）
+    for r in BUILTIN_ROLES:
+        role = (await db.execute(select(Role).where(Role.code == r["code"]))).scalar_one_or_none()
+        if role is None:
+            db.add(
+                Role(
+                    code=r["code"],
+                    name=r["name"],
+                    description=r["description"],
+                    permissions=json.dumps(r["permissions"], ensure_ascii=False),
+                    is_builtin=True,
+                )
+            )
+        else:
+            role.name = r["name"]
+            role.description = r["description"]
+            role.is_builtin = True
+    await db.commit()
+
     # 默认管理员
     user = (await db.execute(select(User).where(User.username == DEFAULT_USERNAME))).scalar_one_or_none()
     if user is None:

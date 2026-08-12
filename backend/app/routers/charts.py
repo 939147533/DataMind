@@ -7,8 +7,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_db
-from ..deps import get_current_user
 from ..models import Chart, Dashboard, User
+from ..permissions import require_any_permission, require_permission
 from ..response import ok
 from ..schemas import ChartCreate, ChartUpdate, DashboardCreate, DashboardUpdate
 from ..services.export_service import _run_query
@@ -50,7 +50,7 @@ def _dashboard_out(d: Dashboard) -> dict:
 
 # ---------- 图表 ----------
 @router.post("/charts")
-async def create_chart(data: ChartCreate, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def create_chart(data: ChartCreate, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("reports_manage"))):
     chart = Chart(**data.model_dump())
     db.add(chart)
     await db.commit()
@@ -59,13 +59,13 @@ async def create_chart(data: ChartCreate, db: AsyncSession = Depends(get_db), us
 
 
 @router.get("/charts")
-async def list_charts(db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def list_charts(db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("reports", "reports_manage"))):
     rows = (await db.execute(select(Chart).order_by(Chart.id.desc()))).scalars().all()
     return ok([_chart_out(c) for c in rows])
 
 
 @router.put("/charts/{chart_id}")
-async def update_chart(chart_id: int, data: ChartUpdate, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def update_chart(chart_id: int, data: ChartUpdate, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("reports_manage"))):
     chart = (await db.execute(select(Chart).where(Chart.id == chart_id))).scalar_one_or_none()
     if chart is None:
         raise HTTPException(status_code=404, detail="图表不存在")
@@ -77,7 +77,7 @@ async def update_chart(chart_id: int, data: ChartUpdate, db: AsyncSession = Depe
 
 
 @router.delete("/charts/{chart_id}")
-async def delete_chart(chart_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def delete_chart(chart_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("reports_manage"))):
     chart = (await db.execute(select(Chart).where(Chart.id == chart_id))).scalar_one_or_none()
     if chart is None:
         raise HTTPException(status_code=404, detail="图表不存在")
@@ -87,7 +87,7 @@ async def delete_chart(chart_id: int, db: AsyncSession = Depends(get_db), user: 
 
 
 @router.get("/charts/{chart_id}/data")
-async def chart_data(chart_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def chart_data(chart_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("reports", "reports_manage"))):
     chart = (await db.execute(select(Chart).where(Chart.id == chart_id))).scalar_one_or_none()
     if chart is None:
         raise HTTPException(status_code=404, detail="图表不存在")
@@ -100,7 +100,7 @@ async def chart_data(chart_id: int, db: AsyncSession = Depends(get_db), user: Us
 
 # ---------- 仪表盘 ----------
 @router.post("/dashboards")
-async def create_dashboard(data: DashboardCreate, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def create_dashboard(data: DashboardCreate, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("reports_manage"))):
     dashboard = Dashboard(name=data.name, chart_ids=json.dumps(data.chart_ids), layout=data.layout)
     db.add(dashboard)
     await db.commit()
@@ -109,13 +109,13 @@ async def create_dashboard(data: DashboardCreate, db: AsyncSession = Depends(get
 
 
 @router.get("/dashboards")
-async def list_dashboards(db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def list_dashboards(db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("reports", "reports_manage"))):
     rows = (await db.execute(select(Dashboard).order_by(Dashboard.id.desc()))).scalars().all()
     return ok([_dashboard_out(d) for d in rows])
 
 
 @router.put("/dashboards/{dashboard_id}")
-async def update_dashboard(dashboard_id: int, data: DashboardUpdate, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def update_dashboard(dashboard_id: int, data: DashboardUpdate, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("reports_manage"))):
     dashboard = (await db.execute(select(Dashboard).where(Dashboard.id == dashboard_id))).scalar_one_or_none()
     if dashboard is None:
         raise HTTPException(status_code=404, detail="仪表盘不存在")
@@ -135,7 +135,7 @@ async def update_dashboard(dashboard_id: int, data: DashboardUpdate, db: AsyncSe
 
 
 @router.delete("/dashboards/{dashboard_id}")
-async def delete_dashboard(dashboard_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def delete_dashboard(dashboard_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("reports_manage"))):
     dashboard = (await db.execute(select(Dashboard).where(Dashboard.id == dashboard_id))).scalar_one_or_none()
     if dashboard is None:
         raise HTTPException(status_code=404, detail="仪表盘不存在")
@@ -145,7 +145,7 @@ async def delete_dashboard(dashboard_id: int, db: AsyncSession = Depends(get_db)
 
 
 @router.post("/dashboards/{dashboard_id}/share")
-async def share_dashboard(dashboard_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def share_dashboard(dashboard_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("reports_manage"))):
     dashboard = (await db.execute(select(Dashboard).where(Dashboard.id == dashboard_id))).scalar_one_or_none()
     if dashboard is None:
         raise HTTPException(status_code=404, detail="仪表盘不存在")

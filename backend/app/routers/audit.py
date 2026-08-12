@@ -4,8 +4,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_db
-from ..deps import get_current_user
 from ..models import AuditLog, User
+from ..permissions import require_permission
 from ..response import ok, page_data
 
 router = APIRouter(prefix="/api/audit", tags=["审计日志"])
@@ -18,7 +18,7 @@ async def audit_logs(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
-    user: User = Depends(get_current_user),
+    user: User = Depends(require_permission("audit")),
 ):
     query = select(AuditLog).order_by(AuditLog.id.desc())
     if action_type:

@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..database import get_db
 from ..deps import get_client_ip, get_current_user
 from ..models import QueryHistory, User
+from ..permissions import require_permission
 from ..response import ok, page_data
 from ..schemas import SqlConfirmRequest, SqlExecuteRequest, SqlFormatRequest
 from ..services import sql_service
@@ -27,7 +28,7 @@ async def confirm(data: SqlConfirmRequest, request: Request, db: AsyncSession = 
 
 
 @router.post("/format")
-async def format_sql(data: SqlFormatRequest, db: AsyncSession = Depends(get_db), user: User = Depends(get_current_user)):
+async def format_sql(data: SqlFormatRequest, db: AsyncSession = Depends(get_db), user: User = Depends(require_permission("workspace"))):
     return ok({"sql": sql_service.format_sql(data.sql)})
 
 
@@ -37,7 +38,7 @@ async def history(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     db: AsyncSession = Depends(get_db),
-    user: User = Depends(get_current_user),
+    user: User = Depends(require_permission("workspace")),
 ):
     query = select(QueryHistory).order_by(QueryHistory.id.desc())
     if datasource_id:
