@@ -129,6 +129,14 @@ export const useAgentStore = defineStore("agent", {
     },
     handleEvent(event: Record<string, unknown>, assistant: ChatItem) {
       switch (event.type) {
+        case "session_title": {
+          const t = String(event.content || "");
+          if (t) {
+            const s = this.sessions.find((x) => x.id === this.activeSessionId);
+            if (s) s.title = t;
+          }
+          break;
+        }
         case "thought":
           assistant.content = String(event.content || "");
           break;

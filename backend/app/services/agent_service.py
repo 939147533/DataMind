@@ -193,6 +193,27 @@ def _parse_chart(raw) -> dict | None:
     }
 
 
+
+def _make_title(message: str, max_len: int = 20) -> str:
+    # 以问题的概括作为对话名称：清洗开头装饰后截取前 N 个字符
+    text = message.strip()
+    while text:
+        ch = text[0]
+        code = ord(ch)
+        if code > 0xFFFF or 0x1F000 <= code <= 0x1FAFF:
+            text = text[1:].lstrip()
+            continue
+        if 0x2600 <= code <= 0x27BF or 0x2B00 <= code <= 0x2BFF or ch in "#*>-·—• ":
+            text = text[1:].lstrip()
+            continue
+        break
+    text = " ".join(text.split())
+    if not text:
+        return "新对话"
+    if len(text) > max_len:
+        return text[:max_len] + "…"
+    return text
+
 async def agent_chat(
     db: AsyncSession,
     session_id: int | None,
@@ -214,9 +235,14 @@ async def agent_chat(
         yield {"type": "done"}
         return
 
+    is_first_message = (session.message_count or 0) == 0
     db.add(AgentMessage(session_id=session.id, role="user", content=message, message_type="text"))
     session.message_count = (session.message_count or 0) + 1
+    if is_first_message:
+        session.title = _make_title(message)
     await db.commit()
+    if is_first_message:
+        yield {"type": "session_title", "content": session.title}
 
     provider = get_llm_provider(config)
     validate = getattr(provider, "validate", None)

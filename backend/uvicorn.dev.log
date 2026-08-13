@@ -1,0 +1,21 @@
+INFO:     127.0.0.1:50439 - "GET /api/health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58456 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:58457 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57865 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57866 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:54496 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58172 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58171 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58173 - "GET /api/config/ai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60455 - "PUT /api/config/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55721 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55720 - "GET /api/config/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62655 - "GET /api/config/ai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62653 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62654 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51948 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51949 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51950 - "GET /api/config/ai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51951 - "GET /api/sql/history?page=1&page_size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53110 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51791 - "POST /api/connections/test HTTP/1.1" 400 Bad Request

@@ -230,7 +230,9 @@ function quoteIdentifier(name: string, dbType?: string): string {
 
 function openTable(name: string, schema?: string) {
   const conn = connections.list.find((c) => c.id === dsId.value);
-  const sql = `SELECT * FROM ${quoteIdentifier(name, conn?.db_type)} LIMIT 100;`;
+  const dbType = conn?.db_type;
+  const limitClause = dbType === 'oracle' ? 'FETCH FIRST 100 ROWS ONLY' : 'LIMIT 100';
+  const sql = 'SELECT * FROM ' + quoteIdentifier(name, dbType) + ' ' + limitClause + ';';
   const tab = workspace.addTab(sql, name);
   if (dsId.value) runTab(tab.id);
 }

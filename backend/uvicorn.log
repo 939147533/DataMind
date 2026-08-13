@@ -1,419 +1,50 @@
-INFO:     127.0.0.1:65255 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49673 - "GET /assets/index-CEfU_0hR.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49673 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:49826 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:49673 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:49826 - "GET /login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55625 - "GET /favicon.ico HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58796 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61739 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61739 - "GET /favicon.ico HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61739 - "GET /assets/LoginView-Cbd4Eokv.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58796 - "GET /assets/_plugin-vue_export-helper-DlAUqK2U.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60048 - "GET /assets/LoginView-CLzWzHgE.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58796 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58796 - "GET /assets/AppLayout-eQo1xO6P.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60048 - "GET /assets/AppLayout-ByKhUrsM.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61739 - "GET /assets/SmartQueryView-Dg0xlhSl.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64095 - "GET /assets/agent-BuQees-E.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53440 - "GET /assets/ChartCard-BXVefclW.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55369 - "GET /assets/ChartCard-DWc2N7AS.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60048 - "GET /assets/SmartQueryView-DMzSGAM7.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64095 - "GET /favicon.ico HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61739 - "GET /settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61739 - "GET /assets/index-CEfU_0hR.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:59680 - "GET /favicon.ico HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58796 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61739 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58796 - "GET /assets/SettingsView-CcAo8HTH.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59680 - "GET /assets/_plugin-vue_export-helper-DlAUqK2U.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:61739 - "GET /assets/SettingsView-DlUK1HAg.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61739 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61739 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61739 - "GET /api/config/drivers HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61739 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52600 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52601 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52602 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52605 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52618 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52636 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53109 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53110 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53113 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53130 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53133 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49894 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49895 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49896 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49897 - "GET /api/sql/history?page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49902 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54943 - "POST /api/connections/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64789 - "POST /api/connections HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60016 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64953 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64954 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55860 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:57077 - "GET /api/sql/history?page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50225 - "GET /api/metadata/4/favorites HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52061 - "GET /api/metadata/4/tables HTTP/1.1" 500 Internal Server Error
-INFO:     127.0.0.1:51086 - "POST /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58907 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50991 - "GET /api/agent/sessions/9/messages HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60057 - "POST /api/agent/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55651 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62549 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62549 - "GET /assets/index-CEfU_0hR.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62549 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:53543 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:53543 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:62549 - "GET /favicon.ico HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62850 - "GET /login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53543 - "GET /assets/LoginView-Cbd4Eokv.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62850 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:52617 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:52876 - "GET /assets/LoginView-Cbd4Eokv.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "GET /assets/LoginView-CLzWzHgE.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51960 - "GET /assets/_plugin-vue_export-helper-DlAUqK2U.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "GET /assets/AppLayout-eQo1xO6P.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51960 - "GET /assets/AppLayout-ByKhUrsM.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52876 - "GET /assets/SmartQueryView-Dg0xlhSl.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58797 - "GET /assets/agent-BuQees-E.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59553 - "GET /assets/ChartCard-DWc2N7AS.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60417 - "GET /assets/ChartCard-BXVefclW.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "GET /assets/SmartQueryView-DMzSGAM7.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58797 - "GET /settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60417 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59553 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59553 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "GET /assets/SettingsView-DlUK1HAg.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59553 - "GET /assets/SettingsView-CcAo8HTH.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "GET /api/config/drivers HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59073 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54660 - "POST /api/connections/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59874 - "PUT /api/connections/4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50884 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62624 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62625 - "GET /api/users?search=e2e_user_2814&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62626 - "DELETE /api/users/2 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62627 - "GET /api/users?search=e2e_&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60431 - "GET /api/metadata/4/favorites HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53602 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53603 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52874 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59077 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59806 - "POST /api/agent/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:57035 - "GET /api/metadata/4/tables HTTP/1.1" 500 Internal Server Error
-INFO:     127.0.0.1:60797 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60797 - "GET /assets/index-CEfU_0hR.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60797 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:55799 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:55799 - "GET /favicon.ico HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60797 - "GET /login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58977 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:58229 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61316 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:61316 - "GET /assets/LoginView-Cbd4Eokv.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58229 - "GET /assets/_plugin-vue_export-helper-DlAUqK2U.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63322 - "GET /assets/LoginView-CLzWzHgE.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55288 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55288 - "GET /assets/AppLayout-eQo1xO6P.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55246 - "GET /assets/AppLayout-ByKhUrsM.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49840 - "GET /assets/SmartQueryView-Dg0xlhSl.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /assets/agent-BuQees-E.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55691 - "GET /assets/ChartCard-BXVefclW.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61142 - "GET /assets/ChartCard-DWc2N7AS.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55288 - "GET /assets/SmartQueryView-DMzSGAM7.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /workspace HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49840 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55246 - "GET /assets/WorkspaceView-DX-iYEgF.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /assets/WorkspaceView-DBFeyWZp.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49840 - "GET /assets/connections-CKze2EcI.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49840 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49840 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /api/sql/history?page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /assets/UsersView-Y6xB46rC.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49840 - "GET /assets/UsersView-_WAlWgqd.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /api/roles HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /api/users?page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "POST /api/users HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /api/users?page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /assets/RolesView-CnsT9Fba.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49840 - "GET /assets/RolesView-Bl1jX4zJ.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /api/roles HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49840 - "GET /api/roles/1/users HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /api/users?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49840 - "GET /api/roles/1/users HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /api/users?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49840 - "GET /api/roles/3/users HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59935 - "GET /api/users?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62680 - "PUT /api/roles/3 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62680 - "GET /api/roles HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51142 - "GET /api/roles/3/users HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62680 - "GET /api/users?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50626 - "PUT /api/roles/3/users HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50626 - "GET /api/roles HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50626 - "POST /api/auth/logout HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50626 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50626 - "GET /assets/LoginView-Cbd4Eokv.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:56274 - "GET /assets/LoginView-CLzWzHgE.css HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:56274 - "GET /favicon.ico HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56274 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56274 - "GET /assets/index-CEfU_0hR.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:56274 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50626 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50626 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50626 - "GET /login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56274 - "GET /assets/_plugin-vue_export-helper-DlAUqK2U.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:56274 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50626 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:50626 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56274 - "GET /assets/AppLayout-ByKhUrsM.css HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:50626 - "GET /assets/AppLayout-eQo1xO6P.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:56805 - "GET /assets/SmartQueryView-Dg0xlhSl.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:58954 - "GET /assets/agent-BuQees-E.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:52686 - "GET /assets/ChartCard-BXVefclW.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:53754 - "GET /assets/SmartQueryView-DMzSGAM7.css HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:56274 - "GET /assets/ChartCard-DWc2N7AS.css HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:58954 - "GET /workspace HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56805 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56805 - "GET /assets/WorkspaceView-DBFeyWZp.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:58954 - "GET /assets/WorkspaceView-DX-iYEgF.css HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:50626 - "GET /assets/connections-CKze2EcI.js HTTP/1.1" 304 Not Modified
-INFO:     127.0.0.1:50626 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50626 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/sql/history?page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50626 - "GET /assets/SettingsView-CcAo8HTH.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /assets/SettingsView-DlUK1HAg.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/config/drivers HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50626 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/sql/history?page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/metadata/1/favorites HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "POST /api/sql/execute HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "GET /api/sql/history?datasource_id=1&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58954 - "POST /api/sql/execute HTTP/1.1" 403 Forbidden
-INFO:     127.0.0.1:58954 - "GET /api/sql/history?datasource_id=1&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53755 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53755 - "GET /api/users?search=e2e_user_72384&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53755 - "DELETE /api/users/9 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53755 - "GET /api/roles HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53755 - "PUT /api/roles/3 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51190 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51190 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51190 - "GET /api/users?search=sq_biz_50264&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51190 - "POST /api/users HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64689 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64689 - "GET /assets/index-CEfU_0hR.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64689 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:52633 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:52633 - "GET /favicon.ico HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64689 - "GET /login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61350 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:51124 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:51515 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:51515 - "GET /assets/LoginView-Cbd4Eokv.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62526 - "GET /assets/LoginView-CLzWzHgE.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51124 - "GET /assets/_plugin-vue_export-helper-DlAUqK2U.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54609 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54609 - "GET /assets/AppLayout-eQo1xO6P.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58230 - "GET /assets/AppLayout-ByKhUrsM.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60701 - "GET /assets/SmartQueryView-Dg0xlhSl.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60374 - "GET /assets/agent-BuQees-E.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49372 - "GET /assets/ChartCard-DWc2N7AS.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59497 - "GET /assets/ChartCard-BXVefclW.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54609 - "GET /assets/SmartQueryView-DMzSGAM7.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49372 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59497 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54609 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54609 - "POST /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54609 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54609 - "GET /api/agent/sessions/10/messages HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54609 - "POST /api/agent/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59497 - "GET /assets/WorkspaceView-DBFeyWZp.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49372 - "GET /assets/connections-CKze2EcI.js HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60374 - "GET /assets/WorkspaceView-DX-iYEgF.css HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59497 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49372 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49372 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59497 - "GET /api/sql/history?page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59497 - "POST /api/auth/logout HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59497 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:59497 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:49372 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:49372 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:49372 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:59497 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:59497 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60374 - "GET /api/config/ai HTTP/1.1" 403 Forbidden
-INFO:     127.0.0.1:59497 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49372 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49372 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59497 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59497 - "GET /users HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49372 - "GET /api/config/ai HTTP/1.1" 403 Forbidden
-INFO:     127.0.0.1:59497 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49372 - "GET /api/config/settings HTTP/1.1" 403 Forbidden
-INFO:     127.0.0.1:51190 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51190 - "GET /api/users?search=sq_biz_50264&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49372 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58230 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59497 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51190 - "DELETE /api/users/9 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61384 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61383 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49674 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49675 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49677 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49678 - "GET /api/sql/history?page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49679 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60021 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51235 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56858 - "GET /api/config/drivers HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58231 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60574 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54064 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52489 - "DELETE /api/config/ai/1 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51212 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:57250 - "POST /api/config/ai/test HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62212 - "POST /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59647 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50869 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56106 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:51353 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:57344 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:51772 - "GET /api/auth/me HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51771 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61456 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61457 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:61459 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:49293 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:60582 - "GET /api/metadata/4/favorites HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60583 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60584 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60585 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60586 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61585 - "GET /api/agent/sessions/9/messages HTTP/1.1" 200 OK
-INFO:     127.0.0.1:57517 - "GET /api/agent/sessions/9/messages HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56913 - "POST /api/agent/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56297 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:52134 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62550 - "GET /api/metadata/4/tables HTTP/1.1" 500 Internal Server Error
-INFO:     127.0.0.1:59524 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59534 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59535 - "PUT /api/connections/4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59536 - "POST /api/connections/4/connect HTTP/1.1" 500 Internal Server Error
-INFO:     127.0.0.1:59547 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59548 - "POST /api/connections/4/connect HTTP/1.1" 500 Internal Server Error
-INFO:     127.0.0.1:63611 - "GET /api/health HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52153 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52154 - "POST /api/connections/4/connect HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52157 - "GET /api/connections?search=oracle-free&page=1&page_size=20 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52163 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52164 - "GET /api/metadata/4/tables HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52166 - "POST /api/sql/execute HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52068 - "POST /api/auth/logout HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50357 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
-INFO:     127.0.0.1:63230 - "POST /api/auth/login HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64728 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64730 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64729 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:65129 - "GET /api/metadata/4/favorites HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50563 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50564 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51077 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62533 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56462 - "GET /api/metadata/4/tables HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55461 - "GET /api/config/settings HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56079 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59171 - "GET /api/config/drivers HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59802 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63470 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:55154 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:54134 - "PUT /api/connections/4 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55817 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50795 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:53733 - "GET /api/metadata/2/favorites HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54783 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54784 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59428 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55350 - "GET /api/sql/history?datasource_id=2&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64241 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61089 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:60334 - "POST /api/connections/test HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:51659 - "GET /api/metadata/4/favorites HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60258 - "GET /api/agent/sessions HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60259 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:57542 - "GET /api/config/ai HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59619 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59953 - "POST /api/agent/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52722 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:59245 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56225 - "GET /api/metadata/4/tables HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50311 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:62689 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:57785 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:57333 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56916 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:64781 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60061 - "POST /api/sql/execute HTTP/1.1" 200 OK
-INFO:     127.0.0.1:53009 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:49688 - "POST /api/agent/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51002 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:52341 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62049 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:52801 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54384 - "POST /api/sql/format HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63231 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:50402 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56171 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:49960 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58922 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:53225 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62090 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:53134 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:52794 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:54141 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61721 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:62324 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:62094 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:55526 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58230 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:54285 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55887 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:64179 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56635 - "GET /api/metadata/2/tables HTTP/1.1" 200 OK
-INFO:     127.0.0.1:56634 - "GET /api/metadata/2/favorites HTTP/1.1" 200 OK
-INFO:     127.0.0.1:63633 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:59090 - "GET /api/sql/history?datasource_id=2&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:60650 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:50261 - "GET /api/sql/history?datasource_id=2&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:59317 - "GET /api/metadata/4/favorites HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58795 - "GET /api/metadata/4/tables HTTP/1.1" 200 OK
-INFO:     127.0.0.1:58795 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:65418 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50745 - "POST /api/sql/execute HTTP/1.1" 200 OK
-INFO:     127.0.0.1:55078 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:64240 - "POST /api/agent/chat HTTP/1.1" 200 OK
-INFO:     127.0.0.1:51648 - "POST /api/sql/execute HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54446 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:61213 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:64215 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54045 - "POST /api/sql/execute HTTP/1.1" 400 Bad Request
-INFO:     127.0.0.1:50557 - "GET /api/sql/history?datasource_id=4&page=1&page_size=50 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57929 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63147 - "GET /assets/index-C4ULWoVK.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63147 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:59779 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63147 - "GET /favicon.ico HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59779 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63147 - "GET /login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63147 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57325 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:57325 - "GET /assets/LoginView-b6bJzaLh.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63147 - "GET /assets/_plugin-vue_export-helper-DlAUqK2U.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63769 - "GET /assets/LoginView-CLzWzHgE.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63769 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63769 - "GET /assets/AppLayout-CdRejKzW.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63147 - "GET /assets/AppLayout-ByKhUrsM.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57325 - "GET /assets/SmartQueryView-DiifD6dV.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56377 - "GET /assets/ChartCard-DWc2N7AS.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52111 - "GET /assets/agent-4nyPUwIK.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50734 - "GET /assets/ChartCard-CGwvPGSy.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63769 - "GET /assets/SmartQueryView-DMzSGAM7.css HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50734 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52111 - "GET /api/config/ai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63769 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63769 - "POST /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63769 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63769 - "GET /api/agent/sessions/11/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63769 - "POST /api/agent/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51988 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51988 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51988 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51988 - "DELETE /api/agent/sessions/11 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50673 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50672 - "GET /api/config/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51295 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49708 - "GET /api/config/ai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49707 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63636 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63635 - "GET /api/config/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56339 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56341 - "GET /api/config/ai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56340 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63678 - "POST /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60869 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57428 - "GET /api/agent/sessions/11/messages HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64999 - "POST /api/agent/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49215 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49214 - "GET /api/config/settings HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59634 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62454 - "GET /api/config/ai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62453 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
