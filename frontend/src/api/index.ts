@@ -148,6 +148,17 @@ export interface Dashboard {
   share_token: string;
 }
 
+export interface ChartWithData extends Chart {
+  columns?: string[];
+  rows?: unknown[][];
+  error?: string;
+}
+
+export interface SharePayload {
+  dashboard: Dashboard;
+  charts: ChartWithData[];
+}
+
 export type { ApiError };
 
 // 认证
@@ -303,11 +314,14 @@ export const chartApi = {
   update: (id: number, data: Record<string, unknown>) => http.put<Chart>(`/api/charts/${id}`, data),
   remove: (id: number) => http.del(`/api/charts/${id}`),
   data: (id: number) => http.get<{ columns: string[]; rows: unknown[][] }>(`/api/charts/${id}/data`),
+  dashboard: (id: number) => http.get<Dashboard>(`/api/dashboards/${id}`),
   dashboards: () => http.get<Dashboard[]>("/api/dashboards"),
   createDashboard: (data: { name: string; chart_ids: number[] }) => http.post<Dashboard>("/api/dashboards", data),
   updateDashboard: (id: number, data: Record<string, unknown>) => http.put<Dashboard>(`/api/dashboards/${id}`, data),
   deleteDashboard: (id: number) => http.del(`/api/dashboards/${id}`),
   shareDashboard: (id: number) => http.post<{ share_token: string; share_url: string }>(`/api/dashboards/${id}/share`),
+  shareData: (token: string) => http.get<SharePayload>(`/api/share/${token}`),
+  shareChartData: (token: string, chartId: number) => http.get<{ columns: string[]; rows: unknown[][] }>(`/api/share/${token}/charts/${chartId}/data`),
 };
 
 // 审计

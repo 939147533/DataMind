@@ -244,3 +244,7 @@ Traceback (most recent call last):
     raise AdapterError(f"Oracle 连接失败: {exc}") from exc
 app.adapters.base.AdapterError: Oracle 连接失败: DPY-6005: cannot connect to database (CONNECTION_ID=gomWuuksC2CJ1VrxuG1DCw==).
 timed out
+INFO:     Started server process [17532]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)

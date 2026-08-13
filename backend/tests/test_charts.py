@@ -59,7 +59,19 @@ async def test_dashboard_crud_and_share(auth_client, demo_ds_id):
 
     pub = await auth_client.get(f"/api/share/{token}")
     assert pub.status_code == 200
-    assert pub.json()["data"]["chart_ids"] == [chart_id]
+    pub_data = pub.json()["data"]
+    assert pub_data["dashboard"]["chart_ids"] == [chart_id]
+    assert len(pub_data["charts"]) == 1
+    assert pub_data["charts"][0]["id"] == chart_id
+    assert pub_data["charts"][0]["rows"]
+
+    pub_chart = await auth_client.get(f"/api/share/{token}/charts/{chart_id}/data")
+    assert pub_chart.status_code == 200
+    assert pub_chart.json()["data"]["rows"]
+
+    detail = await auth_client.get(f"/api/dashboards/{dash_id}")
+    assert detail.status_code == 200
+    assert detail.json()["data"]["chart_ids"] == [chart_id]
 
     dele = await auth_client.delete(f"/api/dashboards/{dash_id}")
     await auth_client.delete(f"/api/charts/{chart_id}")

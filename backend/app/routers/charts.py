@@ -3,6 +3,7 @@ import json
 import secrets
 
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import JSONResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,6 +16,26 @@ from ..services.export_service import _run_query
 from ..services.sql_service import get_datasource
 
 router = APIRouter(prefix="/api", tags=["可视化报表"])
+
+
+def _json_safe(value):
+    """将数据库返回的值转换为 JSON 可序列化类型（datetime/Decimal 等）。"""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if hasattr(value, "isoformat"):
+        return value.isoformat()
+    try:
+        from decimal import Decimal
+
+        if isinstance(value, Decimal):
+            return float(value)
+    except ImportError:  # pragma: no cover
+        pass
+    return str(value)
+
+
+def _serialize_rows(rows: list) -> list:
+    return [[_json_safe(v) for v in row] for row in rows]
 
 
 def _chart_out(c: Chart) -> dict:
@@ -46,6 +67,24 @@ def _dashboard_out(d: Dashboard) -> dict:
         "share_token": d.share_token,
         "created_at": d.created_at.isoformat() if d.created_at else None,
     }
+
+
+async def _chart_with_data(db: AsyncSession, chart_id: int) -> dict:
+    chart = (await db.execute(select(Chart).where(Chart.id == chart_id))).scalar_one_or_none()
+    if chart is None:
+        return None
+    out = _chart_out(chart)
+    try:
+        if chart.datasource_id and chart.sql_text:
+            ds = await get_datasource(db, chart.datasource_id)
+            columns, rows = _run_query(ds, chart.sql_text)
+            out["columns"] = columns
+            out["rows"] = _serialize_rows(rows)
+        else:
+            out["error"] = "图表未关联数据源或缺少 SQL"
+    except Exception as exc:  # noqa: BLE001
+        out["error"] = str(exc)
+    return out
 
 
 # ---------- 图表 ----------
@@ -94,8 +133,16 @@ async def chart_data(chart_id: int, db: AsyncSession = Depends(get_db), user: Us
     if not chart.datasource_id:
         raise HTTPException(status_code=400, detail="图表未关联数据源")
     ds = await get_datasource(db, chart.datasource_id)
-    columns, rows = _run_query(ds, chart.sql_text)
-    return ok({"columns": columns, "rows": rows})
+    try:
+        columns, rows = _run_query(ds, chart.sql_text)
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=422, detail=f"?????????{exc}") from exc
+    return JSONResponse(
+        content=ok({"columns": columns, "rows": _serialize_rows(rows)}),
+        headers={"Cache-Control": "no-cache, must-revalidate"},
+    )
 
 
 # ---------- 仪表盘 ----------
@@ -112,6 +159,14 @@ async def create_dashboard(data: DashboardCreate, db: AsyncSession = Depends(get
 async def list_dashboards(db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("reports", "reports_manage"))):
     rows = (await db.execute(select(Dashboard).order_by(Dashboard.id.desc()))).scalars().all()
     return ok([_dashboard_out(d) for d in rows])
+
+
+@router.get("/dashboards/{dashboard_id}")
+async def get_dashboard(dashboard_id: int, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("reports", "reports_manage"))):
+    dashboard = (await db.execute(select(Dashboard).where(Dashboard.id == dashboard_id))).scalar_one_or_none()
+    if dashboard is None:
+        raise HTTPException(status_code=404, detail="仪表盘不存在")
+    return ok(_dashboard_out(dashboard))
 
 
 @router.put("/dashboards/{dashboard_id}")
@@ -160,4 +215,30 @@ async def share_view(token: str, db: AsyncSession = Depends(get_db)):
     dashboard = (await db.execute(select(Dashboard).where(Dashboard.share_token == token, Dashboard.is_public.is_(True)))).scalar_one_or_none()
     if dashboard is None:
         raise HTTPException(status_code=404, detail="分享不存在或已关闭")
-    return ok(_dashboard_out(dashboard))
+    chart_ids = json.loads(dashboard.chart_ids or "[]")
+    charts = []
+    for cid in chart_ids:
+        item = await _chart_with_data(db, cid)
+        if item is not None:
+            charts.append(item)
+    return ok({"dashboard": _dashboard_out(dashboard), "charts": charts})
+
+
+@router.get("/share/{token}/charts/{chart_id}/data")
+async def share_chart_data(token: str, chart_id: int, db: AsyncSession = Depends(get_db)):
+    dashboard = (await db.execute(select(Dashboard).where(Dashboard.share_token == token, Dashboard.is_public.is_(True)))).scalar_one_or_none()
+    if dashboard is None:
+        raise HTTPException(status_code=404, detail="分享不存在或已关闭")
+    try:
+        chart_ids = json.loads(dashboard.chart_ids or "[]")
+    except Exception:  # noqa: BLE001
+        chart_ids = []
+    if chart_id not in chart_ids:
+        raise HTTPException(status_code=404, detail="图表不属于该仪表盘")
+    item = await _chart_with_data(db, chart_id)
+    if item is None:
+        raise HTTPException(status_code=404, detail="图表不存在")
+    return JSONResponse(
+        content=ok({"columns": item.get("columns", []), "rows": item.get("rows", []), "error": item.get("error", "")}),
+        headers={"Cache-Control": "no-cache, must-revalidate"},
+    )

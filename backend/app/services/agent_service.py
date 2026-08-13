@@ -21,17 +21,20 @@ from .sql_service import (
 )
 
 SYSTEM_TEMPLATE = """你是数据库 Agent 助手，运行在数据库查询工具中，使用中文回复。
+当前数据库类型：{db_type}
+{dialect_hint}
 当前数据库 Schema 摘要：
 {schema}
 
 请严格输出 JSON（不要包含其他内容、不要使用 Markdown 代码块），格式：
 {{"thought": "你的推理过程（中文）", "sql": "需要执行的SQL；无需SQL时为空字符串", "answer": "无需SQL时的直接回答（中文）", "chart": "可选：用户要求生成图表时输出图表配置，否则省略该字段"}}
-chart 配置格式：{{"type": "bar|line|pie", "title": "图表标题", "x_column": "X 轴列名", "y_column": "数值列名", "aggregation": "none|sum|count|avg|max|min"}}
+chart 配置格式：{{"type": "bar|line|pie", "title": "图表标题", "x_column": "X 轴列名", "y_columns": ["数值列1", "数值列2", ...], "aggregation": "none|sum|count|avg|max|min"}}
 规则：
 - 用户要求查询或操作数据时生成 SQL，否则 answer 直接回答
-- SQL 必须针对上述 Schema 中存在的表名与列名
+- SQL 必须针对上述 Schema 中存在的表名与列名，遵循当前数据库方言语法
+- 文本枚举列（如状态、类型、渠道）通常存储英文取值（如 SUCCESS/FAIL/PENDING），比较时使用 UPPER(列)=UPPER('值') 或直接使用 Schema 摘要中的枚举值，禁止用中文猜测
 - 查询使用 SELECT；写操作（INSERT/UPDATE/DELETE 或 DDL）也生成完整 SQL，将由系统安全确认后执行
-- 用户要求可视化/图表时，SQL 使用 GROUP BY 聚合查询，并同时输出 chart 配置，x_column/y_column 必须是查询结果中的列名"""
+- 用户要求可视化/图表时，SQL 使用 GROUP BY 聚合查询，并同时输出 chart 配置；单指标可用 y_column，多指标（如笔数和金额）用 y_columns 数组；x_column/y_columns 必须是查询结果中的列名"""
 
 SUMMARY_TEMPLATE = """你是数据库 Agent 助手。用户提问：{question}
 你执行的 SQL：{sql}
@@ -131,14 +134,19 @@ async def _load_history(db: AsyncSession, session_id: int, limit: int = 10) -> l
     return history
 
 
-def _schema_summary(db_session: AsyncSession, ds: DataSource | None) -> str:
+def _schema_info(db_session: AsyncSession, ds: DataSource | None) -> dict:
     if ds is None:
-        return "（未选择数据源）"
+        return {"schema": "（未选择数据源）", "db_type": "", "dialect_hint": ""}
+    db_type = getattr(ds, "db_type", "") or ""
     try:
         adapter = build_adapter(ds)
-        return adapter.schema_summary()[:8000]
+        return {
+            "schema": adapter.schema_summary()[:8000],
+            "db_type": getattr(adapter, "db_type", db_type),
+            "dialect_hint": getattr(adapter, "dialect_hint", "") or "",
+        }
     except Exception:  # noqa: BLE001
-        return "（Schema 获取失败）"
+        return {"schema": "（Schema 获取失败）", "db_type": db_type, "dialect_hint": ""}
 
 
 def _extract_json(text: str) -> dict:
@@ -171,15 +179,21 @@ AGGREGATIONS = ("none", "sum", "count", "avg", "max", "min")
 
 
 def _parse_chart(raw) -> dict | None:
-    """校验并规范化模型输出的图表配置，非法则返回 None。"""
+    """校验并规范化模型输出的图表配置，非法则返回 None；支持单/多系列。"""
     if not isinstance(raw, dict):
         return None
     chart_type = str(raw.get("type") or "").lower()
     if chart_type not in CHART_TYPES:
         return None
     x_column = str(raw.get("x_column") or "").strip()
-    y_column = str(raw.get("y_column") or "").strip()
-    if not x_column or not y_column:
+    if not x_column:
+        return None
+    y_raw = raw.get("y_columns") or raw.get("y_column") or ""
+    if isinstance(y_raw, list):
+        y_columns = [str(c).strip() for c in y_raw if str(c).strip()]
+    else:
+        y_columns = [c.strip() for c in str(y_raw).split(",") if c.strip()]
+    if not y_columns:
         return None
     aggregation = str(raw.get("aggregation") or "none").lower()
     if aggregation not in AGGREGATIONS:
@@ -188,7 +202,7 @@ def _parse_chart(raw) -> dict | None:
         "chart_type": chart_type,
         "title": str(raw.get("title") or "").strip(),
         "x_column": x_column,
-        "y_column": y_column,
+        "y_column": ", ".join(y_columns),
         "aggregation": aggregation,
     }
 
@@ -254,9 +268,13 @@ async def agent_chat(
             yield {"type": "error", "content": f"AI 调用失败: {exc}"}
             yield {"type": "done"}
             return
-    schema = _schema_summary(db, ds)
+    schema_info = _schema_info(db, ds)
     history = await _load_history(db, session.id)
-    system = SYSTEM_TEMPLATE.format(schema=schema)
+    system = SYSTEM_TEMPLATE.format(
+        db_type=schema_info["db_type"],
+        dialect_hint=schema_info["dialect_hint"],
+        schema=schema_info["schema"],
+    )
     messages = build_messages(system, history, message)
 
     try:
@@ -340,7 +358,20 @@ async def agent_chat(
         db.add(AgentMessage(session_id=session.id, role="assistant", content=sql, message_type="sql"))
         db.add(AgentMessage(session_id=session.id, role="assistant", content=final_text, message_type="text"))
         if chart:
-            db.add(AgentMessage(session_id=session.id, role="assistant", content=json.dumps(chart, ensure_ascii=False), message_type="chart"))
+            chart_content = json.dumps(
+                {
+                    "chart": chart,
+                    "result": {
+                        "columns": columns,
+                        "rows": rows,
+                        "total_rows": result.get("total_rows", total),
+                        "duration_ms": result.get("duration_ms", 0),
+                        "sql_text": sql,
+                    },
+                },
+                ensure_ascii=False,
+            )
+            db.add(AgentMessage(session_id=session.id, role="assistant", content=chart_content, message_type="chart"))
             session.message_count = (session.message_count or 0) + 1
         session.message_count = (session.message_count or 0) + 2
         await db.commit()
@@ -381,8 +412,8 @@ async def explain_sql(db: AsyncSession, datasource_id: int | None, sql: str, use
     ds = None
     if datasource_id:
         ds = (await db.execute(select(DataSource).where(DataSource.id == datasource_id))).scalar_one_or_none()
-    schema = _schema_summary(db, ds)
-    prompt = f"当前数据库 Schema：\n{schema}\n\n请用中文解释以下 SQL 的含义、执行逻辑与潜在风险：\n{sql}"
+    schema_info = _schema_info(db, ds)
+    prompt = f"当前数据库类型：{schema_info['db_type']}\n{schema_info['dialect_hint']}\n当前数据库 Schema：\n{schema_info['schema']}\n\n请用中文解释以下 SQL 的含义、执行逻辑与潜在风险：\n{sql}"
     provider = get_llm_provider(config)
     try:
         async for chunk in provider.stream(build_messages("你是 SQL 解释专家。", [], prompt)):

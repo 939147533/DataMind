@@ -8,6 +8,7 @@ from .base import AdapterError, BaseDBAdapter
 
 class SQLiteAdapter(BaseDBAdapter):
     db_type = "sqlite"
+    dialect_hint = "SQLite 方言：日期用 strftime('%Y-%m-%d', col)，最近 N 天用 date('now', '-N day')，取前 N 行用 LIMIT N"
     supports_ddl_generate = True
 
     def _db_path(self) -> Path:
@@ -139,6 +140,10 @@ class SQLiteAdapter(BaseDBAdapter):
 
     def get_sequences(self, schema: str = "") -> list[dict]:
         return []
+
+    def sample_column_values(self, table: str, column: str, schema: str = "") -> list[str]:
+        rows = self._query(f'SELECT DISTINCT "{column}" AS v FROM "{table}" WHERE "{column}" IS NOT NULL LIMIT 8')
+        return [r["v"] for r in rows]
 
     def execute(self, sql: str) -> dict:
         conn = self.connect()

@@ -12,6 +12,7 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: "/login", component: () => import("../views/LoginView.vue"), meta: { public: true } },
+    { path: "/share/:token", name: "share", component: () => import("../views/ShareView.vue"), meta: { public: true } },
     {
       path: "/",
       component: () => import("../components/AppLayout.vue"),
@@ -21,6 +22,7 @@ const router = createRouter({
         { path: "workspace", name: "workspace", component: () => import("../views/WorkspaceView.vue"), meta: { permission: "workspace" } },
         { path: "connections", name: "connections", component: () => import("../views/ConnectionsView.vue"), meta: { permission: "connections" } },
         { path: "reports", name: "reports", component: () => import("../views/ReportsView.vue"), meta: { permission: "reports" } },
+        { path: "reports/dashboard/:id", name: "dashboard-detail", component: () => import("../views/DashboardDetailView.vue"), meta: { permission: "reports" } },
         { path: "users", name: "users", component: () => import("../views/UsersView.vue"), meta: { permission: "users" } },
         { path: "roles", name: "roles", component: () => import("../views/RolesView.vue"), meta: { permission: "roles" } },
         { path: "settings", name: "settings", component: () => import("../views/SettingsView.vue"), meta: { permission: "settings" } },

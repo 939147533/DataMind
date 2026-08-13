@@ -126,3 +126,81 @@ async def test_session_lifecycle(auth_client, demo_ds_id):
     assert any(s["id"] == session_id for s in listing.json()["data"])
     dele = await auth_client.delete(f"/api/agent/sessions/{session_id}")
     assert dele.status_code == 200
+
+
+class ChartProvider(FakeProvider):
+    def __init__(self, config, sql="SELECT 1 AS x"):
+        super().__init__(config, sql=sql)
+        self.chart = {"type": "line", "title": "交易趋势", "x_column": "month", "y_column": "total", "aggregation": "sum"}
+
+    async def chat(self, messages, json_mode=False):
+        return json.dumps({"thought": "分析", "sql": self.sql, "answer": "", "chart": self.chart})
+
+
+async def test_chat_chart_persists_result(auth_client, demo_ds_id, monkeypatch):
+    sql = "SELECT strftime('%Y-%m', created_at) AS month, SUM(amount) AS total FROM orders GROUP BY month ORDER BY month"
+    monkeypatch.setattr(
+        "app.services.agent_service.get_llm_provider",
+        lambda cfg: ChartProvider(cfg, sql=sql),
+    )
+    sess = await auth_client.post("/api/agent/sessions", json={"datasource_id": demo_ds_id})
+    session_id = sess.json()["data"]["id"]
+    resp = await auth_client.post(
+        "/api/agent/chat",
+        json={"session_id": session_id, "message": "按月份统计交易趋势并生成图表"},
+    )
+    assert resp.status_code == 200
+    events = _events(resp.text)
+    charts = [e for e in events if e["type"] == "chart"]
+    assert charts, [e["type"] for e in events]
+    assert charts[0]["content"]["chart_type"] == "line"
+
+    msgs = await auth_client.get(f"/api/agent/sessions/{session_id}/messages")
+    chart_msgs = [m for m in msgs.json()["data"] if m["message_type"] == "chart"]
+    assert chart_msgs, [m["message_type"] for m in msgs.json()["data"]]
+    payload = json.loads(chart_msgs[0]["content"])
+    assert payload["chart"]["chart_type"] == "line"
+    assert payload["result"]["columns"] == ["month", "total"]
+    assert payload["result"]["rows"]
+    assert payload["result"]["sql_text"] == sql
+
+def test_parse_chart_multiple_y_columns():
+    from app.services.agent_service import _parse_chart
+
+    cfg = _parse_chart(
+        {
+            "type": "line",
+            "title": "近30天交易趋势",
+            "x_column": "TRANS_DATE",
+            "y_columns": ["TRANS_COUNT", "TRANS_AMOUNT"],
+            "aggregation": "none",
+        }
+    )
+    assert cfg is not None
+    assert cfg["chart_type"] == "line"
+    assert cfg["x_column"] == "TRANS_DATE"
+    assert cfg["y_column"] == "TRANS_COUNT, TRANS_AMOUNT"
+
+    # 旧格式单 y_column 兼容
+    cfg2 = _parse_chart({"type": "bar", "title": "t", "x_column": "DAY", "y_column": "COUNT"})
+    assert cfg2["y_column"] == "COUNT"
+
+    # 逗号分隔的 y_column 兼容
+    cfg3 = _parse_chart({"type": "bar", "title": "t", "x_column": "DAY", "y_column": "A, B"})
+    assert cfg3["y_column"] == "A, B"
+
+    # 非法：无 y 列 / 空数组 / 未知类型
+    assert _parse_chart({"type": "pie", "x_column": "DAY"}) is None
+    assert _parse_chart({"type": "line", "x_column": "DAY", "y_columns": []}) is None
+    assert _parse_chart({"type": "radar", "x_column": "DAY", "y_column": "C"}) is None
+
+
+def test_schema_summary_enum_hint():
+    from app.adapters.base import ConnectionInfo
+    from app.adapters.sqlite_adapter import SQLiteAdapter
+
+    adapter = SQLiteAdapter(ConnectionInfo(db_type="sqlite", database_name="demo.db"))
+    summary = adapter.schema_summary()
+    assert "orders(" in summary
+    assert "[枚举:" in summary
+    assert any(k in summary for k in ("pending", "paid", "done", "shipped"))

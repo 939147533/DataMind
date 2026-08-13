@@ -12,6 +12,7 @@ def _import_pymysql():
 
 class MySQLAdapter(BaseDBAdapter):
     db_type = "mysql"
+    dialect_hint = "MySQL 方言：日期用 DATE_FORMAT(col, '%Y-%m-%d')，最近 N 天用 DATE_SUB(NOW(), INTERVAL N DAY)，取前 N 行用 LIMIT N，标识符用反引号"
     supports_ddl_generate = True
 
     def connect(self):
@@ -171,6 +172,13 @@ class MySQLAdapter(BaseDBAdapter):
 
     def get_sequences(self, schema: str = "") -> list[dict]:
         return []
+
+    def sample_column_values(self, table: str, column: str, schema: str = "") -> list[str]:
+        db = schema or self._db()
+        rows = self._query(
+            f'SELECT DISTINCT `{column}` AS v FROM `{db}`.`{table}` WHERE `{column}` IS NOT NULL LIMIT 8'
+        )
+        return [r["v"] for r in rows]
 
     def execute(self, sql: str) -> dict:
         conn = self.connect()

@@ -39,7 +39,9 @@
         <div v-else-if="item.type === 'chart' && item.chart" class="msg assistant">
           <div class="chart-box">
             <div class="chart-title">{{ item.chart.title || "AI 生成图表" }}</div>
-            <ChartCard :chart="toChart(item)" :data="chartData(item)" />
+            <ChartCard v-if="chartRows(item) > 0" :chart="toChart(item)" :data="chartData(item)" />
+            <div v-else-if="chartData(item)" class="chart-empty">查询结果为空，请调整问题重试</div>
+            <div v-else class="chart-empty">图表数据未保存，请重新提问以生成图表</div>
             <div class="chart-actions">
               <n-button size="tiny" type="primary" @click="saveChart(item)">保存到可视化报表</n-button>
             </div>
@@ -86,8 +88,8 @@ const agent = useAgentStore();
 const message = useMessage();
 const input = ref("");
 const msgBox = ref<HTMLElement>();
-const dsId = ref<number | null>(null);
-const modelConfigId = ref<number | null>(null);
+const dsId = ref<number | null>(agent.datasourceId);
+const modelConfigId = ref<number | null>(agent.modelConfigId);
 const aiConfigs = ref<AIConfig[]>([]);
 const dsOptions = ref<{ label: string; value: number }[]>([]);
 
@@ -109,7 +111,8 @@ async function loadDatasources() {
   try {
     const data = await connectionApi.list({ page: 1, page_size: 100 });
     dsOptions.value = data.list.map((c) => ({ label: `${c.name} (${c.db_type})`, value: c.id }));
-    if (!dsId.value && dsOptions.value.length) {
+    const dsStillValid = dsOptions.value.some((o) => o.value === dsId.value);
+    if (!dsStillValid && dsOptions.value.length) {
       const demo = dsOptions.value.find((o) => o.label.includes("sqlite"));
       dsId.value = (demo || dsOptions.value[0]).value;
     }
@@ -121,6 +124,10 @@ async function loadDatasources() {
 async function loadModels() {
   try {
     aiConfigs.value = await configApi.listAi();
+    const stillValid = modelOptions.value.some((o) => o.value === modelConfigId.value);
+    if (!stillValid && modelOptions.value.length) {
+      modelConfigId.value = modelOptions.value[0].value;
+    }
   } catch {
     aiConfigs.value = [];
   }
@@ -163,6 +170,10 @@ function toChart(item: ChatItem): Chart {
 function chartData(item: ChatItem): { columns: string[]; rows: unknown[][] } | null {
   const result = item.result as SqlResult | undefined;
   return result ? { columns: result.columns, rows: result.rows } : null;
+}
+
+function chartRows(item: ChatItem): number {
+  return chartData(item)?.rows.length ?? 0;
 }
 
 async function send() {
@@ -252,6 +263,17 @@ function scrollToBottom() {
 }
 
 watch(() => agent.items.length, scrollToBottom);
+
+watch(dsId, (v) => {
+  agent.datasourceId = v;
+  if (v) localStorage.setItem("agent.datasourceId", String(v));
+  else localStorage.removeItem("agent.datasourceId");
+});
+watch(modelConfigId, (v) => {
+  agent.modelConfigId = v;
+  if (v) localStorage.setItem("agent.modelConfigId", String(v));
+  else localStorage.removeItem("agent.modelConfigId");
+});
 </script>
 
 <style scoped>
@@ -364,6 +386,12 @@ watch(() => agent.items.length, scrollToBottom);
 .chart-box :deep(.chart-card) {
   height: 280px;
   min-height: 280px;
+}
+.chart-empty {
+  padding: 24px 0;
+  text-align: center;
+  color: #999;
+  font-size: 13px;
 }
 .chart-actions {
   margin-top: 8px;

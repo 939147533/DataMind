@@ -13,6 +13,7 @@ def _import_psycopg():
 
 class PostgreSQLAdapter(BaseDBAdapter):
     db_type = "postgresql"
+    dialect_hint = "PostgreSQL 方言：日期用 TO_CHAR(col, 'YYYY-MM-DD') 或 DATE_TRUNC，最近 N 天用 CURRENT_DATE - INTERVAL 'N days'，取前 N 行用 LIMIT N，字符串用单引号"
     supports_ddl_generate = True
 
     def connect(self):
@@ -179,6 +180,13 @@ class PostgreSQLAdapter(BaseDBAdapter):
             (sch,),
         )
         return [{"name": r["name"], "current_value": None, "increment": None} for r in rows]
+
+    def sample_column_values(self, table: str, column: str, schema: str = "") -> list[str]:
+        sch = schema or "public"
+        rows = self._query(
+            f'SELECT DISTINCT "{column}" AS v FROM "{sch}"."{table}" WHERE "{column}" IS NOT NULL LIMIT 8'
+        )
+        return [r["v"] for r in rows]
 
     def execute(self, sql: str) -> dict:
         psycopg2, _ = _import_psycopg()

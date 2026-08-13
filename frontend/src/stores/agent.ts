@@ -27,6 +27,14 @@ export const useAgentStore = defineStore("agent", {
     items: [] as ChatItem[],
     streaming: false,
     inputEnabled: true,
+    datasourceId: (() => {
+      const raw = localStorage.getItem("agent.datasourceId");
+      return raw ? Number(raw) : null;
+    })(),
+    modelConfigId: (() => {
+      const raw = localStorage.getItem("agent.modelConfigId");
+      return raw ? Number(raw) : null;
+    })(),
   }),
   actions: {
     async loadSessions() {
@@ -43,13 +51,21 @@ export const useAgentStore = defineStore("agent", {
       const msgs = await agentApi.messages(id);
       this.items = msgs.map((m) => {
         if (m.message_type === "chart") {
-          let chart: SmartChartConfig | null = null;
           try {
-            chart = JSON.parse(m.content) as SmartChartConfig;
+            const parsed = JSON.parse(m.content);
+            if (parsed && typeof parsed === "object" && parsed.chart && parsed.result) {
+              return {
+                role: m.role,
+                type: "chart",
+                content: "",
+                chart: parsed.chart as SmartChartConfig,
+                result: parsed.result as SqlResult,
+              };
+            }
+            return { role: m.role, type: "chart", content: "", chart: parsed as SmartChartConfig };
           } catch {
-            chart = null;
+            return { role: m.role, type: "chart", content: "", chart: null };
           }
-          return { role: m.role, type: "chart", content: "", chart };
         }
         return { role: m.role, type: m.message_type, content: m.content };
       });
@@ -150,14 +166,23 @@ export const useAgentStore = defineStore("agent", {
         case "result":
           this.items.push({ role: "assistant", type: "result", content: "", result: event.content as SqlResult });
           break;
-        case "chart":
-          this.items.push({
+        case "chart": {
+          const chartItem: ChatItem = {
             role: "assistant",
             type: "chart",
             content: "",
             chart: (event.content as SmartChartConfig) || null,
-          });
+          };
+          for (let i = this.items.length - 1; i >= 0; i--) {
+            const it = this.items[i];
+            if (it.type === "result" && it.result) {
+              chartItem.result = it.result;
+              break;
+            }
+          }
+          this.items.push(chartItem);
           break;
+        }
         case "text":
           assistant.content += String(event.content || "");
           break;

@@ -12,7 +12,8 @@ export async function request<T>(url: string, options: RequestInit = {}): Promis
     headers["Content-Type"] = "application/json";
   }
   const resp = await fetch(url, { credentials: "include", ...options, headers });
-  if (resp.status === 401 && !url.includes("/auth/login") && !url.includes("/auth/me") && !window.location.pathname.startsWith("/login")) {
+  const publicPage = window.location.pathname.startsWith("/login") || window.location.pathname.startsWith("/share/");
+  if (resp.status === 401 && !url.includes("/auth/login") && !url.includes("/auth/me") && !publicPage) {
     window.location.href = "/login";
     throw new ApiError(401, "未登录");
   }

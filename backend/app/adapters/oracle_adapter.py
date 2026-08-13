@@ -12,6 +12,7 @@ def _import_oracledb():
 
 class OracleAdapter(BaseDBAdapter):
     db_type = "oracle"
+    dialect_hint = "Oracle 方言：字符串用单引号，日期用 TO_CHAR/TRUNC，最近 N 天用 TRUNC(SYSDATE)-N，取前 N 行用 FETCH FIRST N ROWS ONLY（不支持 LIMIT）"
     supports_ddl_generate = True
 
     def _dsn(self) -> str:
@@ -190,6 +191,23 @@ class OracleAdapter(BaseDBAdapter):
             }
             for r in rows
         ]
+
+    def sample_column_values(self, table: str, column: str, schema: str = "") -> list[str]:
+        owner = (schema or self.conn.username).upper()
+        try:
+            rows = self._query(
+                f'SELECT DISTINCT "{column}" AS v FROM (SELECT "{column}" FROM {owner}."{table}" '
+                f'SAMPLE(20) WHERE "{column}" IS NOT NULL)'
+            )
+            vals = [r["v"] for r in rows[:8]]
+            if len(vals) >= 2:
+                return vals
+        except Exception:  # noqa: BLE001
+            pass
+        rows = self._query(
+            f'SELECT DISTINCT "{column}" AS v FROM {owner}."{table}" WHERE "{column}" IS NOT NULL'
+        )
+        return [r["v"] for r in rows[:8]]
 
     def execute(self, sql: str) -> dict:
         conn = self.connect()

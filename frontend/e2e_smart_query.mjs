@@ -5,6 +5,7 @@ const SHOT_DIR = "C:\\Users\\93914\\AppData\\Local\\Temp";
 let step = 0;
 let failures = 0;
 const errors = [];
+let roleRestore = null;
 const BIZ_USER = "sq_biz_" + String(Date.now() % 100000);
 const BIZ_PWD = "e2e123456";
 
@@ -73,6 +74,20 @@ try {
     check("创建业务查询用户", created.status() === 200, String(created.status()));
   }
 
+  // 0b. 基线清理：biz_query 角色不含 workspace（防止上次失败残留）
+  {
+    const { api, headers } = await apiAdmin();
+    const roles = await (await api.get(BASE + "/api/roles", { headers })).json();
+    const bizRole = roles.data.find((r) => r.code === "biz_query");
+    if (bizRole && bizRole.permissions.includes("workspace")) {
+      const perms = bizRole.permissions.filter((p) => p !== "workspace");
+      const r2 = await api.put(BASE + "/api/roles/" + bizRole.id, { data: { permissions: perms }, headers });
+      check("基线清理：移除 biz_query.workspace", r2.status() === 200, String(r2.status()));
+    } else {
+      check("基线：biz_query 默认不含 workspace", true);
+    }
+  }
+
   // 1. 管理员登录默认进入智能查询
   await login("admin", "admin123");
   await page.waitForURL("**/smart-query", { timeout: 20000 });
@@ -105,32 +120,64 @@ try {
   await page.waitForSelector(".workspace-view", { timeout: 20000 });
   check("SQL 工作台可访问", true);
 
-  // 6. 业务查询用户：默认进入智能查询；菜单有智能查询和 SQL 工作台，无用户/角色管理
+  // 6. 业务查询用户：默认进入智能查询；workspace 权限由角色管理配置（默认未授予），无用户/角色管理
   await logout();
   await login(BIZ_USER, BIZ_PWD);
   await page.waitForURL("**/smart-query", { timeout: 20000 });
   await page.waitForSelector(".smart-query-view", { timeout: 20000 });
   check("业务用户默认进入智能查询", true);
-  await page.waitForSelector('.n-menu-item-content:has-text("SQL 工作台")', { timeout: 10000 });
-  check("业务用户菜单含 SQL 工作台（未写死移除 workspace）", true);
+  const hasWorkspaceMenu = await page.locator('.n-menu-item-content:has-text("SQL 工作台")').count();
+  check("业务用户默认看不到 SQL 工作台（权限由角色管理配置）", hasWorkspaceMenu === 0, "count=" + hasWorkspaceMenu);
   const hasUsers = await page.locator('.n-menu-item-content:has-text("用户管理")').count();
   const hasRoles = await page.locator('.n-menu-item-content:has-text("角色管理")').count();
   check("业务用户看不到用户管理/角色管理", hasUsers === 0 && hasRoles === 0, "users=" + hasUsers + " roles=" + hasRoles);
   await shot(page, "biz-smart-query");
 
-  // 7. 业务用户也可进入 SQL 工作台
-  await menuClick("SQL 工作台");
-  await page.waitForSelector(".workspace-view", { timeout: 20000 });
-  check("业务用户可访问 SQL 工作台", true);
+  // 7. 直接访问 /workspace 被守卫拦截回退智能查询
+  await page.goto(BASE + "/workspace", { waitUntil: "domcontentloaded" });
+  await page.waitForURL("**/smart-query", { timeout: 20000 });
+  check("业务用户访问 SQL 工作台被拦截回退首页", true);
+
+  // 7b. 管理员通过角色管理授予 workspace 后，业务用户可见并可使用 SQL 工作台
+  {
+    const { api, headers } = await apiAdmin();
+    const roles = await (await api.get(BASE + "/api/roles", { headers })).json();
+    const bizRole = roles.data.find((r) => r.code === "biz_query");
+    check("找到 biz_query 角色", !!bizRole, JSON.stringify(roles.data));
+    const originalPerms = bizRole.permissions;
+    const granted = Array.from(new Set([...originalPerms, "workspace"]));
+    const upd = await api.put(BASE + "/api/roles/" + bizRole.id, { data: { permissions: granted }, headers });
+    check("角色管理授予 workspace 成功", upd.status() === 200, String(upd.status()));
+    roleRestore = { id: bizRole.id, permissions: originalPerms };
+    await logout();
+    await login(BIZ_USER, BIZ_PWD);
+    await page.waitForURL("**/smart-query", { timeout: 20000 });
+    await page.waitForSelector('.n-menu-item-content:has-text("SQL 工作台")', { timeout: 15000 });
+    check("授予后业务用户菜单出现 SQL 工作台", true);
+    await menuClick("SQL 工作台");
+    await page.waitForSelector(".workspace-view", { timeout: 20000 });
+    check("授予后业务用户可进入 SQL 工作台", true);
+    const { api: restoreApi, headers: restoreHeaders } = await apiAdmin();
+    const restoreResp = await restoreApi.put(BASE + "/api/roles/" + bizRole.id, { data: { permissions: originalPerms }, headers: restoreHeaders });
+    if (restoreResp.status() === 200) roleRestore = null;
+    check("还原 biz_query 角色权限", restoreResp.status() === 200, String(restoreResp.status()));
+  }
 
   // 8. 直接访问 /users 被守卫拦截
-  await page.goto(BASE + "/users", { waitUntil: "domcontentloaded" });
-  await page.waitForURL("**/smart-query", { timeout: 20000 });
-  check("业务用户访问用户管理被拦截回退首页", true);
 } catch (e) {
   console.log("E2E ERROR:", e.message);
   failures += 1;
 } finally {
+  // 还原被修改的 biz_query 角色权限
+  if (roleRestore) {
+    try {
+      const { api, headers } = await apiAdmin();
+      await api.put(BASE + "/api/roles/" + roleRestore.id, { data: { permissions: roleRestore.permissions }, headers });
+      console.log("role restored");
+    } catch (e) {
+      console.log("role restore failed:", e.message);
+    }
+  }
   // 清理测试用户
   try {
     const { api, headers } = await apiAdmin();

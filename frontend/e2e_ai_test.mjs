@@ -43,7 +43,22 @@ const context = await browser.newContext({ viewport: { width: 1440, height: 900 
 const page = await context.newPage();
 page.on("pageerror", (e) => errors.push("pageerror: " + e.message));
 
+let tempCfgId = null;
 try {
+  // 0. 通过 API 创建无 Key 临时 AI 配置（gpt-4o-mini），供无 Key 分支测试
+  {
+    const adminLogin = await context.request.post(BASE + "/api/auth/login", { data: { username: "admin", password: "admin123" } });
+    const adminCookie = (adminLogin.headers()["set-cookie"] || "").split(";")[0];
+    const created = await context.request.post(BASE + "/api/config/ai", {
+      data: { provider: "openai", api_key: "", api_base: "", model_name: "gpt-4o-mini", max_tokens: 4096, temperature: 0.7, is_active: true, is_default: false },
+      headers: { Cookie: adminCookie },
+    });
+    const createdBody = await created.json();
+    tempCfgId = createdBody.data && createdBody.data.id;
+    check("创建无 Key 临时 AI 配置", created.status() === 200 && !!tempCfgId, String(created.status()));
+    await context.clearCookies();
+  }
+
   // 1. 管理员登录并进入系统设置
   await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 30000 });
   await page.waitForSelector(".login-card", { timeout: 20000 });
@@ -72,7 +87,7 @@ try {
   await shot(page, "card-test-nokey");
 
   // 4. 卡片测试：有 Key 配置（第一张卡，id 倒序 = DeepSeek）→ 连接成功
-  const firstCard = page.locator(".settings-view .n-grid .n-card").first();
+  const firstCard = page.locator('.settings-view .n-grid .n-card:has-text("deepseek")').first();
   await firstCard.locator(".card-actions .n-button", { hasText: "测试" }).click();
   await waitMsg(page, "连接成功", 45000);
   check("卡片测试有 Key 配置连接成功", true);
@@ -112,6 +127,16 @@ try {
   console.log("E2E ERROR:", e.message);
   failures += 1;
 } finally {
+  if (tempCfgId) {
+    try {
+      const adminLogin = await context.request.post(BASE + "/api/auth/login", { data: { username: "admin", password: "admin123" } });
+      const adminCookie = (adminLogin.headers()["set-cookie"] || "").split(";")[0];
+      await context.request.delete(BASE + "/api/config/ai/" + tempCfgId, { headers: { Cookie: adminCookie } });
+      console.log("temp ai config cleaned");
+    } catch (e) {
+      console.log("temp ai config cleanup failed:", e.message);
+    }
+  }
   if (errors.length) console.log("PAGE ERRORS:", errors.join(" | "));
   await browser.close();
 }

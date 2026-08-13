@@ -1,4 +1,5 @@
 """数据库适配器抽象基类。"""
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 
@@ -33,6 +34,13 @@ class BaseDBAdapter(ABC):
 
     db_type = "base"
     supports_ddl_generate = False
+    dialect_hint = ""
+
+    # 低基数文本列名匹配：用于 Schema 摘要中附带枚举取值提示
+    _enum_column_re = re.compile(
+        r"status|state|type|flag|channel|mode|level|risk|grade|category|kind|gender|currency|region|account_type|user_type|cert_type|trans_code",
+        re.IGNORECASE,
+    )
 
     def __init__(self, conn: ConnectionInfo):
         self.conn = conn
@@ -106,12 +114,37 @@ class BaseDBAdapter(ABC):
     def explain(self, sql: str) -> list[dict]:
         raise AdapterError(f"{self.db_type} 暂不支持执行计划分析")
 
+    def sample_column_values(self, table: str, column: str, schema: str = "") -> list[str]:
+        """采样文本列的常见取值，用于 Schema 摘要中的枚举提示；默认不采样。"""
+        return []
+
+    @classmethod
+    def _is_enum_like(cls, col: dict) -> bool:
+        name = str(col.get("name") or "")
+        data_type = str(col.get("data_type") or "").upper()
+        if not cls._enum_column_re.search(name):
+            return False
+        return any(k in data_type for k in ("CHAR", "VARCHAR", "ENUM", "STRING", "TEXT", "CLOB"))
+
     def schema_summary(self) -> str:
         """生成供 LLM 使用的 Schema 摘要文本。"""
         parts = []
         for schema in self.get_schemas()[:5]:
             for table in self.get_tables(schema)[:20]:
                 cols = self.get_table_columns(table, schema)
-                col_desc = ", ".join(f"{c['name']} {c['data_type']}" for c in cols)
-                parts.append(f"{schema}.{table}({col_desc})")
+                col_desc = []
+                enum_count = 0
+                for c in cols:
+                    desc = f"{c['name']} {c['data_type']}"
+                    if enum_count < 4 and self._is_enum_like(c):
+                        try:
+                            vals = [str(v) for v in self.sample_column_values(table, c["name"], schema)]
+                            # 单值采样信息量低且可能误导，跳过
+                            if len(vals) >= 2:
+                                desc += f"[枚举:{'|'.join(vals[:8])}]"
+                                enum_count += 1
+                        except Exception:  # noqa: BLE001
+                            pass
+                    col_desc.append(desc)
+                parts.append(f"{schema}.{table}({', '.join(col_desc)})")
         return "\n".join(parts)
