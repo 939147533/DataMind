@@ -1,0 +1,4 @@
+{
+  "ts": "2026-08-13T13:48:31.263Z",
+  "rect": "ERR:Error: Timed out after 3000ms evaluating selector .cell-edit >> nth=0: Playwright selector deadline exceeded"
+}

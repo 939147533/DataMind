@@ -1,0 +1,16 @@
+{
+  "sel": "iab-selected",
+  "count": 1,
+  "browsers": [
+    {
+      "id": "-31cf-427e-a127-b1224868314b",
+      "name": "Codex In-app Browser",
+      "type": "iab",
+      "meta": {
+        "codexAppBuildFlavor": "prod",
+        "codexAppSessionId": "c9481d6e-86d0-45e0-bbed-221b5fd33bf6",
+        "codexSessionId": "019ffb2f-0075-77d0-87a2-894d8c39a962"
+      }
+    }
+  ]
+}

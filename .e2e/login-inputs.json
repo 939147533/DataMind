@@ -1,0 +1,17 @@
+{
+  "step": "login-fill",
+  "ok": false,
+  "inputCount": 2,
+  "inputs": [
+    {
+      "i": 0,
+      "type": "text",
+      "placeholder": "admin"
+    },
+    {
+      "i": 1,
+      "type": "password",
+      "placeholder": "admin123"
+    }
+  ]
+}

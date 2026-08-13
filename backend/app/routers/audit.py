@@ -1,5 +1,6 @@
 """审计日志路由。"""
 from fastapi import APIRouter, Depends, Query
+from fastapi.responses import Response
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -7,6 +8,7 @@ from ..database import get_db
 from ..models import AuditLog, User
 from ..permissions import require_permission
 from ..response import ok, page_data
+from ..services import audit_service
 
 router = APIRouter(prefix="/api/audit", tags=["审计日志"])
 
@@ -42,3 +44,19 @@ async def audit_logs(
         for r in rows
     ]
     return ok(page_data(items, total, page, page_size))
+
+
+@router.get("/export")
+async def audit_export(
+    action_type: str = "",
+    status: str = "",
+    format: str = Query("csv"),
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(require_permission("audit")),
+):
+    content, filename = await audit_service.export_logs(db, action_type, status, format)
+    return Response(
+        content=content,
+        media_type="application/octet-stream",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )

@@ -1,0 +1,3 @@
+{
+  "error": "TypeError: btn.boundingBox is not a function\n    at E:\\Code\\DataMind\\.node_repl_cell_18.mjs:15:24\n    at SourceTextModule.evaluate (node:internal/vm/module:233:26)\n    at C:\\Users\\93914\\AppData\\Local\\Temp\\.tmpZUeYf0\\kernel.js:2475:24\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async C:\\Users\\93914\\AppData\\Local\\Temp\\.tmpZUeYf0\\kernel.js:2421:7\n    at async handleExec (C:\\Users\\93914\\AppData\\Local\\Temp\\.tmpZUeYf0\\kernel.js:2420:5)"
+}

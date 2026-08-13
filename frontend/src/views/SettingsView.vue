@@ -61,6 +61,10 @@
             <n-form-item label="自动补全">
               <n-switch v-model:value="autocomplete" />
             </n-form-item>
+            <n-form-item label="审计日志保留(天)">
+              <n-input-number v-model:value="auditRetentionDays" :min="1" :max="3650" style="width: 160px" />
+              <span class="pref-hint">超出天数的审计日志在服务启动时自动清理</span>
+            </n-form-item>
             <n-form-item label="">
               <n-button type="primary" :loading="savingPrefs" @click="savePrefs">保存设置</n-button>
             </n-form-item>
@@ -165,6 +169,10 @@ const tabSize = computed({
 const autocomplete = computed({
   get: () => settings.autocomplete === "true",
   set: (v) => (settings.autocomplete = String(v)),
+});
+const auditRetentionDays = computed({
+  get: () => Number(settings.audit_retention_days || 180),
+  set: (v) => (settings.audit_retention_days = String(v)),
 });
 
 function providerLabel(p: string) {
@@ -389,5 +397,10 @@ onMounted(async () => {
   font-size: 13px;
   color: #666;
   line-height: 1.9;
+}
+.pref-hint {
+  margin-left: 10px;
+  font-size: 12px;
+  color: #888;
 }
 </style>

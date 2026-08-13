@@ -6,7 +6,7 @@ from ..database import get_db
 from ..models import User
 from ..permissions import require_any_permission
 from ..response import ok
-from ..schemas import AlterTableRequest, FavoriteRequest
+from ..schemas import AlterTableRequest, FavoriteRequest, TableDataDeleteRequest, TableDataInsertRequest, TableDataUpdateRequest
 from ..services import metadata_service
 from ..services.agent_service import resolve_model_config
 from ..services.llm_providers import build_messages, get_llm_provider
@@ -51,6 +51,39 @@ async def table_data(
     user: User = Depends(require_any_permission("workspace", "reports")),
 ):
     return ok(await metadata_service.get_table_data(db, ds_id, table, schema, page, size))
+
+
+@router.post("/{ds_id}/tables/{table}/data")
+async def update_table_row(
+    ds_id: int,
+    table: str,
+    data: TableDataUpdateRequest,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(require_any_permission("workspace", "reports")),
+):
+    return ok(await metadata_service.update_table_row(db, ds_id, table, data, user.id))
+
+
+@router.post("/{ds_id}/tables/{table}/rows")
+async def insert_table_row(
+    ds_id: int,
+    table: str,
+    data: TableDataInsertRequest,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(require_any_permission("workspace", "reports")),
+):
+    return ok(await metadata_service.insert_table_row(db, ds_id, table, data, user.id))
+
+
+@router.post("/{ds_id}/tables/{table}/rows/delete")
+async def delete_table_row(
+    ds_id: int,
+    table: str,
+    data: TableDataDeleteRequest,
+    db: AsyncSession = Depends(get_db),
+    user: User = Depends(require_any_permission("workspace", "reports")),
+):
+    return ok(await metadata_service.delete_table_row(db, ds_id, table, data, user.id))
 
 
 @router.post("/{ds_id}/tables/{table}/alter")

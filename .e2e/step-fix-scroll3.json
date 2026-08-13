@@ -1,0 +1,8 @@
+{
+  "err": "Error: TypeError: Cannot set property scrollLeft of [object Object] which has only a getter\n    at __playwrightEvaluate (<anonymous>:2642:116)\n    at <anonymous>:2643:14\n    at runUserScript (<anonymous>:2644:10)\n    at <anonymous>:2648:10\n    at <anonymous>:2649:3",
+  "before": {
+    "cw": 380,
+    "sl": 0,
+    "sw": 380
+  }
+}

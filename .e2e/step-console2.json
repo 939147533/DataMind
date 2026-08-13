@@ -1,0 +1,10 @@
+{
+  "step": "console-after-edit",
+  "ok": false,
+  "count": 13,
+  "lastErrors": [
+    "ApiError: 接口不存在\n    at request (http://localhost:5174/src/api/client.ts?t=1786626937068:22:32)\n    at async loadOverview (http://localhost:5174/src/views/MonitorView.vue?t=1786627293254:45:26)",
+    "ApiError: 接口不存在\n    at request (http://localhost:5174/src/api/client.ts?t=1786626937068:22:32)\n    at async loadSlow (http://localhost:5174/src/views/MonitorView.vue?t=1786627293254:53:22)",
+    "ApiError: SQL 执行错误: unsupported format character ''' (0x27) at index 177\n    at request (http://localhost:5174/src/api/client.ts?t=1786626937068:22:32)\n    at async runDiff (http://localhost:5174/src/views/MonitorView.vue?t=1786627293254:65:28)"
+  ]
+}

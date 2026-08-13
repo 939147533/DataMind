@@ -1,0 +1,8 @@
+{
+  "ts": "2026-08-13T13:52:34.584Z",
+  "btnCount": 1,
+  "btnVis": true,
+  "modalCount": 3,
+  "inputCount": 4,
+  "modalText": "||新增行username留空表示 NULLemail留空表示 NULLage留空表示 NULLcreated_at留空表示 NULL取消保存"
+}

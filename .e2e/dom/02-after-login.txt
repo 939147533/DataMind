@@ -1,0 +1,12 @@
+- generic: 🗄️
+- heading "数据库 Agent Web 应用" [level=2]
+- paragraph: 自然语言查询 · SQL 工作台 · 多数据库管理
+- generic: 用户名
+- textbox "admin"
+- generic: 密码
+- textbox "admin123"
+- generic: admin123
+- button "登 录" [active]:
+  - generic: 登 录
+- generic: 默认账户：admin / admin123
+- generic: 请输入用户名和密码

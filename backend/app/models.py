@@ -177,3 +177,32 @@ class Role(Base):
     permissions = Column(Text, default="[]")
     is_builtin = Column(Boolean, default=False)
     created_at = Column(DateTime, default=now)
+
+class SavedQuery(Base):
+    """SQL 收藏/模板。"""
+    __tablename__ = "saved_queries"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
+    sql_text = Column(Text, default="")
+    datasource_id = Column(Integer, ForeignKey("datasources.id"), nullable=True)
+    description = Column(Text, default="")
+    created_at = Column(DateTime, default=now)
+    updated_at = Column(DateTime, default=now, onupdate=now)
+
+
+class ScheduledExport(Base):
+    """定时导出任务。"""
+    __tablename__ = "scheduled_exports"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(100), nullable=False)
+    datasource_id = Column(Integer, ForeignKey("datasources.id"), nullable=False)
+    sql_text = Column(Text, default="")
+    format = Column(String(20), default="csv")
+    interval_minutes = Column(Integer, default=1440)
+    enabled = Column(Boolean, default=True)
+    last_run_at = Column(DateTime, nullable=True)
+    last_status = Column(String(20), default="")
+    last_file = Column(String(500), default="")
+    next_run_at = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=now)
+    updated_at = Column(DateTime, default=now, onupdate=now)

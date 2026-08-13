@@ -1,0 +1,5 @@
+{
+  "step": "download-xhr",
+  "ok": false,
+  "error": "TypeError: XMLHttpRequest is not a constructor\n    at <anonymous>:2643:19\n    at new Promise (<anonymous>)\n    at __playwrightEvaluate (<anonymous>:2642:18)\n    at <anonymous>:2655:14\n    at runUserScript (<anonymous>:2656:10)\n    at <anonymous>:2660:10\n    at <anonymous>:2661:3"
+}

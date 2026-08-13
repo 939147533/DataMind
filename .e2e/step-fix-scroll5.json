@@ -1,0 +1,85 @@
+{
+  "err": null,
+  "hit": {
+    "hits": [
+      {
+        "hit": "DIV",
+        "inViewport": true,
+        "isButton": false,
+        "rowIdx": 0,
+        "x": 861,
+        "y": 563
+      },
+      {
+        "hit": "DIV",
+        "inViewport": true,
+        "isButton": false,
+        "rowIdx": 1,
+        "x": 861,
+        "y": 602
+      },
+      {
+        "hit": "DIV",
+        "inViewport": true,
+        "isButton": false,
+        "rowIdx": 2,
+        "x": 861,
+        "y": 640
+      },
+      {
+        "hit": "DIV",
+        "inViewport": true,
+        "isButton": false,
+        "rowIdx": 3,
+        "x": 861,
+        "y": 678
+      },
+      {
+        "hit": "null",
+        "inViewport": true,
+        "isButton": false,
+        "rowIdx": 4,
+        "x": 861,
+        "y": 717
+      },
+      {
+        "hit": "null",
+        "inViewport": true,
+        "isButton": false,
+        "rowIdx": 5,
+        "x": 861,
+        "y": 755
+      },
+      {
+        "hit": "null",
+        "inViewport": true,
+        "isButton": false,
+        "rowIdx": 6,
+        "x": 861,
+        "y": 794
+      },
+      {
+        "hit": "null",
+        "inViewport": true,
+        "isButton": false,
+        "rowIdx": 7,
+        "x": 861,
+        "y": 832
+      }
+    ],
+    "tableScrolls": [
+      {
+        "cls": "v-x-scroll",
+        "sl": 0
+      },
+      {
+        "cls": "n-data-table-base-table-header",
+        "sl": 750
+      },
+      {
+        "cls": "v-vl",
+        "sl": 750
+      }
+    ]
+  }
+}

@@ -67,7 +67,7 @@ class MySQLAdapter(BaseDBAdapter):
         rows = self._query(
             "SELECT column_name AS name, data_type AS data_type, "
             "is_nullable='YES' AS nullable, column_default AS default_value, "
-            "column_key='PRI' AS primary_key, extra LIKE '%auto_increment%' AS auto_increment, "
+            "column_key='PRI' AS primary_key, extra LIKE '%%auto_increment%%' AS auto_increment, "
             "column_comment AS comment "
             "FROM information_schema.columns WHERE table_schema=%s AND table_name=%s "
             "ORDER BY ordinal_position",
@@ -151,6 +151,26 @@ class MySQLAdapter(BaseDBAdapter):
             (db,),
         )
         return [r["name"] for r in rows]
+
+    def get_function_ddl(self, name: str, schema: str = "") -> str:
+        db = schema or self._db()
+        try:
+            rows = self._query(f"SHOW CREATE FUNCTION `{db}`.`{name}`")
+            if rows:
+                return rows[0].get("Create Function") or rows[0].get("Function") or ""
+        except AdapterError:
+            pass
+        return ""
+
+    def get_procedure_ddl(self, name: str, schema: str = "") -> str:
+        db = schema or self._db()
+        try:
+            rows = self._query(f"SHOW CREATE PROCEDURE `{db}`.`{name}`")
+            if rows:
+                return rows[0].get("Create Procedure") or rows[0].get("Procedure") or ""
+        except AdapterError:
+            pass
+        return ""
 
     def get_triggers(self, schema: str = "") -> list[dict]:
         db = schema or self._db()

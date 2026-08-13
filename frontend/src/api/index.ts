@@ -1,4 +1,4 @@
-import { downloadFile, http, request } from "./client";
+import { downloadFile, downloadGet, http, request } from "./client";
 import type { ApiError } from "./client";
 
 export interface PageResult<T> {
@@ -85,6 +85,7 @@ export const PERMISSION_GROUPS = [
       { code: "audit", name: "审计日志", desc: "查看操作审计日志" },
       { code: "users", name: "用户管理", desc: "管理用户账号" },
       { code: "roles", name: "角色管理", desc: "管理角色与功能权限" },
+      { code: "monitor", name: "运维监控", desc: "慢查询、连接概览、表结构对比" },
     ],
   },
 ];
@@ -252,6 +253,12 @@ export const metadataApi = {
     http.get<{ columns: string[]; rows: unknown[][]; total: number; page: number; page_size: number }>(
       `/api/metadata/${dsId}/tables/${encodeURIComponent(table)}/data?page=${page}&size=${size}`,
     ),
+  updateRow: (dsId: number, table: string, body: { schema_name?: string; set_values: Record<string, unknown>; where: Record<string, unknown> }) =>
+    http.post<SqlResult>(`/api/metadata/${dsId}/tables/${encodeURIComponent(table)}/data`, body),
+  insertRow: (dsId: number, table: string, body: { schema_name?: string; values: Record<string, unknown> }) =>
+    http.post<SqlResult>(`/api/metadata/${dsId}/tables/${encodeURIComponent(table)}/rows`, body),
+  deleteRow: (dsId: number, table: string, body: { schema_name?: string; where: Record<string, unknown> }) =>
+    http.post<SqlResult>(`/api/metadata/${dsId}/tables/${encodeURIComponent(table)}/rows/delete`, body),
   alter: (dsId: number, table: string, body: { schema_name?: string; changes?: string; ddl?: string }) =>
     http.post<SqlResult>(`/api/metadata/${dsId}/tables/${encodeURIComponent(table)}/alter`, body),
   objects: (dsId: number, kind: string, schema?: string) =>
@@ -334,6 +341,14 @@ export const auditApi = {
     if (params.status) q.set("status", params.status);
     return http.get<PageResult<AuditItem>>(`/api/audit/logs?${q}`);
   },
+  exportLogs: (params: { action_type?: string; status?: string; format?: string }) => {
+    const q = new URLSearchParams();
+    if (params.action_type) q.set("action_type", params.action_type);
+    if (params.status) q.set("status", params.status);
+    const format = params.format || "csv";
+    q.set("format", format);
+    return downloadGet(`/api/audit/export?${q}`, `audit_logs.${format === "xlsx" ? "xlsx" : "csv"}`);
+  },
 };
 
 export interface AuditItem {
@@ -392,4 +407,121 @@ export const roleApi = {
   remove: (id: number) => http.del(`/api/roles/${id}`),
   users: (id: number) => http.get<RoleMember[]>(`/api/roles/${id}/users`),
   setUsers: (id: number, user_ids: number[]) => http.put(`/api/roles/${id}/users`, { user_ids }),
+};
+
+// SQL 收藏/模板
+export interface SavedQuery {
+  id: number;
+  name: string;
+  sql_text: string;
+  datasource_id: number | null;
+  description: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export const savedQueryApi = {
+  list: (params: { search?: string; page?: number; page_size?: number } = {}) => {
+    const q = new URLSearchParams();
+    if (params.search) q.set("search", params.search);
+    q.set("page", String(params.page || 1));
+    q.set("page_size", String(params.page_size || 100));
+    return http.get<PageResult<SavedQuery>>(`/api/saved-queries?${q}`);
+  },
+  create: (data: { name: string; sql_text: string; datasource_id?: number | null; description?: string }) =>
+    http.post<SavedQuery>("/api/saved-queries", data),
+  update: (id: number, data: Record<string, unknown>) => http.put<SavedQuery>(`/api/saved-queries/${id}`, data),
+  remove: (id: number) => http.del(`/api/saved-queries/${id}`),
+};
+
+// 运维监控
+export interface DatasourceStat {
+  datasource_id: number;
+  name: string;
+  db_type: string;
+  query_count: number;
+  avg_duration_ms: number;
+  max_duration_ms: number;
+  success_count: number;
+  success_rate: number;
+  last_executed_at: string | null;
+}
+
+export interface MonitorOverview {
+  total_queries: number;
+  today_queries: number;
+  datasources: DatasourceStat[];
+}
+
+export interface SlowQueryItem {
+  id: number;
+  datasource_id: number;
+  datasource_name: string;
+  sql_text: string;
+  duration_ms: number;
+  row_count: number;
+  status: string;
+  error_message: string;
+  created_at?: string;
+}
+
+export interface SchemaColumnDiff {
+  column: string;
+  source_type: string;
+  target_type: string;
+}
+
+export interface SchemaTableDiff {
+  table: string;
+  added_columns: string[];
+  removed_columns: string[];
+  changed_columns: SchemaColumnDiff[];
+}
+
+export interface SchemaDiffResult {
+  source_ds_id: number;
+  target_ds_id: number;
+  schema: string;
+  only_source: string[];
+  only_target: string[];
+  table_diffs: SchemaTableDiff[];
+}
+
+export const monitorApi = {
+  overview: () => http.get<MonitorOverview>("/api/monitor/overview"),
+  slowQueries: (params: { threshold_ms?: number; page?: number; page_size?: number } = {}) => {
+    const q = new URLSearchParams();
+    q.set("threshold_ms", String(params.threshold_ms || 1000));
+    q.set("page", String(params.page || 1));
+    q.set("page_size", String(params.page_size || 20));
+    return http.get<PageResult<SlowQueryItem>>(`/api/monitor/slow-queries?${q}`);
+  },
+  schemaDiff: (body: { source_ds_id: number; target_ds_id: number; schema_name?: string }) =>
+    http.post<SchemaDiffResult>("/api/monitor/schema-diff", body),
+};
+
+// 定时导出
+export interface ScheduleTask {
+  id: number;
+  name: string;
+  datasource_id: number;
+  sql_text: string;
+  format: string;
+  interval_minutes: number;
+  enabled: boolean;
+  last_run_at?: string | null;
+  last_status: string;
+  last_file: string;
+  next_run_at?: string | null;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export const scheduleApi = {
+  list: () => http.get<ScheduleTask[]>("/api/schedule"),
+  create: (data: Record<string, unknown>) => http.post<ScheduleTask>("/api/schedule", data),
+  update: (id: number, data: Record<string, unknown>) => http.put<ScheduleTask>(`/api/schedule/${id}`, data),
+  remove: (id: number) => http.del(`/api/schedule/${id}`),
+  run: (id: number) => http.post<{ task_id: number; file: string; message: string }>(`/api/schedule/${id}/run`),
+  download: (id: number, filename: string) => downloadGet(`/api/schedule/${id}/file`, filename),
 };

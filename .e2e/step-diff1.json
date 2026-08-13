@@ -1,0 +1,5 @@
+{
+  "step": "schema-diff",
+  "ok": false,
+  "error": "Playwright selector deadline exceeded\nwaiting on click for selector input >> nth=0\nLocator diagnostics: {\"kind\":\"no_matches\",\"action\":\"click\",\"locator\":\"input >> nth=0\",\"matchCount\":0,\"matches\":[],\"visibleCount\":0,\"truncated\":false}"
+}

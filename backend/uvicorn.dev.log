@@ -332,3 +332,146 @@ INFO:     127.0.0.1:62538 - "GET /api/charts/2/data HTTP/1.1" 200 OK
 INFO:     127.0.0.1:62537 - "GET /api/charts/4/data HTTP/1.1" 200 OK
 INFO:     127.0.0.1:62535 - "GET /api/charts/1/data HTTP/1.1" 200 OK
 INFO:     127.0.0.1:50867 - "PUT /api/config/settings HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:58856 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58855 - "GET /api/config/settings HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:63332 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63333 - "GET /api/charts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63334 - "GET /api/dashboards HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53019 - "GET /api/charts/6/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61521 - "GET /api/charts/4/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56483 - "GET /api/charts/5/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61523 - "GET /api/charts/1/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61522 - "GET /api/charts/2/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61701 - "GET /api/config/settings HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:61702 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60390 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60391 - "GET /api/charts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60392 - "GET /api/dashboards HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57564 - "GET /api/charts/6/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53662 - "GET /api/charts/5/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61990 - "GET /api/charts/2/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61989 - "GET /api/charts/4/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61991 - "GET /api/charts/1/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50898 - "GET /api/config/settings HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:50899 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55623 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55624 - "GET /api/charts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55625 - "GET /api/dashboards HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53365 - "GET /api/charts/4/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53364 - "GET /api/charts/5/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53367 - "GET /api/charts/1/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53366 - "GET /api/charts/2/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62978 - "GET /api/charts/6/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56222 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56221 - "GET /api/config/settings HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:63119 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63120 - "GET /api/charts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63121 - "GET /api/dashboards HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64879 - "GET /api/charts/2/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50968 - "GET /api/charts/6/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50969 - "GET /api/charts/5/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64878 - "GET /api/charts/4/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64880 - "GET /api/charts/1/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54078 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51539 - "GET /api/charts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61899 - "GET /api/dashboards HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61192 - "GET /api/charts/6/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54196 - "GET /api/charts/2/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54195 - "GET /api/charts/4/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54197 - "GET /api/charts/1/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51454 - "GET /api/charts/5/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51170 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51169 - "GET /api/config/settings HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:65444 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65445 - "GET /api/charts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64193 - "GET /api/dashboards HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53132 - "GET /api/charts/6/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50114 - "GET /api/charts/5/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52228 - "GET /api/charts/2/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52227 - "GET /api/charts/4/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52229 - "GET /api/charts/1/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59554 - "GET /api/config/settings HTTP/1.1" 403 Forbidden
+INFO:     127.0.0.1:59553 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52685 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63737 - "GET /api/charts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57762 - "GET /api/charts HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54195 - "GET /api/dashboards HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61598 - "GET /api/dashboards HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50102 - "GET /api/charts/6/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54796 - "GET /api/charts/5/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57958 - "GET /api/charts/4/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57960 - "GET /api/charts/2/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57962 - "GET /api/charts/1/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51438 - "GET /api/charts/4/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57968 - "GET /api/charts/6/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53709 - "GET /api/charts/5/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61609 - "GET /api/charts/2/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51449 - "GET /api/charts/1/data HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63803 - "POST /api/auth/logout HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63820 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:62237 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65283 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55244 - "GET /api/config/ai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55243 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56058 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55228 - "GET /api/monitor/overview HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55116 - "GET /api/monitor/slow-queries?threshold_ms=1000&page=1&page_size=20 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55117 - "GET /api/schedule HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:54070 - "GET /api/audit/logs?page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64055 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51511 - "GET /api/monitor/overview HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51512 - "GET /api/monitor/slow-queries?threshold_ms=1000&page=1&page_size=20 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51513 - "GET /api/schedule HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50670 - "GET /api/roles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51136 - "GET /api/roles/1/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51135 - "GET /api/users?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50416 - "GET /api/roles/1/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55240 - "GET /api/users?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64237 - "GET /api/roles/1/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64236 - "GET /api/users?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52993 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62180 - "GET /api/config/ai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62181 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60256 - "GET /api/roles HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51801 - "GET /api/roles/1/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51800 - "GET /api/users?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63081 - "GET /api/roles/1/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63080 - "GET /api/users?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60559 - "GET /api/users?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53089 - "GET /api/roles/2/users HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60650 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63852 - "GET /api/monitor/overview HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63179 - "GET /api/monitor/slow-queries?threshold_ms=1000&page=1&page_size=20 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63180 - "GET /api/schedule HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:58865 - "GET /api/monitor/slow-queries?threshold_ms=1000&page=1&page_size=20 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63994 - "POST /api/monitor/schema-diff HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:58960 - "GET /api/monitor/overview HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50317 - "GET /api/audit/logs?page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49674 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57310 - "GET /api/monitor/overview HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57311 - "GET /api/monitor/slow-queries?threshold_ms=1000&page=1&page_size=20 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:57312 - "GET /api/schedule HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51468 - "GET /api/monitor/slow-queries?threshold_ms=10&page=1&page_size=20 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56671 - "GET /api/monitor/slow-queries?threshold_ms=1&page=1&page_size=20 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:50454 - "GET /api/audit/logs?page=1&page_size=20 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60046 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62969 - "GET /api/monitor/overview HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53098 - "GET /api/monitor/slow-queries?threshold_ms=1000&page=1&page_size=20 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:53099 - "GET /api/schedule HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:63974 - "GET /api/config/settings HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:63975 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:60867 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60506 - "GET /api/agent/sessions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60508 - "GET /api/config/ai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60507 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59282 - "GET /api/connections?page=1&page_size=100 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59283 - "GET /api/monitor/overview HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59483 - "GET /api/monitor/slow-queries?threshold_ms=1000&page=1&page_size=20 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:59454 - "GET /api/schedule HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:52407 - "GET /api/schedule HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51186 - "GET /api/monitor/overview HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51186 - "GET /api/monitor/slow-queries?page=1&page_size=5 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51186 - "GET /api/saved-queries HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51186 - "GET /api/audit/export?format=csv HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51186 - "GET /metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51565 - "GET /metrics HTTP/1.1" 200 OK

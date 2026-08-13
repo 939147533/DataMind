@@ -1,0 +1,60 @@
+- complementary:
+  - generic: 🗄️
+  - generic: 数据库 Agent
+  - menu:
+    - menuitem "智能查询":
+      - img: 🤖
+      - text: 智能查询
+    - menuitem "SQL 工作台":
+      - img: 🖥️
+      - text: SQL 工作台
+    - menuitem "连接管理":
+      - img: 🔌
+      - text: 连接管理
+    - menuitem "可视化报表":
+      - img: 📊
+      - text: 可视化报表
+    - menuitem "用户管理":
+      - img: 👥
+      - text: 用户管理
+    - menuitem "角色管理":
+      - img: 🛡️
+      - text: 角色管理
+    - menuitem "系统设置":
+      - img: ⚙️
+      - text: 系统设置
+    - menuitem "审计日志":
+      - img: 📜
+      - text: 审计日志
+    - menuitem "运维监控":
+      - img: 📈
+      - text: 运维监控
+- generic: 智能查询
+- button "🌙":
+  - generic: 🌙
+- button "👤 管理员":
+  - generic: 👤
+  - generic: 管理员
+- generic "本地演示库 (SQLite) (sqlite)":
+  - generic: 本地演示库 (SQLite) (sqlite)
+- img "loading":
+- generic "ollama · qwen3.6:35b-a3b-q4_K_M":
+  - generic: ollama · qwen3.6:35b-a3b-q4_K_M
+- img "loading":
+- generic: 选择对话
+- img "loading":
+- button "新建对话":
+  - generic: 新建对话
+- button "删除" [disabled]:
+  - generic: 删除
+- generic: 本地演示库 (SQLite) (sqlite)
+- generic: 👋 你好，我是数据库 Agent
+- paragraph: 用自然语言描述你的需求，AI 会自动生成查询并返回结果：
+- generic: 统计各订单状态的数量
+- generic: 销售额最高的 5 个商品
+- generic: 各品类订单金额占比（生成图表）
+- textbox "输入自然语言查询，Enter 发送，Shift+Enter 换行；例如：统计各订单状态的数量"
+- generic: 输入自然语言查询，Enter 发送，Shift+Enter 换行；例如：统计各订单状态的数量
+- generic: AI 将自动生成并执行只读查询，结果可导出
+- button "发送" [disabled]:
+  - generic: 发送

@@ -1,0 +1,8 @@
+{
+  "step": "open-login",
+  "ok": true,
+  "visibilitySet": true,
+  "tabs": [],
+  "url": "http://localhost:5174/login",
+  "title": "数据库 Agent Web 应用"
+}

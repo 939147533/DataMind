@@ -1,0 +1,19 @@
+{
+  "ts": "2026-08-13T13:47:16.957Z",
+  "opts": [
+    "oracle-free",
+    "mysql",
+    "mac_Oracle",
+    "本地演示库 (SQLite)"
+  ],
+  "idx": 3,
+  "dsAfter": "本地演示库 (SQLite)",
+  "editorText": "SELECT * FROM users LIMIT 50;",
+  "rowsText": 1,
+  "editHint": 1,
+  "addRowBtn": 1,
+  "opsCol": 6,
+  "cellEdit": 32,
+  "delInTable": 12,
+  "ok": true
+}

@@ -94,8 +94,14 @@ class BaseDBAdapter(ABC):
     def get_functions(self, schema: str = "") -> list[str]:
         return []
 
+    def get_function_ddl(self, name: str, schema: str = "") -> str:
+        return ""
+
     def get_procedures(self, schema: str = "") -> list[str]:
         return []
+
+    def get_procedure_ddl(self, name: str, schema: str = "") -> str:
+        return ""
 
     def get_triggers(self, schema: str = "") -> list[str]:
         return []

@@ -160,6 +160,19 @@ class PostgreSQLAdapter(BaseDBAdapter):
         )
         return [r["name"] for r in rows]
 
+    def get_function_ddl(self, name: str, schema: str = "") -> str:
+        sch = schema or "public"
+        rows = self._query(
+            "SELECT pg_get_functiondef(p.oid) AS ddl FROM pg_proc p "
+            "JOIN pg_namespace n ON n.oid=p.pronamespace "
+            "WHERE n.nspname=%s AND p.proname=%s ORDER BY p.oid LIMIT 1",
+            (sch, name),
+        )
+        return rows[0]["ddl"] if rows else ""
+
+    def get_procedure_ddl(self, name: str, schema: str = "") -> str:
+        return self.get_function_ddl(name, schema)
+
     def get_triggers(self, schema: str = "") -> list[dict]:
         sch = schema or "public"
         rows = self._query(
@@ -170,7 +183,14 @@ class PostgreSQLAdapter(BaseDBAdapter):
         return [{"name": r["name"], "sql": ""} for r in rows]
 
     def get_trigger_ddl(self, name: str, schema: str = "") -> str:
-        return ""
+        sch = schema or "public"
+        rows = self._query(
+            "SELECT pg_get_triggerdef(t.oid) AS ddl FROM pg_trigger t "
+            "JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace "
+            "WHERE n.nspname=%s AND t.tgname=%s AND NOT t.tgisinternal",
+            (sch, name),
+        )
+        return rows[0]["ddl"] if rows else ""
 
     def get_sequences(self, schema: str = "") -> list[dict]:
         sch = schema or "public"

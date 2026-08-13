@@ -48,8 +48,9 @@ export const useAuthStore = defineStore("auth", {
         users: "users",
         roles: "roles",
         audit: "audit",
+        monitor: "monitor",
       };
-      const order = ["smart-query", "workspace", "reports", "connections", "settings", "users", "roles", "audit"];
+      const order = ["smart-query", "workspace", "reports", "connections", "settings", "users", "roles", "audit", "monitor"];
       return order.find((r) => this.hasPermission(routePerm[r])) || "";
     },
   },

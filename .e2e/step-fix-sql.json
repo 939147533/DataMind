@@ -1,0 +1,4 @@
+{
+  "err": null,
+  "text": "SELECT * FROM users LIMIT 50;"
+}

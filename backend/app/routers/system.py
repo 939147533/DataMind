@@ -217,6 +217,7 @@ DEFAULT_SETTINGS = {
     "editor_font_size": "14",
     "editor_tab_size": "4",
     "autocomplete": "true",
+    "audit_retention_days": "180",
 }
 
 

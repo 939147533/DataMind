@@ -1,0 +1,12 @@
+{
+  "btnRect": {
+    "x": 1825,
+    "y": 758.0859375
+  },
+  "hit": [
+    "n-button__content",
+    "n-button n-button--error-type n-button--tiny-type",
+    "n-data-table-td n-data-table-td--last-col n-data-table-td--last-row",
+    "n-data-table-tr"
+  ]
+}

@@ -1,10 +1,10 @@
 <template>
-  <div class="agent-panel" :style="panelStyle" v-show="!collapsed">
-    <div class="agent-header" @mousedown="startDrag">
+  <div class="agent-panel" v-show="!collapsed">
+    <div class="agent-header">
       <span class="agent-title">🤖 AI Agent</span>
       <n-tag v-if="dsName" size="tiny" type="info" style="margin-left: 6px">{{ dsName }}</n-tag>
       <div style="flex: 1"></div>
-      <n-button size="tiny" quaternary @mousedown.stop @click="collapsed = true" title="收起">—</n-button>
+      <n-button size="tiny" quaternary @click="emit('update:collapsed', true)" title="收起">—</n-button>
     </div>
 
     <div class="agent-toolbar">
@@ -69,7 +69,7 @@
     </div>
   </div>
 
-  <div v-if="collapsed" class="agent-fab" @click="collapsed = false">🤖</div>
+  <div v-if="collapsed" class="agent-rail" @click="emit('update:collapsed', false)" title="展开 Agent">🤖</div>
 </template>
 
 <script setup lang="ts">
@@ -81,13 +81,12 @@ import type { AIConfig } from "../api";
 import { useAgentStore } from "../stores/agent";
 import type { ChatItem } from "../stores/agent";
 
-const emit = defineEmits<{ (e: "fill-editor", sql: string): void; (e: "run-sql", sql: string): void }>();
-const props = defineProps<{ dsId: number | null; dsName: string }>();
+const emit = defineEmits<{ (e: "fill-editor", sql: string): void; (e: "run-sql", sql: string): void; (e: "update:collapsed", v: boolean): void }>();
+const props = withDefaults(defineProps<{ dsId: number | null; dsName: string; collapsed?: boolean }>(), { collapsed: false });
 const agent = useAgentStore();
 const message = useMessage();
 const input = ref("");
 const msgBox = ref<HTMLElement>();
-const collapsed = ref(false);
 const aiConfigs = ref<AIConfig[]>([]);
 const modelConfigId = ref<number | null>(null);
 
@@ -100,26 +99,6 @@ const activeSessionId = computed({
 
 const sessionOptions = computed(() => agent.sessions.map((s) => ({ label: s.title || `对话 ${s.id}`, value: s.id })));
 const modelOptions = computed(() => aiConfigs.value.filter((c) => c.is_active).map((c) => ({ label: `${c.provider} · ${c.model_name}`, value: c.id })));
-
-const panelStyle = ref({ right: "16px", bottom: "16px", width: "380px", height: "440px" });
-
-let dragStart = { x: 0, y: 0, right: 0, bottom: 0 };
-
-function startDrag(e: MouseEvent) {
-  const target = e.target as HTMLElement;
-  if (target.closest("button")) return;
-  dragStart = { x: e.clientX, y: e.clientY, right: parseInt(panelStyle.value.right), bottom: parseInt(panelStyle.value.bottom) };
-  const onMove = (ev: MouseEvent) => {
-    panelStyle.value.right = `${dragStart.right - (ev.clientX - dragStart.x)}px`;
-    panelStyle.value.bottom = `${dragStart.bottom - (ev.clientY - dragStart.y)}px`;
-  };
-  const onUp = () => {
-    window.removeEventListener("mousemove", onMove);
-    window.removeEventListener("mouseup", onUp);
-  };
-  window.addEventListener("mousemove", onMove);
-  window.addEventListener("mouseup", onUp);
-}
 
 function resultColumns(r: SqlResult) {
   return (r.columns || []).map((c, i) => ({ title: c, key: `c${i}`, ellipsis: { tooltip: true }, render: (row: Record<string, unknown>) => String(row[`c${i}`] ?? "") }));
@@ -196,21 +175,21 @@ onMounted(async () => {
 
 <style scoped>
 .agent-panel {
-  position: fixed;
-  z-index: 50;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   background: var(--n-color);
-  border: 1px solid rgba(128, 128, 128, 0.25);
-  border-radius: 10px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+  border: none;
+  border-left: 1px solid rgba(128, 128, 128, 0.25);
+  border-radius: 0;
   overflow: hidden;
 }
 .agent-header {
   display: flex;
   align-items: center;
   padding: 8px 10px;
-  cursor: move;
+  cursor: default;
   user-select: none;
   background: linear-gradient(135deg, #2080f0, #18a058);
   color: #fff;
@@ -317,21 +296,18 @@ onMounted(async () => {
   font-size: 11px;
   color: #999;
 }
-.agent-fab {
-  position: fixed;
-  right: 16px;
-  bottom: 16px;
-  z-index: 50;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+.agent-rail {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   background: linear-gradient(135deg, #2080f0, #18a058);
   color: #fff;
   font-size: 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  user-select: none;
 }
 </style>

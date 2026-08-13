@@ -27,6 +27,7 @@ const router = createRouter({
         { path: "roles", name: "roles", component: () => import("../views/RolesView.vue"), meta: { permission: "roles" } },
         { path: "settings", name: "settings", component: () => import("../views/SettingsView.vue"), meta: { permission: "settings" } },
         { path: "audit", name: "audit", component: () => import("../views/AuditView.vue"), meta: { permission: "audit" } },
+        { path: "monitor", name: "monitor", component: () => import("../views/MonitorView.vue"), meta: { permission: "monitor" } },
       ],
     },
   ],

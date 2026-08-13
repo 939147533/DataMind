@@ -4,6 +4,7 @@ import uuid
 from datetime import datetime, timedelta
 
 from fastapi import HTTPException
+from prometheus_client import Counter as PromCounter
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlglot import transpile
@@ -20,6 +21,8 @@ READ_KEYWORDS = {"SELECT", "WITH", "SHOW", "DESC", "DESCRIBE", "EXPLAIN", "PRAGM
 SESSION_KEYWORDS = {"SET", "USE", "BEGIN", "COMMIT", "START"}
 DML_KEYWORDS = {"INSERT", "UPDATE", "DELETE", "MERGE", "REPLACE", "UPSERT", "CALL"}
 DDL_KEYWORDS = {"CREATE", "ALTER", "DROP", "TRUNCATE", "RENAME", "GRANT", "REVOKE"}
+
+SQL_EXECUTIONS = PromCounter("sql_executions_total", "SQL 执行总数", ["operation_type", "status"])
 
 _executions: dict[str, dict] = {}
 
@@ -137,6 +140,26 @@ def format_sql(sql: str) -> str:
         return ";\n".join(transpile(sql, pretty=True) or [sql])
     except Exception:  # noqa: BLE001
         return sql
+
+
+def quote_identifier(name: str, db_type: str = "") -> str:
+    """按方言引用标识符（MySQL 系反引号，其余双引号）。"""
+    mysql_like = db_type in ("mysql", "oceanbase", "goldendb")
+    text = str(name or "").strip()
+    if mysql_like:
+        return "`" + text.replace("`", "``") + "`"
+    return '"' + text.replace('"', '""') + '"'
+
+
+def quote_value(value) -> str:
+    """将 Python 值转为 SQL 字面量（用于构造安全的 DML）。"""
+    if value is None:
+        return "NULL"
+    if isinstance(value, bool):
+        return "1" if value else "0"
+    if isinstance(value, (int, float)):
+        return str(value)
+    return "'" + str(value).replace("'", "''") + "'"
 
 
 def build_connection_info(ds: DataSource) -> ConnectionInfo:
@@ -322,11 +345,13 @@ async def execute_sql(db: AsyncSession, ds: DataSource, sql: str, user_id: int |
             result["duration_ms"] = duration_ms
             await _record_history(db, ds.id, sql, "success", result.get("total_rows", 0), duration_ms)
             await _record_audit(db, user_id, "execute_sql", sql, "READ", ds.id, "success", client_ip)
+            SQL_EXECUTIONS.labels(operation_type="READ", status="success").inc()
             return result
         except AdapterError as exc:
             duration_ms = int((time.time() - start) * 1000)
             await _record_history(db, ds.id, sql, "failed", 0, duration_ms, str(exc))
             await _record_audit(db, user_id, "execute_sql", sql, "READ", ds.id, "failed", client_ip)
+            SQL_EXECUTIONS.labels(operation_type="READ", status="failed").inc()
             raise HTTPException(status_code=400, detail=str(exc))
 
     risk_level = "danger" if op_type == "DDL" else "warning"
@@ -336,6 +361,7 @@ async def execute_sql(db: AsyncSession, ds: DataSource, sql: str, user_id: int |
     except Exception:  # noqa: BLE001
         preview = "将执行写操作"
     await _record_audit(db, user_id, "execute_sql", sql, op_type, ds.id, "pending", client_ip)
+    SQL_EXECUTIONS.labels(operation_type=op_type, status="pending").inc()
     return {
         "need_confirm": True,
         "operation_type": op_type,
@@ -351,11 +377,13 @@ async def confirm_execution(db: AsyncSession, execution_id: str, confirmed: bool
     entry = _pop_execution(execution_id)
     if not confirmed:
         await _record_audit(db, entry.get("user_id"), "execute_sql", entry["sql"], entry["operation_type"], entry.get("datasource_id"), "rejected", client_ip)
+        SQL_EXECUTIONS.labels(operation_type=entry["operation_type"], status="rejected").inc()
         return {"status": "cancelled", "message": "已取消执行", "session_id": entry.get("session_id")}
     try:
         await check_sql_permission(db, entry.get("user_id"), entry["operation_type"])
     except HTTPException:
         await _record_audit(db, entry.get("user_id"), "execute_sql", entry["sql"], entry["operation_type"], entry.get("datasource_id"), "denied", client_ip)
+        SQL_EXECUTIONS.labels(operation_type=entry["operation_type"], status="denied").inc()
         raise
     ds = await get_datasource(db, entry["datasource_id"])
     adapter = build_adapter(ds)
@@ -367,6 +395,7 @@ async def confirm_execution(db: AsyncSession, execution_id: str, confirmed: bool
         affected = result.get("affected_rows", 0)
         await _record_history(db, ds.id, entry["sql"], "success", affected, duration_ms)
         await _record_audit(db, entry.get("user_id"), "execute_sql", entry["sql"], entry["operation_type"], ds.id, "approved", client_ip)
+        SQL_EXECUTIONS.labels(operation_type=entry["operation_type"], status="executed").inc()
         result["session_id"] = entry.get("session_id")
         result["status"] = "executed"
         return result
@@ -374,4 +403,5 @@ async def confirm_execution(db: AsyncSession, execution_id: str, confirmed: bool
         duration_ms = int((time.time() - start) * 1000)
         await _record_history(db, ds.id, entry["sql"], "failed", 0, duration_ms, str(exc))
         await _record_audit(db, entry.get("user_id"), "execute_sql", entry["sql"], entry["operation_type"], ds.id, "failed", client_ip)
+        SQL_EXECUTIONS.labels(operation_type=entry["operation_type"], status="failed").inc()
         raise HTTPException(status_code=400, detail=str(exc))

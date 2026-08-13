@@ -1,0 +1,43 @@
+{
+  "chain": [
+    {
+      "cls": "agent-messages",
+      "tag": "DIV",
+      "txt": "👋 你好，我是数据库 Agent可以用"
+    },
+    {
+      "cls": "agent-panel",
+      "tag": "DIV",
+      "txt": "🤖 AI Agent本地演示库 (SQ"
+    },
+    {
+      "cls": "workspace-view",
+      "tag": "DIV",
+      "txt": "本地演示库 (SQLite)对象历史收藏"
+    },
+    {
+      "cls": "n-scrollbar-content",
+      "tag": "DIV",
+      "txt": "本地演示库 (SQLite)对象历史收藏"
+    },
+    {
+      "cls": "n-scrollbar-container",
+      "tag": "DIV",
+      "txt": "本地演示库 (SQLite)对象历史收藏"
+    },
+    {
+      "cls": "n-scrollbar",
+      "tag": "DIV",
+      "txt": "本地演示库 (SQLite)对象历史收藏"
+    }
+  ],
+  "cx": 1255,
+  "cy": 384.8984375,
+  "found": true,
+  "h": 12,
+  "isBtn": false,
+  "topTag": "DIV",
+  "w": 24,
+  "x": 1243,
+  "y": 378.8984375
+}

@@ -1,0 +1,63 @@
+- complementary:
+  - generic: 🗄️
+  - generic: 数据库 Agent
+  - menu:
+    - menuitem "智能查询":
+      - img: 🤖
+      - text: 智能查询
+    - menuitem "SQL 工作台":
+      - img: 🖥️
+      - text: SQL 工作台
+    - menuitem "连接管理":
+      - img: 🔌
+      - text: 连接管理
+    - menuitem "可视化报表":
+      - img: 📊
+      - text: 可视化报表
+    - menuitem "用户管理":
+      - img: 👥
+      - text: 用户管理
+    - menuitem "角色管理":
+      - img: 🛡️
+      - text: 角色管理
+    - menuitem "系统设置":
+      - img: ⚙️
+      - text: 系统设置
+    - menuitem "审计日志":
+      - img: 📜
+      - text: 审计日志
+    - menuitem "运维监控":
+      - img: 📈
+      - text: 运维监控
+- generic: 运维监控
+- button "☀️":
+  - generic: ☀️
+- button "👤 管理员":
+  - generic: 👤
+  - generic: 管理员
+- generic: 连接概览
+- generic: 慢查询
+- generic: 表结构对比
+- generic: 定时任务
+- button "刷新":
+  - generic: 刷新
+- generic: 基于执行历史统计（query_history）
+- table:
+  - rowgroup:
+    - row "数据源 类型 查询次数 平均耗时(ms) 最大耗时(ms) 成功率 最近执行":
+      - columnheader "数据源":
+        - generic: 数据源
+      - columnheader "类型":
+        - generic: 类型
+      - columnheader "查询次数":
+        - generic: 查询次数
+      - columnheader "平均耗时(ms)":
+        - generic: 平均耗时(ms)
+      - columnheader "最大耗时(ms)":
+        - generic: 最大耗时(ms)
+      - columnheader "成功率":
+        - generic: 成功率
+      - columnheader "最近执行":
+        - generic: 最近执行
+- generic: 无数据
+- generic: 加载定时任务失败（需要报表维护权限）

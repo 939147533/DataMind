@@ -26,6 +26,7 @@
             <pre><code>{{ item.content }}</code></pre>
           </div>
         </div>
+        <div v-else-if="item.type === 'tool'" class="msg assistant tool-msg">{{ item.content }}</div>
         <div v-else-if="item.type === 'result' && item.result" class="msg assistant">
           <n-data-table size="small" :columns="resultColumns(item.result)" :data="resultRows(item.result)" :max-height="300" :scroll-x="800" />
           <div class="result-actions">
@@ -396,6 +397,16 @@ watch(modelConfigId, (v) => {
 .chart-actions {
   margin-top: 8px;
   text-align: right;
+}
+.tool-msg {
+  font-size: 12px;
+  color: #888;
+  background: rgba(128, 128, 128, 0.08);
+  border-radius: 6px;
+  padding: 6px 10px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-width: 720px;
 }
 .sq-input {
   flex-shrink: 0;

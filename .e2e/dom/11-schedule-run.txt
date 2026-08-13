@@ -1,0 +1,87 @@
+- complementary:
+  - generic: 🗄️
+  - generic: 数据库 Agent
+  - menu:
+    - menuitem "智能查询":
+      - img: 🤖
+      - text: 智能查询
+    - menuitem "SQL 工作台":
+      - img: 🖥️
+      - text: SQL 工作台
+    - menuitem "连接管理":
+      - img: 🔌
+      - text: 连接管理
+    - menuitem "可视化报表":
+      - img: 📊
+      - text: 可视化报表
+    - menuitem "用户管理":
+      - img: 👥
+      - text: 用户管理
+    - menuitem "角色管理":
+      - img: 🛡️
+      - text: 角色管理
+    - menuitem "系统设置":
+      - img: ⚙️
+      - text: 系统设置
+    - menuitem "审计日志":
+      - img: 📜
+      - text: 审计日志
+    - menuitem "运维监控":
+      - img: 📈
+      - text: 运维监控
+- generic: 运维监控
+- button "🌙":
+  - generic: 🌙
+- button "👤 管理员":
+  - generic: 👤
+  - generic: 管理员
+- generic: 连接概览
+- generic: 慢查询
+- generic: 表结构对比
+- generic: 定时任务
+- button "新建任务":
+  - generic: 新建任务
+- button "刷新":
+  - generic: 刷新
+- generic: 按间隔周期导出报表/订阅推送（复用导出服务）
+- table:
+  - rowgroup:
+    - row "名称 数据源 格式 间隔 启用 上次执行 状态 下次执行 操作":
+      - columnheader "名称":
+        - generic: 名称
+      - columnheader "数据源":
+        - generic: 数据源
+      - columnheader "格式":
+        - generic: 格式
+      - columnheader "间隔":
+        - generic: 间隔
+      - columnheader "启用":
+        - generic: 启用
+      - columnheader "上次执行":
+        - generic: 上次执行
+      - columnheader "状态":
+        - generic: 状态
+      - columnheader "下次执行":
+        - generic: 下次执行
+      - columnheader "操作":
+        - generic: 操作
+  - rowgroup:
+    - row "E2E定时导出测试 本地演示库 (SQLite) csv 1 天 2026/8/13 21:34:18 success 2026/8/14 21:34:18 执行 下载 删除":
+      - cell "E2E定时导出测试"
+      - cell "本地演示库 (SQLite)"
+      - cell "csv"
+      - cell "1 天"
+      - cell:
+        - switch [checked]
+      - cell "2026/8/13 21:34:18"
+      - cell "success":
+        - generic: success
+      - cell "2026/8/14 21:34:18"
+      - cell "执行 下载 删除":
+        - button "执行" [active]:
+          - generic: 执行
+        - button "下载":
+          - generic: 下载
+        - button "删除":
+          - generic: 删除
+- generic: 导出完成

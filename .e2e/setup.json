@@ -1,0 +1,13 @@
+{
+  "step": "runtime-ready",
+  "hasAgent": true,
+  "hasBrowser": true,
+  "browserKeys": [],
+  "browserKeys2": [
+    "browserId",
+    "capabilities",
+    "tabs",
+    "user"
+  ],
+  "docLen": 31518
+}

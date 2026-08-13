@@ -203,6 +203,7 @@ async def seed_all(db: AsyncSession) -> None:
         "editor_font_size": "14",
         "editor_tab_size": "4",
         "autocomplete": "true",
+        "audit_retention_days": "180",
     }.items():
         setting = (await db.execute(select(Setting).where(Setting.key == key))).scalar_one_or_none()
         if setting is None:

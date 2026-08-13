@@ -156,6 +156,16 @@ export const useAgentStore = defineStore("agent", {
         case "thought":
           assistant.content = String(event.content || "");
           break;
+        case "tool":
+          this.items.push({
+            role: "assistant",
+            type: "tool",
+            content: `🔧 ${String(event.tool || "工具")}：${String(event.content || "")}`,
+          });
+          break;
+        case "retry":
+          this.items.push({ role: "assistant", type: "tool", content: `🔄 ${String(event.content || "")}` });
+          break;
         case "sql": {
           const sql = String(event.content || "");
           assistant.sql = sql;

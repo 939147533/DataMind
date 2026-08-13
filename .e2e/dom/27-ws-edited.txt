@@ -1,0 +1,98 @@
+- complementary:
+  - generic: 🗄️
+  - generic: 数据库 Agent
+  - menu:
+    - menuitem "智能查询":
+      - img: 🤖
+      - text: 智能查询
+    - menuitem "SQL 工作台":
+      - img: 🖥️
+      - text: SQL 工作台
+    - menuitem "连接管理":
+      - img: 🔌
+      - text: 连接管理
+    - menuitem "可视化报表":
+      - img: 📊
+      - text: 可视化报表
+    - menuitem "用户管理":
+      - img: 👥
+      - text: 用户管理
+    - menuitem "角色管理":
+      - img: 🛡️
+      - text: 角色管理
+    - menuitem "系统设置":
+      - img: ⚙️
+      - text: 系统设置
+    - menuitem "审计日志":
+      - img: 📜
+      - text: 审计日志
+    - menuitem "运维监控":
+      - img: 📈
+      - text: 运维监控
+- generic: SQL 工作台
+- button "🌙":
+  - generic: 🌙
+- button "👤 管理员":
+  - generic: 👤
+  - generic: 管理员
+- complementary:
+  - generic "本地演示库 (SQLite)":
+    - generic: 本地演示库 (SQLite)
+  - img "loading":
+  - generic: 对象
+  - generic: 历史
+  - generic: 收藏
+  - generic: 📌 收藏
+  - generic: 📁 表
+  - generic: 👁️ 视图
+  - generic: ƒ 函数
+  - generic: ⚙️ 存储过程
+  - generic: 🔔 触发器
+  - generic: 🔢 序列
+- generic: 查询 1
+- button "close":
+- button "＋ 新建":
+  - generic: ＋ 新建
+- button "▶ 执行":
+  - generic: ▶ 执行
+- button "格式化":
+  - generic: 格式化
+- button "收藏":
+  - generic: 收藏
+- button "导出库文档 ▾":
+  - generic: 导出库文档 ▾
+- generic: Selection deleted
+- generic: "1"
+- textbox [active]:
+  - generic: SELECT * FROM users LIMIT 50;
+- generic: DML
+- button "CSV":
+  - generic: CSV
+- button "Excel":
+  - generic: Excel
+- button "JSON":
+  - generic: JSON
+- generic: 无结果
+- generic: 🤖 AI Agent
+- generic: 本地演示库 (SQLite)
+- button "—":
+  - generic: —
+- generic: 选择对话
+- img "loading":
+- button "新建":
+  - generic: 新建
+- button "删除":
+  - generic: 删除
+- generic: 模型
+- generic "openai · agnes-2.5-flash":
+  - generic: openai · agnes-2.5-flash
+- img "loading":
+- paragraph: 👋 你好，我是数据库 Agent
+- paragraph:
+  - text: 可以用自然语言查询数据，例如：
+  - text: 「统计各订单状态的数量并按状态分组」
+- textbox "输入自然语言查询，Enter 发送，Shift+Enter 换行"
+- generic: 输入自然语言查询，Enter 发送，Shift+Enter 换行
+- generic: 模型将自动生成并执行 SQL
+- button "发送" [disabled]:
+  - generic: 发送

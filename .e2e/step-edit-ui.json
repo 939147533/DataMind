@@ -1,0 +1,9 @@
+{
+  "step": "check-edit-ui",
+  "ok": true,
+  "editHint": 0,
+  "addRowBtn": 0,
+  "delBtns": 1,
+  "hasOpsCol": 1,
+  "cellEditSpans": 0
+}

@@ -1,0 +1,245 @@
+- complementary:
+  - generic: 🗄️
+  - generic: 数据库 Agent
+  - menu:
+    - menuitem "智能查询":
+      - img: 🤖
+      - text: 智能查询
+    - menuitem "SQL 工作台":
+      - img: 🖥️
+      - text: SQL 工作台
+    - menuitem "连接管理":
+      - img: 🔌
+      - text: 连接管理
+    - menuitem "可视化报表":
+      - img: 📊
+      - text: 可视化报表
+    - menuitem "用户管理":
+      - img: 👥
+      - text: 用户管理
+    - menuitem "角色管理":
+      - img: 🛡️
+      - text: 角色管理
+    - menuitem "系统设置":
+      - img: ⚙️
+      - text: 系统设置
+    - menuitem "审计日志":
+      - img: 📜
+      - text: 审计日志
+    - menuitem "运维监控":
+      - img: 📈
+      - text: 运维监控
+- generic: SQL 工作台
+- button "🌙":
+  - generic: 🌙
+- button "👤 管理员":
+  - generic: 👤
+  - generic: 管理员
+- complementary:
+  - generic "本地演示库 (SQLite)":
+    - generic: 本地演示库 (SQLite)
+  - img "loading":
+  - generic: 对象
+  - generic: 历史
+  - generic: 收藏
+  - generic: 📌 收藏
+  - generic: 📁 表
+  - generic: 👁️ 视图
+  - generic: ƒ 函数
+  - generic: ⚙️ 存储过程
+  - generic: 🔔 触发器
+  - generic: 🔢 序列
+- generic: 查询 1
+- button "close":
+- button "＋ 新建":
+  - generic: ＋ 新建
+- button "▶ 执行" [active]:
+  - generic: ▶ 执行
+- button "格式化":
+  - generic: 格式化
+- button "收藏":
+  - generic: 收藏
+- button "导出库文档 ▾":
+  - generic: 导出库文档 ▾
+- generic: "1"
+- textbox:
+  - generic: SELECT * FROM users LIMIT 50;
+- generic: READ
+- generic: 共 9 行
+- generic: 影响 0 行
+- generic: 耗时 2 ms
+- generic: 双击单元格编辑
+- button "＋ 新增行":
+  - generic: ＋ 新增行
+- button "CSV":
+  - generic: CSV
+- button "Excel":
+  - generic: Excel
+- button "JSON":
+  - generic: JSON
+- table:
+  - rowgroup:
+    - row "id username email age created_at 操作":
+      - columnheader "id":
+        - generic: id
+      - columnheader "username":
+        - generic: username
+      - columnheader "email":
+        - generic: email
+      - columnheader "age":
+        - generic: age
+      - columnheader "created_at":
+        - generic: created_at
+      - columnheader "操作":
+        - generic: 操作
+- table:
+  - rowgroup:
+    - row "1 alice alice@example.com 28 2026-01-05 09:12:00 删除":
+      - cell "1":
+        - generic: "1"
+      - cell "alice":
+        - generic: alice
+      - cell "alice@example.com":
+        - generic: alice@example.com
+      - cell "28":
+        - generic: "28"
+      - cell "2026-01-05 09:12:00":
+        - generic: 2026-01-05 09:12:00
+      - cell "删除":
+        - button "删除":
+          - generic: 删除
+    - row "2 bob bob@example.com 34 2026-01-12 14:30:00 删除":
+      - cell "2":
+        - generic: "2"
+      - cell "bob":
+        - generic: bob
+      - cell "bob@example.com":
+        - generic: bob@example.com
+      - cell "34":
+        - generic: "34"
+      - cell "2026-01-12 14:30:00":
+        - generic: 2026-01-12 14:30:00
+      - cell "删除":
+        - button "删除":
+          - generic: 删除
+    - row "3 carol carol@example.com 25 2026-02-03 10:00:00 删除":
+      - cell "3":
+        - generic: "3"
+      - cell "carol":
+        - generic: carol
+      - cell "carol@example.com":
+        - generic: carol@example.com
+      - cell "25":
+        - generic: "25"
+      - cell "2026-02-03 10:00:00":
+        - generic: 2026-02-03 10:00:00
+      - cell "删除":
+        - button "删除":
+          - generic: 删除
+    - row "4 dave dave@example.com 41 2026-02-15 16:45:00 删除":
+      - cell "4":
+        - generic: "4"
+      - cell "dave":
+        - generic: dave
+      - cell "dave@example.com":
+        - generic: dave@example.com
+      - cell "41":
+        - generic: "41"
+      - cell "2026-02-15 16:45:00":
+        - generic: 2026-02-15 16:45:00
+      - cell "删除":
+        - button "删除":
+          - generic: 删除
+    - row "5 eve eve@example.com 30 2026-03-02 08:20:00 删除":
+      - cell "5":
+        - generic: "5"
+      - cell "eve":
+        - generic: eve
+      - cell "eve@example.com":
+        - generic: eve@example.com
+      - cell "30":
+        - generic: "30"
+      - cell "2026-03-02 08:20:00":
+        - generic: 2026-03-02 08:20:00
+      - cell "删除":
+        - button "删除":
+          - generic: 删除
+    - row "6 frank frank@example.com 22 2026-03-18 11:05:00 删除":
+      - cell "6":
+        - generic: "6"
+      - cell "frank":
+        - generic: frank
+      - cell "frank@example.com":
+        - generic: frank@example.com
+      - cell "22":
+        - generic: "22"
+      - cell "2026-03-18 11:05:00":
+        - generic: 2026-03-18 11:05:00
+      - cell "删除":
+        - button "删除":
+          - generic: 删除
+    - row "7 grace grace@example.com 37 2026-04-01 13:40:00 删除":
+      - cell "7":
+        - generic: "7"
+      - cell "grace":
+        - generic: grace
+      - cell "grace@example.com":
+        - generic: grace@example.com
+      - cell "37":
+        - generic: "37"
+      - cell "2026-04-01 13:40:00":
+        - generic: 2026-04-01 13:40:00
+      - cell "删除":
+        - button "删除":
+          - generic: 删除
+    - row "8 heidi heidi@example.com 29 2026-04-20 09:55:00 删除":
+      - cell "8":
+        - generic: "8"
+      - cell "heidi":
+        - generic: heidi
+      - cell "heidi@example.com":
+        - generic: heidi@example.com
+      - cell "29":
+        - generic: "29"
+      - cell "2026-04-20 09:55:00":
+        - generic: 2026-04-20 09:55:00
+      - cell "删除":
+        - button "删除":
+          - generic: 删除
+    - row "9 e2e_test_user e2e_test@test.com 99 2026-08-13 00:00:00 删除":
+      - cell "9":
+        - generic: "9"
+      - cell "e2e_test_user":
+        - generic: e2e_test_user
+      - cell "e2e_test@test.com":
+        - generic: e2e_test@test.com
+      - cell "99":
+        - generic: "99"
+      - cell "2026-08-13 00:00:00":
+        - generic: 2026-08-13 00:00:00
+      - cell "删除":
+        - button "删除":
+          - generic: 删除
+- generic: 🤖 AI Agent
+- generic: 本地演示库 (SQLite)
+- button "—":
+  - generic: —
+- generic: 选择对话
+- img "loading":
+- button "新建":
+  - generic: 新建
+- button "删除":
+  - generic: 删除
+- generic: 模型
+- generic "openai · agnes-2.5-flash":
+  - generic: openai · agnes-2.5-flash
+- img "loading":
+- paragraph: 👋 你好，我是数据库 Agent
+- paragraph:
+  - text: 可以用自然语言查询数据，例如：
+  - text: 「统计各订单状态的数量并按状态分组」
+- textbox "输入自然语言查询，Enter 发送，Shift+Enter 换行"
+- generic: 输入自然语言查询，Enter 发送，Shift+Enter 换行
+- generic: 模型将自动生成并执行 SQL
+- button "发送" [disabled]:
+  - generic: 发送

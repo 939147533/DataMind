@@ -293,3 +293,60 @@ class AIConfigTestRequest(BaseModel):
     model_name: Optional[str] = None
     max_tokens: Optional[int] = None
     temperature: Optional[float] = None
+
+
+# ---------- SQL 收藏/模板 ----------
+class SavedQueryCreate(BaseModel):
+    name: str
+    sql_text: str = ""
+    datasource_id: Optional[int] = None
+    description: str = ""
+
+
+class SavedQueryUpdate(BaseModel):
+    name: Optional[str] = None
+    sql_text: Optional[str] = None
+    datasource_id: Optional[int] = None
+    description: Optional[str] = None
+
+
+# ---------- 表数据编辑 ----------
+class TableDataUpdateRequest(BaseModel):
+    schema_name: str = ""
+    set_values: dict[str, Any] = Field(default_factory=dict)
+    where: dict[str, Any] = Field(default_factory=dict)
+
+
+class TableDataInsertRequest(BaseModel):
+    schema_name: str = ""
+    values: dict[str, Any] = Field(default_factory=dict)
+
+
+class TableDataDeleteRequest(BaseModel):
+    schema_name: str = ""
+    where: dict[str, Any] = Field(default_factory=dict)
+
+
+# ---------- 结构对比 ----------
+class SchemaCompareRequest(BaseModel):
+    source_ds_id: int
+    target_ds_id: int
+    schema_name: str = ""
+
+
+# ---------- 定时导出 ----------
+class ScheduleCreate(BaseModel):
+    name: str
+    datasource_id: int
+    sql_text: str = ""
+    format: str = "csv"
+    interval_minutes: int = 1440
+    enabled: bool = True
+
+
+class ScheduleUpdate(BaseModel):
+    name: Optional[str] = None
+    sql_text: Optional[str] = None
+    format: Optional[str] = None
+    interval_minutes: Optional[int] = None
+    enabled: Optional[bool] = None

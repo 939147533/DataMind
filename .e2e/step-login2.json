@@ -1,0 +1,6 @@
+{
+  "step": "login",
+  "ok": true,
+  "url": "http://localhost:5174/login",
+  "title": "数据库 Agent Web 应用"
+}

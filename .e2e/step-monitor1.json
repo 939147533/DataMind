@@ -1,0 +1,5 @@
+{
+  "step": "monitor-open",
+  "ok": true,
+  "url": "http://localhost:5174/monitor"
+}

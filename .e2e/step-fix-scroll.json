@@ -1,0 +1,23 @@
+{
+  "err": null,
+  "result": {
+    "agentPanel": {
+      "h": 413,
+      "w": 397,
+      "x": 884,
+      "y": 56
+    },
+    "docScrollX": 0,
+    "innerWidth": 1280,
+    "opsHeader": {
+      "w": 90,
+      "x": 1603
+    },
+    "resultBox": {
+      "clientWidth": 404,
+      "overflowX": "auto",
+      "scrollLeft": 0,
+      "scrollWidth": 404
+    }
+  }
+}

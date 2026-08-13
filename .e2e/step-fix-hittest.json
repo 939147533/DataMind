@@ -1,0 +1,136 @@
+{
+  "err": null,
+  "result": {
+    "hits": [
+      {
+        "btnText": "删除",
+        "center": {
+          "x": 1623,
+          "y": 569
+        },
+        "hitEl": "null",
+        "isButton": false,
+        "rect": {
+          "h": 12,
+          "w": 24,
+          "x": 1611,
+          "y": 563
+        },
+        "rowIdx": 0
+      },
+      {
+        "btnText": "删除",
+        "center": {
+          "x": 1623,
+          "y": 608
+        },
+        "hitEl": "null",
+        "isButton": false,
+        "rect": {
+          "h": 12,
+          "w": 24,
+          "x": 1611,
+          "y": 602
+        },
+        "rowIdx": 1
+      },
+      {
+        "btnText": "删除",
+        "center": {
+          "x": 1623,
+          "y": 646
+        },
+        "hitEl": "null",
+        "isButton": false,
+        "rect": {
+          "h": 12,
+          "w": 24,
+          "x": 1611,
+          "y": 640
+        },
+        "rowIdx": 2
+      },
+      {
+        "btnText": "删除",
+        "center": {
+          "x": 1623,
+          "y": 684
+        },
+        "hitEl": "null",
+        "isButton": false,
+        "rect": {
+          "h": 12,
+          "w": 24,
+          "x": 1611,
+          "y": 678
+        },
+        "rowIdx": 3
+      },
+      {
+        "btnText": "删除",
+        "center": {
+          "x": 1623,
+          "y": 723
+        },
+        "hitEl": "null",
+        "isButton": false,
+        "rect": {
+          "h": 12,
+          "w": 24,
+          "x": 1611,
+          "y": 717
+        },
+        "rowIdx": 4
+      },
+      {
+        "btnText": "删除",
+        "center": {
+          "x": 1623,
+          "y": 761
+        },
+        "hitEl": "null",
+        "isButton": false,
+        "rect": {
+          "h": 12,
+          "w": 24,
+          "x": 1611,
+          "y": 755
+        },
+        "rowIdx": 5
+      },
+      {
+        "btnText": "删除",
+        "center": {
+          "x": 1623,
+          "y": 800
+        },
+        "hitEl": "null",
+        "isButton": false,
+        "rect": {
+          "h": 12,
+          "w": 24,
+          "x": 1611,
+          "y": 794
+        },
+        "rowIdx": 6
+      },
+      {
+        "btnText": "删除",
+        "center": {
+          "x": 1623,
+          "y": 838
+        },
+        "hitEl": "null",
+        "isButton": false,
+        "rect": {
+          "h": 12,
+          "w": 24,
+          "x": 1611,
+          "y": 832
+        },
+        "rowIdx": 7
+      }
+    ],
+    "rowCount": 8
+  }
+}

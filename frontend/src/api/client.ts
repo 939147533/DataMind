@@ -58,3 +58,23 @@ export async function downloadFile(url: string, body: unknown, filename: string)
   a.click();
   URL.revokeObjectURL(a.href);
 }
+
+export async function downloadGet(url: string, filename: string) {
+  const resp = await fetch(url, { credentials: "include" });
+  if (!resp.ok) {
+    let message = `下载失败 (${resp.status})`;
+    try {
+      const j = await resp.json();
+      if (j.message) message = j.message;
+    } catch {
+      /* ignore */
+    }
+    throw new ApiError(resp.status, message);
+  }
+  const blob = await resp.blob();
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}

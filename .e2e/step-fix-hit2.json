@@ -1,0 +1,68 @@
+{
+  "err": null,
+  "result": {
+    "btnComputed": {
+      "display": "inline-flex",
+      "pointerEvents": "auto",
+      "position": "relative",
+      "visibility": "visible",
+      "zIndex": "auto"
+    },
+    "btnRect": {
+      "h": 12,
+      "w": 24,
+      "x": 861,
+      "y": 563
+    },
+    "btnRect2": {
+      "cellRect": {
+        "h": 38,
+        "w": 90,
+        "x": 853,
+        "y": 550
+      }
+    },
+    "center": {
+      "x": 873,
+      "y": 569
+    },
+    "hitChain": [
+      {
+        "cls": "result-box",
+        "id": "",
+        "tag": "DIV"
+      },
+      {
+        "cls": "n-layout-scroll-container",
+        "id": "",
+        "tag": "DIV"
+      },
+      {
+        "cls": "n-layout n-layout--static-positioned main-col",
+        "id": "",
+        "tag": "DIV"
+      },
+      {
+        "cls": "n-layout-scroll-container",
+        "id": "",
+        "tag": "DIV"
+      },
+      {
+        "cls": "n-layout n-layout--static-positioned",
+        "id": "",
+        "tag": "DIV"
+      },
+      {
+        "cls": "workspace-view",
+        "id": "",
+        "tag": "DIV"
+      }
+    ],
+    "inPanel": false,
+    "inTable": false,
+    "panelRect": {
+      "w": 397,
+      "x": 884
+    }
+  }
+}

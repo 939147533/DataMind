@@ -1,0 +1,10 @@
+{
+  "ts": "2026-08-13T13:51:14.009Z",
+  "modalOpen": 1,
+  "newVal": "alice_e2e",
+  "confirmModal": 2,
+  "confirmText": "|写操作确认写操作确认将影响 1 行数据DML · warning取消确认执行",
+  "confirmBtnCount": 1,
+  "firstCellAfter": "alice_e2e",
+  "rowsCount": 1
+}

@@ -9,6 +9,7 @@ export const useSettingsStore = defineStore("settings", {
     editor_font_size: "14",
     editor_tab_size: "4",
     autocomplete: "true",
+    audit_retention_days: "180",
     loaded: false,
   }),
   getters: {
@@ -24,6 +25,7 @@ export const useSettingsStore = defineStore("settings", {
         this.editor_font_size = v.editor_font_size || "14";
         this.editor_tab_size = v.editor_tab_size || "4";
         this.autocomplete = v.autocomplete || "true";
+        this.audit_retention_days = v.audit_retention_days || "180";
         this.loaded = true;
         this.applyTheme();
       } catch {
@@ -51,6 +53,7 @@ export const useSettingsStore = defineStore("settings", {
           editor_font_size: this.editor_font_size,
           editor_tab_size: this.editor_tab_size,
           autocomplete: this.autocomplete,
+          audit_retention_days: this.audit_retention_days,
         });
       } catch {
         /* ignore */

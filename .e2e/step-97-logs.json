@@ -1,0 +1,14 @@
+[
+  {
+    "level": "debug",
+    "message": "[vite] connecting...",
+    "timestamp": "2026-08-13T13:55:40.035Z",
+    "url": "http://localhost:5174/@vite/client"
+  },
+  {
+    "level": "debug",
+    "message": "[vite] connected.",
+    "timestamp": "2026-08-13T13:55:40.353Z",
+    "url": "http://localhost:5174/@vite/client"
+  }
+]

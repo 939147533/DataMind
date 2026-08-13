@@ -1,0 +1,109 @@
+- complementary:
+  - generic: 🗄️
+  - generic: 数据库 Agent
+  - menu:
+    - menuitem "智能查询":
+      - img: 🤖
+      - text: 智能查询
+    - menuitem "SQL 工作台":
+      - img: 🖥️
+      - text: SQL 工作台
+    - menuitem "连接管理":
+      - img: 🔌
+      - text: 连接管理
+    - menuitem "可视化报表":
+      - img: 📊
+      - text: 可视化报表
+    - menuitem "用户管理":
+      - img: 👥
+      - text: 用户管理
+    - menuitem "角色管理":
+      - img: 🛡️
+      - text: 角色管理
+    - menuitem "系统设置":
+      - img: ⚙️
+      - text: 系统设置
+    - menuitem "审计日志":
+      - img: 📜
+      - text: 审计日志
+    - menuitem "运维监控":
+      - img: 📈
+      - text: 运维监控
+- generic: 运维监控
+- button "🌙":
+  - generic: 🌙
+- button "👤 管理员":
+  - generic: 👤
+  - generic: 管理员
+- generic: 连接概览
+- generic: 慢查询
+- generic: 表结构对比
+- generic: 定时任务
+- button "刷新":
+  - generic: 刷新
+- generic: 基于执行历史统计（query_history）
+- table:
+  - rowgroup:
+    - 'row "累计查询 : 133 今日查询 : 39 数据源数 : 4"':
+      - 'cell "累计查询 : 133"':
+        - text: 累计查询
+        - generic: ":"
+        - generic: "133"
+      - 'cell "今日查询 : 39"':
+        - text: 今日查询
+        - generic: ":"
+        - generic: "39"
+      - 'cell "数据源数 : 4"':
+        - text: 数据源数
+        - generic: ":"
+        - generic: "4"
+- table:
+  - rowgroup:
+    - row "数据源 类型 查询次数 平均耗时(ms) 最大耗时(ms) 成功率 最近执行":
+      - columnheader "数据源":
+        - generic: 数据源
+      - columnheader "类型":
+        - generic: 类型
+      - columnheader "查询次数":
+        - generic: 查询次数
+      - columnheader "平均耗时(ms)":
+        - generic: 平均耗时(ms)
+      - columnheader "最大耗时(ms)":
+        - generic: 最大耗时(ms)
+      - columnheader "成功率":
+        - generic: 成功率
+      - columnheader "最近执行":
+        - generic: 最近执行
+  - rowgroup:
+    - row "本地演示库 (SQLite) sqlite 49 2.2 9 95.9% 2026/8/13 18:27:42":
+      - cell "本地演示库 (SQLite)"
+      - cell "sqlite"
+      - cell "49"
+      - cell "2.2"
+      - cell "9"
+      - cell "95.9%"
+      - cell "2026/8/13 18:27:42"
+    - row "mac_Oracle oracle 7 5238.1 20010 57.1% 2026/8/12 23:24:49":
+      - cell "mac_Oracle"
+      - cell "oracle"
+      - cell "7"
+      - cell "5238.1"
+      - cell "20010"
+      - cell "57.1%"
+      - cell "2026/8/12 23:24:49"
+    - row "mysql mysql 17 95.5 391 64.7% 2026/8/13 18:28:24":
+      - cell "mysql"
+      - cell "mysql"
+      - cell "17"
+      - cell "95.5"
+      - cell "391"
+      - cell "64.7%"
+      - cell "2026/8/13 18:28:24"
+    - row "oracle-free oracle 60 168.9 2690 58.3% 2026/8/13 19:36:01":
+      - cell "oracle-free"
+      - cell "oracle"
+      - cell "60"
+      - cell "168.9"
+      - cell "2690"
+      - cell "58.3%"
+      - cell "2026/8/13 19:36:01"

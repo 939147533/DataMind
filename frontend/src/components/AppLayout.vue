@@ -52,6 +52,7 @@ const menuItems = [
   { label: "角色管理", key: "roles", permission: "roles", icon: () => h(NIcon, null, { default: () => "🛡️" }) },
   { label: "系统设置", key: "settings", permission: "settings", icon: () => h(NIcon, null, { default: () => "⚙️" }) },
   { label: "审计日志", key: "audit", permission: "audit", icon: () => h(NIcon, null, { default: () => "📜" }) },
+  { label: "运维监控", key: "monitor", permission: "monitor", icon: () => h(NIcon, null, { default: () => "📈" }) },
 ];
 const menuOptions = computed(() =>
   menuItems.filter((m) => auth.hasPermission(m.permission)).map((m) => ({ label: m.label, key: m.key, icon: m.icon })),
@@ -68,6 +69,7 @@ const pageTitle = computed(() => {
     roles: "角色管理",
     settings: "系统设置",
     audit: "审计日志",
+    monitor: "运维监控",
   };
   return map[String(route.name)] || "数据库 Agent";
 });

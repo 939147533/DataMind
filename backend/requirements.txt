@@ -22,4 +22,5 @@ psycopg2-binary>=2.9
 
 sshtunnel>=0.4
 paramiko>=3.4
+prometheus-client>=0.20
 

@@ -1,0 +1,5 @@
+{
+  "step": "monitor-reload",
+  "ok": true,
+  "url": "http://localhost:5174/monitor"
+}

@@ -1,0 +1,16 @@
+{
+  "ts": "2026-08-13T13:51:44.174Z",
+  "modalCount": 3,
+  "modalText": "||新增行username留空表示 NULLemail留空表示 NULLage留空表示 NULLcreated_at留空表示 NULL取消保存",
+  "inputCount": 4,
+  "confirmText": "|写操作确认写操作确认（无法预估影响行数：影响行数预估失败: NOT NULL constraint failed: users.created_at）DML · warning取消确认执行|",
+  "confirmBtnCount": 1,
+  "rowsCount": 0,
+  "hasNewUser": false,
+  "lastRowVals": [
+    "heidi",
+    "heidi@example.com",
+    "29",
+    "2026-04-20 09:55:00"
+  ]
+}

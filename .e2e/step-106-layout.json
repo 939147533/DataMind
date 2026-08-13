@@ -1,0 +1,39 @@
+{
+  "btn": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "h": 12,
+    "opacity": "1",
+    "pointerEvents": "auto",
+    "position": "relative",
+    "w": 24,
+    "x": 1243,
+    "y": 378.8984375,
+    "zIndex": "auto"
+  },
+  "innerH": 720,
+  "innerW": 1280,
+  "panel": {
+    "bg": "rgb(16, 16, 20)",
+    "h": 442,
+    "opacity": "1",
+    "pointerEvents": "auto",
+    "position": "fixed",
+    "w": 382,
+    "x": 882,
+    "y": 262,
+    "zIndex": "50"
+  },
+  "scrollX": 0,
+  "scrollY": 0,
+  "ws": {
+    "bg": "rgba(0, 0, 0, 0)",
+    "h": 735.984375,
+    "opacity": "1",
+    "pointerEvents": "auto",
+    "position": "static",
+    "w": 1080,
+    "x": 200,
+    "y": -16,
+    "zIndex": "auto"
+  }
+}

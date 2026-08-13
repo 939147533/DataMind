@@ -24,6 +24,7 @@ PERMISSIONS = [
     {"code": "audit", "name": "审计日志", "group": "系统", "description": "查看操作审计日志"},
     {"code": "users", "name": "用户管理", "group": "系统", "description": "管理用户账号"},
     {"code": "roles", "name": "角色管理", "group": "系统", "description": "管理角色与功能权限"},
+    {"code": "monitor", "name": "运维监控", "group": "系统", "description": "查看慢查询、连接概览与表结构对比"},
 ]
 PERMISSION_NAMES = {p["code"]: p["name"] for p in PERMISSIONS}
 
@@ -39,7 +40,7 @@ BUILTIN_ROLES = [
         "code": "tech_manager",
         "name": "技术管理",
         "description": "技术类功能全面管理：SQL 工作台（含写操作与结构变更）、连接、报表、系统设置、审计",
-        "permissions": ["workspace", "ai_query", "sql_write", "sql_ddl", "agent", "connections", "connections_manage", "reports", "reports_manage", "settings", "audit"],
+        "permissions": ["workspace", "ai_query", "sql_write", "sql_ddl", "agent", "connections", "connections_manage", "reports", "reports_manage", "settings", "audit", "monitor"],
     },
     {
         "code": "tech_query",

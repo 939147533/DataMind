@@ -1,0 +1,24 @@
+{
+  "domCua": [
+    "constructor",
+    "get_visible_dom",
+    "click",
+    "double_click",
+    "scroll",
+    "type",
+    "keypress",
+    "downloadMedia"
+  ],
+  "cua": [],
+  "tab": [
+    "id",
+    "playwright",
+    "dom_cua",
+    "cua",
+    "content",
+    "clipboard",
+    "dev",
+    "capabilities"
+  ],
+  "playwright": []
+}

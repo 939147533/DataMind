@@ -1,0 +1,97 @@
+- complementary:
+  - generic: 🗄️
+  - generic: 数据库 Agent
+  - menu:
+    - menuitem "智能查询":
+      - img: 🤖
+      - text: 智能查询
+    - menuitem "SQL 工作台":
+      - img: 🖥️
+      - text: SQL 工作台
+    - menuitem "连接管理":
+      - img: 🔌
+      - text: 连接管理
+    - menuitem "可视化报表":
+      - img: 📊
+      - text: 可视化报表
+    - menuitem "用户管理":
+      - img: 👥
+      - text: 用户管理
+    - menuitem "角色管理":
+      - img: 🛡️
+      - text: 角色管理
+    - menuitem "系统设置":
+      - img: ⚙️
+      - text: 系统设置
+    - menuitem "审计日志":
+      - img: 📜
+      - text: 审计日志
+    - menuitem "运维监控":
+      - img: 📈
+      - text: 运维监控
+- generic: 运维监控
+- button "🌙":
+  - generic: 🌙
+- button "👤 管理员":
+  - generic: 👤
+  - generic: 管理员
+- generic: 连接概览
+- generic: 慢查询
+- generic: 表结构对比
+- generic: 定时任务
+- generic: 耗时 ≥
+- textbox "请输入": "1000"
+- button:
+- button:
+- generic: ms
+- button "查询":
+  - generic: 查询
+- table:
+  - rowgroup:
+    - row "数据源 耗时(ms) 行数 状态 SQL 时间":
+      - columnheader "数据源":
+        - generic: 数据源
+      - columnheader "耗时(ms)":
+        - generic: 耗时(ms)
+      - columnheader "行数":
+        - generic: 行数
+      - columnheader "状态":
+        - generic: 状态
+      - columnheader "SQL":
+        - generic: SQL
+      - columnheader "时间":
+        - generic: 时间
+- table:
+  - rowgroup:
+    - row "mac_Oracle 20010 0 failed SELECT * FROM employees 2026/8/6 16:07:18":
+      - cell "mac_Oracle"
+      - cell "20010"
+      - cell "0"
+      - cell "failed"
+      - cell "SELECT * FROM employees":
+        - generic: SELECT * FROM employees
+      - cell "2026/8/6 16:07:18"
+    - row "mac_Oracle 8790 10 success SELECT * FROM employees 2026/8/6 16:03:20":
+      - cell "mac_Oracle"
+      - cell "8790"
+      - cell "10"
+      - cell "success"
+      - cell "SELECT * FROM employees":
+        - generic: SELECT * FROM employees
+      - cell "2026/8/6 16:03:20"
+    - row "mac_Oracle 7403 10 success SELECT * FROM employees 2026/8/6 16:03:02":
+      - cell "mac_Oracle"
+      - cell "7403"
+      - cell "10"
+      - cell "success"
+      - cell "SELECT * FROM employees":
+        - generic: SELECT * FROM employees
+      - cell "2026/8/6 16:03:02"
+    - row "oracle-free 2690 100000 success SELECT * FROM \"T_TRANS_LOG\"; 2026/8/12 23:25:22":
+      - cell "oracle-free"
+      - cell "2690"
+      - cell "100000"
+      - cell "success"
+      - cell "SELECT * FROM \"T_TRANS_LOG\";":
+        - generic: SELECT * FROM "T_TRANS_LOG";
+      - cell "2026/8/12 23:25:22"

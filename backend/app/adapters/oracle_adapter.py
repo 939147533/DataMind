@@ -156,6 +156,22 @@ class OracleAdapter(BaseDBAdapter):
         )
         return [r["name"] for r in rows]
 
+    def get_function_ddl(self, name: str, schema: str = "") -> str:
+        owner = (schema or self.conn.username).upper()
+        rows = self._query(
+            "SELECT dbms_metadata.get_ddl('FUNCTION', :name, :owner) AS ddl FROM dual",
+            {"name": name.upper(), "owner": owner},
+        )
+        return rows[0]["ddl"] if rows else ""
+
+    def get_procedure_ddl(self, name: str, schema: str = "") -> str:
+        owner = (schema or self.conn.username).upper()
+        rows = self._query(
+            "SELECT dbms_metadata.get_ddl('PROCEDURE', :name, :owner) AS ddl FROM dual",
+            {"name": name.upper(), "owner": owner},
+        )
+        return rows[0]["ddl"] if rows else ""
+
     def get_triggers(self, schema: str = "") -> list[dict]:
         owner = (schema or self.conn.username).upper()
         rows = self._query(

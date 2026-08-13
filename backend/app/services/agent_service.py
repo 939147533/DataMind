@@ -10,7 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..adapters import AdapterError
-from ..models import AIConfig, AgentMessage, AgentSession, AuditLog, DataSource
+from ..models import AIConfig, AgentMessage, AgentSession, AuditLog, DataSource, QueryHistory
 from .llm_providers import LLMError, build_messages, get_llm_provider
 from .sql_service import (
     MAX_ROWS_PER_PAGE,
@@ -25,13 +25,22 @@ SYSTEM_TEMPLATE = """你是数据库 Agent 助手，运行在数据库查询工�
 {dialect_hint}
 当前数据库 Schema 摘要：
 {schema}
+{few_shots}
+当 Schema 摘要不足以回答时，可先调用工具获取更多信息。工具调用输出格式（JSON）：
+{{"tool": "list_tables|get_columns|sample_data|explain", "tool_params": {{"table": "表名", "schema": "Schema名", "sql": "SQL", "limit": 5}}}}
+工具说明：
+- list_tables：列出数据表；tool_params 可选 schema
+- get_columns：查看表结构；tool_params 需要 table
+- sample_data：采样表数据；tool_params 需要 table，可选 limit（默认 5）
+- explain：查看 SQL 执行计划；tool_params 需要 sql
+工具结果会追加给你，请根据工具结果继续思考，直到最终输出最终 JSON。
 
-请严格输出 JSON（不要包含其他内容、不要使用 Markdown 代码块），格式：
+请严格输出 JSON（不要包含其他内容、不要使用 Markdown 代码块），最终格式：
 {{"thought": "你的推理过程（中文）", "sql": "需要执行的SQL；无需SQL时为空字符串", "answer": "无需SQL时的直接回答（中文）", "chart": "可选：用户要求生成图表时输出图表配置，否则省略该字段"}}
 chart 配置格式：{{"type": "bar|line|pie", "title": "图表标题", "x_column": "X 轴列名", "y_columns": ["数值列1", "数值列2", ...], "aggregation": "none|sum|count|avg|max|min"}}
 规则：
 - 用户要求查询或操作数据时生成 SQL，否则 answer 直接回答
-- SQL 必须针对上述 Schema 中存在的表名与列名，遵循当前数据库方言语法
+- SQL 必须针对 Schema 中存在的表名与列名，遵循当前数据库方言语法
 - 文本枚举列（如状态、类型、渠道）通常存储英文取值（如 SUCCESS/FAIL/PENDING），比较时使用 UPPER(列)=UPPER('值') 或直接使用 Schema 摘要中的枚举值，禁止用中文猜测
 - 查询使用 SELECT；写操作（INSERT/UPDATE/DELETE 或 DDL）也生成完整 SQL，将由系统安全确认后执行
 - 用户要求可视化/图表时，SQL 使用 GROUP BY 聚合查询，并同时输出 chart 配置；单指标可用 y_column，多指标（如笔数和金额）用 y_columns 数组；x_column/y_columns 必须是查询结果中的列名"""
@@ -228,6 +237,81 @@ def _make_title(message: str, max_len: int = 20) -> str:
         return text[:max_len] + "…"
     return text
 
+
+MAX_TOOL_ROUNDS = 3
+TOOL_NAMES = ("list_tables", "get_columns", "sample_data", "explain")
+
+
+async def _load_few_shots(db: AsyncSession, ds_id: int | None, limit: int = 3) -> str:
+    """从执行历史中挑选近期成功的只读 SQL，作为模型 few-shot 风格示例。"""
+    if not ds_id:
+        return ""
+    rows = (
+        await db.execute(
+            select(QueryHistory)
+            .where(QueryHistory.datasource_id == ds_id, QueryHistory.status == "success")
+            .order_by(QueryHistory.id.desc())
+            .limit(60)
+        )
+    ).scalars().all()
+    seen: set[str] = set()
+    examples: list[str] = []
+    for r in rows:
+        sql = (r.sql_text or "").strip()
+        if not sql or sql in seen or len(sql) > 400:
+            continue
+        seen.add(sql)
+        examples.append(sql)
+        if len(examples) >= limit:
+            break
+    if not examples:
+        return ""
+    return "历史成功执行的 SQL 示例（仅供风格参考）：\n" + "\n".join(examples)
+
+
+def _run_tool(ds: DataSource, tool_name: str, params: dict) -> str:
+    """执行 Agent 元数据工具（同步适配器调用，结果转文本）。"""
+    from ..adapters import AdapterError
+
+    adapter = build_adapter(ds)
+    schema = str(params.get("schema") or "").strip()
+    table = str(params.get("table") or "").strip()
+    try:
+        if tool_name == "list_tables":
+            tables = adapter.get_tables(schema)
+            return "数据表列表：" + ("、".join(tables) if tables else "（空）")
+        if tool_name == "get_columns":
+            if not table:
+                return "错误：get_columns 需要 table 参数"
+            cols = adapter.get_table_columns(table, schema)
+            if not cols:
+                return f"表 {table} 不存在或无列信息"
+            lines = [f"{c['name']} {c['data_type']}{' PK' if c.get('primary_key') else ''}" for c in cols]
+            return f"表 {schema + '.' if schema else ''}{table} 列：\n" + "\n".join(lines)
+        if tool_name == "sample_data":
+            if not table:
+                return "错误：sample_data 需要 table 参数"
+            limit = int(params.get("limit") or 5)
+            data = adapter.get_table_data(table, schema, 1, min(max(limit, 1), 20))
+            cols = data.get("columns") or []
+            rows = data.get("rows") or []
+            lines = [" | ".join(str(v) for v in row) for row in rows[: limit]]
+            return f"表 {table} 前 {len(lines)} 行（列：{', '.join(cols)}）：\n" + "\n".join(lines)
+        if tool_name == "explain":
+            sql = str(params.get("sql") or "").strip()
+            if not sql:
+                return "错误：explain 需要 sql 参数"
+            plan = adapter.explain(sql)
+            return "执行计划：\n" + "\n".join(
+                str(r.get("detail") or r) for r in plan[:20]
+            )
+    except AdapterError as exc:
+        return f"工具执行失败：{exc}"
+    except Exception as exc:  # noqa: BLE001
+        return f"工具执行异常：{exc}"
+    return f"未知工具：{tool_name}"
+
+
 async def agent_chat(
     db: AsyncSession,
     session_id: int | None,
@@ -274,6 +358,7 @@ async def agent_chat(
         db_type=schema_info["db_type"],
         dialect_hint=schema_info["dialect_hint"],
         schema=schema_info["schema"],
+        few_shots=await _load_few_shots(db, ds.id if ds else None),
     )
     messages = build_messages(system, history, message)
 
@@ -283,6 +368,35 @@ async def agent_chat(
     except (LLMError, ValueError, json.JSONDecodeError) as exc:
         await _record_audit(db, user_id, "agent_action", message, "AGENT", ds.id if ds else None, "failed", client_ip)
         yield {"type": "error", "content": f"AI 调用失败: {exc}"}
+        yield {"type": "done"}
+        return
+
+    # 工具调用循环：模型可先请求元数据工具，工具结果追加后继续
+    for _round in range(MAX_TOOL_ROUNDS):
+        tool_name = str(parsed.get("tool") or "").strip()
+        if tool_name not in TOOL_NAMES:
+            break
+        if ds is None:
+            yield {"type": "error", "content": "未选择数据源，无法调用工具"}
+            break
+        tool_params = parsed.get("tool_params") or {}
+        tool_result = _run_tool(ds, tool_name, tool_params)
+        yield {"type": "tool", "tool": tool_name, "content": tool_result}
+        messages.append(
+            {
+                "role": "user",
+                "content": f"工具 {tool_name} 返回：\n{tool_result}\n请基于该结果继续（可再次调用工具，或直接输出最终 JSON）。",
+            }
+        )
+        try:
+            raw = await provider.chat(messages, json_mode=True)
+            parsed = _extract_json(raw)
+        except (LLMError, ValueError, json.JSONDecodeError) as exc:
+            yield {"type": "error", "content": f"AI 调用失败: {exc}"}
+            yield {"type": "done"}
+            return
+    else:
+        yield {"type": "error", "content": "工具调用轮次过多，已停止"}
         yield {"type": "done"}
         return
 
@@ -310,10 +424,37 @@ async def agent_chat(
     yield {"type": "sql", "content": sql, "operation_type": op_type, "need_confirm": op_type != "READ"}
 
     if op_type == "READ":
-        try:
-            result = await execute_sql(db, ds, sql, user_id, client_ip, session_id=session.id)
-        except HTTPException as exc:
-            yield {"type": "error", "content": str(exc.detail)}
+        result = None
+        error_detail = ""
+        for attempt in range(3):
+            try:
+                result = await execute_sql(db, ds, sql, user_id, client_ip, session_id=session.id)
+                break
+            except HTTPException as exc:
+                error_detail = str(exc.detail)
+                if attempt >= 2:
+                    break
+                yield {"type": "retry", "content": f"SQL 执行失败（{error_detail}），AI 正在修正重试…"}
+                messages.append(
+                    {
+                        "role": "user",
+                        "content": f"你生成的 SQL 执行失败：{error_detail}\n请修正 SQL 后直接输出最终 JSON（不要再调用工具）。原 SQL：\n{sql}",
+                    }
+                )
+                try:
+                    raw = await provider.chat(messages, json_mode=True)
+                    parsed = _extract_json(raw)
+                except (LLMError, ValueError, json.JSONDecodeError) as exc:
+                    yield {"type": "error", "content": f"AI 修正失败: {exc}"}
+                    yield {"type": "done"}
+                    return
+                new_sql = str(parsed.get("sql") or "").strip()
+                if not new_sql or new_sql == sql:
+                    break
+                sql = new_sql
+                yield {"type": "sql", "content": sql, "operation_type": "READ", "need_confirm": False}
+        if result is None:
+            yield {"type": "error", "content": error_detail or "SQL 执行失败"}
             yield {"type": "done"}
             return
         columns = result.get("columns", [])

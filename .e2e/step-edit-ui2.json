@@ -1,0 +1,15 @@
+{
+  "name": "edit-ui-after-fix",
+  "ts": "2026-08-13T13:46:12.824Z",
+  "url": "http://localhost:5174/workspace",
+  "dsBefore": "选择数据源",
+  "dsAfter": "oracle-free",
+  "editorText": "SELECT * FROM users LIMIT 50;",
+  "rowsText": 0,
+  "editHint": 0,
+  "addRowBtn": 0,
+  "opsCol": 0,
+  "cellEdit": 0,
+  "delInTable": 1,
+  "ok": true
+}

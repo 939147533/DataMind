@@ -25,6 +25,18 @@
                 </div>
               </div>
             </n-tab-pane>
+            <n-tab-pane name="saved" tab="收藏">
+              <div class="history-list">
+                <div v-for="item in savedItems" :key="item.id" class="history-item" @click="loadSavedItem(item)">
+                  <div class="history-sql">{{ item.name }}</div>
+                  <div class="history-meta">
+                    <span>{{ (item.sql_text || "").slice(0, 60) }}</span>
+                    <n-button size="tiny" text type="error" @click.stop="removeSaved(item.id)">删除</n-button>
+                  </div>
+                </div>
+                <n-empty v-if="!savedItems.length" description="暂无收藏，点击工具栏「收藏」保存当前 SQL" style="padding: 30px 0" />
+              </div>
+            </n-tab-pane>
           </n-tabs>
         </div>
       </n-layout-sider>
@@ -37,6 +49,7 @@
             <n-button size="small" @click="newTab">＋ 新建</n-button>
             <n-button size="small" type="primary" :loading="activeTab?.loading" @click="runActive">▶ 执行</n-button>
             <n-button size="small" :loading="formatting" @click="formatSql">格式化</n-button>
+            <n-button size="small" :disabled="!activeTab?.sql.trim()" @click="openSaveModal">收藏</n-button>
             <n-dropdown :options="exportDbOptions" @select="exportDatabase">
               <n-button size="small" :loading="dbExporting">导出库文档 ▾</n-button>
             </n-dropdown>
@@ -53,12 +66,36 @@
           </n-empty>
         </div>
         <div class="result-box">
-          <ResultTable ref="resultTableRef" :result="activeTab?.result ?? null" :error="activeTab?.error ?? ''" @clear-error="clearActiveError" />
+          <ResultTable
+            ref="resultTableRef"
+            :result="activeTab?.result ?? null"
+            :error="activeTab?.error ?? ''"
+            @clear-error="clearActiveError"
+            @edit-confirm="onEditConfirm"
+            @reload="reloadResult"
+          />
         </div>
       </n-layout>
+      <n-layout-sider bordered :width="agentCollapsed ? 48 : 396" :native-scrollbar="false">
+        <AgentPanel v-model:collapsed="agentCollapsed" :ds-id="dsId" :ds-name="dsName" @fill-editor="fillEditor" @run-sql="runAgentSql" />
+      </n-layout-sider>
     </n-layout>
 
     <ConfirmExecModal v-model:show="confirmShow" :info="confirmInfo" :loading="confirmLoading" @confirm="onConfirmExec" />
+
+    <n-modal v-model:show="saveModalShow" preset="card" title="收藏 SQL" style="width: 460px">
+      <n-form label-placement="left" label-width="80px">
+        <n-form-item label="名称">
+          <n-input v-model:value="saveModalName" placeholder="给这条 SQL 起个名字" />
+        </n-form-item>
+      </n-form>
+      <template #footer>
+        <div style="display: flex; justify-content: flex-end; gap: 8px">
+          <n-button size="small" @click="saveModalShow = false">取消</n-button>
+          <n-button size="small" type="primary" @click="saveCurrentSql">保存</n-button>
+        </div>
+      </template>
+    </n-modal>
 
     <n-modal v-model:show="ddlShow" preset="card" title="对象定义 (DDL)" style="width: 720px">
       <pre class="ddl-pre">{{ ddlText }}</pre>
@@ -69,15 +106,14 @@
       </template>
     </n-modal>
 
-    <AgentPanel :ds-id="dsId" :ds-name="dsName" @fill-editor="fillEditor" @run-sql="runAgentSql" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue";
 import { useMessage } from "naive-ui";
-import { exportApi, metadataApi, sqlApi } from "../api";
-import type { SqlHistoryItem } from "../api";
+import { exportApi, metadataApi, savedQueryApi, sqlApi } from "../api";
+import type { SavedQuery, SqlHistoryItem, SqlResult } from "../api";
 import AgentPanel from "../components/AgentPanel.vue";
 import ConfirmExecModal from "../components/ConfirmExecModal.vue";
 import ObjectTree from "../components/ObjectTree.vue";
@@ -101,7 +137,11 @@ const confirmLoading = ref(false);
 const confirmInfo = ref<{ sql_text: string; operation_type: string; risk_level: string; preview?: string; execution_id: string } | null>(null);
 const ddlShow = ref(false);
 const ddlText = ref("");
+const agentCollapsed = ref(false);
 const resultTableRef = ref<InstanceType<typeof ResultTable>>();
+const savedItems = ref<SavedQuery[]>([]);
+const saveModalShow = ref(false);
+const saveModalName = ref("");
 
 const dsId = computed({
   get: () => connections.currentDsId,
@@ -132,7 +172,58 @@ onMounted(async () => {
     );
   }
   loadHistory();
+  loadSaved();
 });
+
+async function loadSaved() {
+  try {
+    const data = await savedQueryApi.list({ page: 1, page_size: 100 });
+    savedItems.value = data.list;
+  } catch {
+    /* ignore */
+  }
+}
+
+function openSaveModal() {
+  const tab = workspace.activeTab;
+  if (!tab || !tab.sql.trim()) return;
+  saveModalName.value = tab.title && tab.title !== "新查询" ? tab.title : (tab.sql.trim().split("\n")[0] || "收藏 SQL").slice(0, 40);
+  saveModalShow.value = true;
+}
+
+async function saveCurrentSql() {
+  const tab = workspace.activeTab;
+  if (!tab) return;
+  if (!saveModalName.value.trim()) {
+    message.warning("请输入名称");
+    return;
+  }
+  try {
+    await savedQueryApi.create({
+      name: saveModalName.value.trim(),
+      sql_text: tab.sql,
+      datasource_id: dsId.value,
+    });
+    message.success("已收藏");
+    saveModalShow.value = false;
+    loadSaved();
+  } catch (e) {
+    message.error((e as Error).message);
+  }
+}
+
+function loadSavedItem(item: SavedQuery) {
+  workspace.addTab(item.sql_text || "", item.name);
+}
+
+async function removeSaved(id: number) {
+  try {
+    await savedQueryApi.remove(id);
+    loadSaved();
+  } catch (e) {
+    message.error((e as Error).message);
+  }
+}
 
 function newTab() {
   workspace.addTab("", `查询 ${workspace.tabs.length + 1}`);
@@ -193,6 +284,11 @@ async function onConfirmExec(confirmed: boolean) {
     if (confirmed) {
       message.success(`已执行，影响 ${result.affected_rows ?? 0} 行`);
       resultTableRef.value?.setLastSql(info.sql_text);
+      // 结果编辑场景（SELECT 表浏览）确认后刷新结果
+      const tab = workspace.activeTab;
+      if (tab && /^\s*select\b/i.test(tab.sql) && dsId.value) {
+        await runTab(tab.id);
+      }
     } else {
       message.info("已取消执行");
     }
@@ -204,6 +300,23 @@ async function onConfirmExec(confirmed: boolean) {
   } finally {
     confirmLoading.value = false;
   }
+}
+
+function onEditConfirm(result: SqlResult) {
+  if (!result?.need_confirm || !result.execution_id) return;
+  confirmInfo.value = {
+    execution_id: result.execution_id,
+    sql_text: result.sql_text || "",
+    operation_type: result.operation_type,
+    risk_level: result.risk_level || "warning",
+    preview: result.preview,
+  };
+  confirmShow.value = true;
+}
+
+function reloadResult() {
+  const tab = workspace.activeTab;
+  if (tab && dsId.value) runTab(tab.id);
 }
 
 async function formatSql() {

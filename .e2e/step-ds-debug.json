@@ -1,0 +1,11 @@
+{
+  "ts": "2026-08-13T13:46:49.749Z",
+  "opts": [
+    "oracle-free",
+    "mysql",
+    "mac_Oracle",
+    "本地演示库 (SQLite)"
+  ],
+  "targetCount": 4,
+  "dsAfter": "oracle-free"
+}
