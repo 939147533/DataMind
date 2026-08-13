@@ -200,23 +200,30 @@ function openEdit(row: any) {
 }
 
 async function testForm() {
+  if (editingId.value && !form.password) {
+    try {
+      const result = await connectionApi.connect(editingId.value);
+      testResult.value = { success: true, message: result.status === "active" ? "连接成功" : result.status };
+    } catch (e) {
+      const msg = (e as { message?: string; detail?: string }).message || (e as { detail?: string }).detail || "连接失败";
+      testResult.value = { success: false, message: msg };
+    }
+    showTest.value = true;
+    return;
+  }
   const result = await store.test({ ...form });
   testResult.value = result;
   showTest.value = true;
 }
 
 async function testRow(id: number) {
-  const conn = store.list.find((c) => c.id === id);
-  if (!conn) return;
-  const result = await connectionApi.test({
-    db_type: conn.db_type,
-    host: conn.host,
-    port: conn.port,
-    username: conn.username,
-    database_name: conn.database_name,
-    environment: conn.environment,
-  });
-  testResult.value = result;
+  try {
+    const result = await connectionApi.connect(id);
+    testResult.value = { success: true, message: result.status === "active" ? "连接成功" : result.status };
+  } catch (e) {
+    const msg = (e as { message?: string; detail?: string }).message || (e as { detail?: string }).detail || "连接失败";
+    testResult.value = { success: false, message: msg };
+  }
   showTest.value = true;
 }
 

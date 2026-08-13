@@ -6,3 +6,241 @@ INFO:     Started server process [12384]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "src/oracledb/impl/thin/connection.pyx", line 421, in oracledb.thin_impl.ThinConnImpl._connect_with_address
+  File "src/oracledb/impl/thin/protocol.pyx", line 268, in oracledb.thin_impl.Protocol._connect_phase_one
+  File "src/oracledb/impl/thin/protocol.pyx", line 402, in oracledb.thin_impl.Protocol._connect_tcp
+  File "D:\miniforge3\Lib\socket.py", line 864, in create_connection
+    raise exceptions[0]
+  File "D:\miniforge3\Lib\socket.py", line 849, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Code\DataMind\backend\app\adapters\oracle_adapter.py", line 23, in connect
+    return oracledb.connect(
+           ~~~~~~~~~~~~~~~~^
+        user=self.conn.username,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+        password=self.conn.password,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        dsn=self._dsn(),
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 482, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/thin/connection.pyx", line 463, in oracledb.thin_impl.ThinConnImpl._connect_with_description
+  File "src/oracledb/impl/thin/connection.pyx", line 425, in oracledb.thin_impl.ThinConnImpl._connect_with_address
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\oracledb\errors.py", line 199, in _raise_err
+    raise error.exc_type(error) from cause
+oracledb.exceptions.OperationalError: DPY-6005: cannot connect to database (CONNECTION_ID=7xptahdeqFW75wePlvAgew==).
+timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 422, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 63, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Code\DataMind\backend\app\routers\connections.py", line 70, in connect
+    ok_flag, message = await service.test_saved_connection(db, connection_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Code\DataMind\backend\app\services\connection_service.py", line 194, in test_saved_connection
+    ok, message = test_connection(conn)
+                  ~~~~~~~~~~~~~~~^^^^^^
+  File "E:\Code\DataMind\backend\app\adapters\registry.py", line 28, in test_connection
+    return get_adapter(conn).test_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\Code\DataMind\backend\app\adapters\base.py", line 47, in test_connection
+    conn = self.connect()
+  File "E:\Code\DataMind\backend\app\adapters\oracle_adapter.py", line 29, in connect
+    raise AdapterError(f"Oracle 连接失败: {exc}") from exc
+app.adapters.base.AdapterError: Oracle 连接失败: DPY-6005: cannot connect to database (CONNECTION_ID=7xptahdeqFW75wePlvAgew==).
+timed out
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "src/oracledb/impl/thin/connection.pyx", line 421, in oracledb.thin_impl.ThinConnImpl._connect_with_address
+  File "src/oracledb/impl/thin/protocol.pyx", line 268, in oracledb.thin_impl.Protocol._connect_phase_one
+  File "src/oracledb/impl/thin/protocol.pyx", line 402, in oracledb.thin_impl.Protocol._connect_tcp
+  File "D:\miniforge3\Lib\socket.py", line 864, in create_connection
+    raise exceptions[0]
+  File "D:\miniforge3\Lib\socket.py", line 849, in create_connection
+    sock.connect(sa)
+    ~~~~~~~~~~~~^^^^
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Code\DataMind\backend\app\adapters\oracle_adapter.py", line 23, in connect
+    return oracledb.connect(
+           ~~~~~~~~~~~~~~~~^
+        user=self.conn.username,
+        ^^^^^^^^^^^^^^^^^^^^^^^^
+        password=self.conn.password,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        dsn=self._dsn(),
+        ^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\oracledb\connection.py", line 1768, in connect
+    return conn_class(dsn=dsn, pool=pool, params=params, **kwargs)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\oracledb\connection.py", line 892, in __init__
+    impl.connect(params_impl)
+    ~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "src/oracledb/impl/thin/connection.pyx", line 544, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 540, in oracledb.thin_impl.ThinConnImpl.connect
+  File "src/oracledb/impl/thin/connection.pyx", line 482, in oracledb.thin_impl.ThinConnImpl._connect_with_params
+  File "src/oracledb/impl/thin/connection.pyx", line 463, in oracledb.thin_impl.ThinConnImpl._connect_with_description
+  File "src/oracledb/impl/thin/connection.pyx", line 425, in oracledb.thin_impl.ThinConnImpl._connect_with_address
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\oracledb\errors.py", line 199, in _raise_err
+    raise error.exc_type(error) from cause
+oracledb.exceptions.OperationalError: DPY-6005: cannot connect to database (CONNECTION_ID=gomWuuksC2CJ1VrxuG1DCw==).
+timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 422, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 63, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 1780, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 2789, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 1800, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 1279, in handle
+    await app(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "E:\Code\DataMind\backend\.venv\Lib\site-packages\fastapi\routing.py", line 352, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Code\DataMind\backend\app\routers\connections.py", line 70, in connect
+    ok_flag, message = await service.test_saved_connection(db, connection_id)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Code\DataMind\backend\app\services\connection_service.py", line 194, in test_saved_connection
+    ok, message = test_connection(conn)
+                  ~~~~~~~~~~~~~~~^^^^^^
+  File "E:\Code\DataMind\backend\app\adapters\registry.py", line 28, in test_connection
+    return get_adapter(conn).test_connection()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "E:\Code\DataMind\backend\app\adapters\base.py", line 47, in test_connection
+    conn = self.connect()
+  File "E:\Code\DataMind\backend\app\adapters\oracle_adapter.py", line 29, in connect
+    raise AdapterError(f"Oracle 连接失败: {exc}") from exc
+app.adapters.base.AdapterError: Oracle 连接失败: DPY-6005: cannot connect to database (CONNECTION_ID=gomWuuksC2CJ1VrxuG1DCw==).
+timed out

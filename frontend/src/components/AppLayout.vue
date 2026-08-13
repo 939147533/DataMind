@@ -44,7 +44,7 @@ const settings = useSettingsStore();
 const collapsed = ref(false);
 
 const menuItems = [
-  { label: "智能查询", key: "smart-query", permission: "ai_query", icon: () => h(NIcon, null, { default: () => "✏" }) },
+  { label: "智能查询", key: "smart-query", permission: "ai_query", icon: () => h(NIcon, null, { default: () => "🤖" }) },
   { label: "SQL 工作台", key: "workspace", permission: "workspace", icon: () => h(NIcon, null, { default: () => "🖥️" }) },
   { label: "连接管理", key: "connections", permission: "connections", icon: () => h(NIcon, null, { default: () => "🔌" }) },
   { label: "可视化报表", key: "reports", permission: "reports", icon: () => h(NIcon, null, { default: () => "📊" }) },
