@@ -24,7 +24,7 @@ class BaseLLMProvider(ABC):
     def validate(self) -> None:
         """校验配置是否满足调用前提，缺失时快速失败而非等待 SDK 超时。"""
         if self.config.provider in ("openai", "claude") and not self._api_key():
-            raise LLMError("未配置 API Key，请到 系统设置 → AI 配置 中填写")
+            raise LLMError("未配置 API Key，请到 系统设置 → 大模型连接配置 中填写")
         if self.config.provider == "ollama" and not self.config.api_base:
             raise LLMError("未配置 Ollama 服务地址（api_base）")
 

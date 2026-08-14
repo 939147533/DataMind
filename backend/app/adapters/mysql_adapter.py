@@ -208,7 +208,7 @@ class MySQLAdapter(BaseDBAdapter):
                 if cur.description:
                     columns = [d[0] for d in cur.description]
                     rows = cur.fetchall()
-                    return {"columns": columns, "rows": [list(r) for r in rows], "affected_rows": 0, "is_query": True}
+                    return {"columns": columns, "rows": [list(r.values()) for r in rows], "affected_rows": 0, "is_query": True}
                 conn.commit()
                 return {"columns": [], "rows": [], "affected_rows": cur.rowcount, "is_query": False}
         except Exception as exc:  # noqa: BLE001

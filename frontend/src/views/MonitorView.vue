@@ -1,7 +1,7 @@
 <template>
   <div class="monitor-view">
     <n-tabs v-model:value="activeTab" type="line" size="medium">
-      <n-tab-pane name="overview" tab="连接概览">
+      <n-tab-pane v-if="canViewMonitor" name="overview" tab="连接概览">
         <div class="toolbar">
           <n-button size="small" type="primary" @click="loadOverview">刷新</n-button>
           <span class="hint">基于执行历史统计（query_history）</span>
@@ -14,7 +14,11 @@
         <n-data-table :columns="overviewColumns" :data="overview?.datasources || []" size="small" :loading="loadingOverview" :bordered="false" />
       </n-tab-pane>
 
-      <n-tab-pane name="slow" tab="慢查询">
+      <n-tab-pane v-if="canViewAudit" name="audit" tab="审计日志">
+        <AuditView />
+      </n-tab-pane>
+
+      <n-tab-pane v-if="canViewMonitor" name="slow" tab="慢查询">
         <div class="toolbar">
           <span class="hint">耗时 ≥</span>
           <n-input-number v-model:value="thresholdMs" :min="1" size="small" style="width: 150px" />
@@ -27,7 +31,7 @@
         </div>
       </n-tab-pane>
 
-      <n-tab-pane name="diff" tab="表结构对比">
+      <n-tab-pane v-if="canViewMonitor" name="diff" tab="表结构对比">
         <div class="toolbar">
           <n-select v-model:value="diffForm.source_ds_id" :options="dsOptions" placeholder="源数据源" size="small" style="width: 240px" clearable />
           <n-select v-model:value="diffForm.target_ds_id" :options="dsOptions" placeholder="目标数据源" size="small" style="width: 240px" clearable />
@@ -53,7 +57,7 @@
         </template>
       </n-tab-pane>
 
-      <n-tab-pane name="schedule" tab="定时任务">
+      <n-tab-pane v-if="canViewSchedule" name="schedule" tab="定时任务">
         <div class="toolbar">
           <n-button size="small" type="primary" @click="openScheduleModal">新建任务</n-button>
           <n-button size="small" @click="loadSchedules">刷新</n-button>
@@ -95,6 +99,7 @@
           </template>
         </n-modal>
       </n-tab-pane>
+
     </n-tabs>
   </div>
 </template>
@@ -104,11 +109,17 @@ import { computed, h, onMounted, reactive, ref } from "vue";
 import { NButton, NSwitch, NTag, useMessage } from "naive-ui";
 import type { DatasourceStat, MonitorOverview, SchemaDiffResult, SchemaTableDiff, ScheduleTask, SlowQueryItem } from "../api";
 import { monitorApi, scheduleApi } from "../api";
+import { useAuthStore } from "../stores/auth";
 import { useConnectionsStore } from "../stores/connections";
+import AuditView from "./AuditView.vue";
 
 const connections = useConnectionsStore();
+const auth = useAuthStore();
 const message = useMessage();
-const activeTab = ref("overview");
+const canViewMonitor = computed(() => auth.hasPermission("monitor"));
+const canViewAudit = computed(() => auth.hasPermission("audit"));
+const canViewSchedule = computed(() => auth.hasPermission("reports_manage"));
+const activeTab = ref(canViewMonitor.value ? "overview" : canViewSchedule.value ? "schedule" : "audit");
 const overview = ref<MonitorOverview | null>(null);
 const loadingOverview = ref(false);
 const thresholdMs = ref(1000);
@@ -136,9 +147,11 @@ const dsOptions = computed(() => connections.list.map((c) => ({ label: c.name, v
 
 onMounted(async () => {
   await connections.load();
-  loadOverview();
-  loadSlow(1, true);
-  loadSchedules();
+  if (canViewMonitor.value) {
+    loadOverview();
+    loadSlow(1, true);
+  }
+  if (canViewSchedule.value) loadSchedules();
 });
 
 async function loadOverview() {

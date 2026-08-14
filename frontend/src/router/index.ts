@@ -5,6 +5,7 @@ declare module "vue-router" {
   interface RouteMeta {
     public?: boolean;
     permission?: string;
+    permissionAny?: string[];
   }
 }
 
@@ -20,14 +21,13 @@ const router = createRouter({
         { path: "", redirect: "/smart-query" },
         { path: "smart-query", name: "smart-query", component: () => import("../views/SmartQueryView.vue"), meta: { permission: "ai_query" } },
         { path: "workspace", name: "workspace", component: () => import("../views/WorkspaceView.vue"), meta: { permission: "workspace" } },
-        { path: "connections", name: "connections", component: () => import("../views/ConnectionsView.vue"), meta: { permission: "connections" } },
         { path: "reports", name: "reports", component: () => import("../views/ReportsView.vue"), meta: { permission: "reports" } },
         { path: "reports/dashboard/:id", name: "dashboard-detail", component: () => import("../views/DashboardDetailView.vue"), meta: { permission: "reports" } },
         { path: "users", name: "users", component: () => import("../views/UsersView.vue"), meta: { permission: "users" } },
         { path: "roles", name: "roles", component: () => import("../views/RolesView.vue"), meta: { permission: "roles" } },
-        { path: "settings", name: "settings", component: () => import("../views/SettingsView.vue"), meta: { permission: "settings" } },
-        { path: "audit", name: "audit", component: () => import("../views/AuditView.vue"), meta: { permission: "audit" } },
-        { path: "monitor", name: "monitor", component: () => import("../views/MonitorView.vue"), meta: { permission: "monitor" } },
+        { path: "settings", name: "settings", component: () => import("../views/SettingsView.vue"), meta: { permissionAny: ["settings", "connections"] } },
+        { path: "audit", redirect: "/monitor" },
+        { path: "monitor", name: "monitor", component: () => import("../views/MonitorView.vue"), meta: { permissionAny: ["monitor", "audit"] } },
       ],
     },
   ],
@@ -43,7 +43,12 @@ router.beforeEach(async (to) => {
     return { path: "/" + (auth.defaultHome() || "workspace") };
   }
   const permission = to.meta.permission;
+  const permissionAny = to.meta.permissionAny;
   if (permission && !auth.hasPermission(permission)) {
+    const home = auth.defaultHome();
+    return { path: home ? "/" + home : "/login" };
+  }
+  if (permissionAny && !auth.hasAnyPermission(...permissionAny)) {
     const home = auth.defaultHome();
     return { path: home ? "/" + home : "/login" };
   }

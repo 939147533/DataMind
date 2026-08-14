@@ -270,7 +270,6 @@ onMounted(() => store.load());
 
 <style scoped>
 .connections-view {
-  padding: 16px;
 }
 .toolbar {
   display: flex;

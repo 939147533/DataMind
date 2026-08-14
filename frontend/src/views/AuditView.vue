@@ -93,7 +93,6 @@ onMounted(load);
 
 <style scoped>
 .audit-view {
-  padding: 16px;
 }
 .toolbar {
   display: flex;
@@ -113,4 +112,3 @@ onMounted(load);
   color: #888;
 }
 </style>
-

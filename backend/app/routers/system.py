@@ -1,4 +1,4 @@
-"""系统管理路由：AI 配置、JDBC 驱动、系统设置。"""
+"""系统管理路由：大模型连接配置、JDBC 驱动、系统设置。"""
 import time
 from pathlib import Path
 

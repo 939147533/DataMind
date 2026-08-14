@@ -106,7 +106,14 @@ const activeSessionId = computed({
 });
 const sessionOptions = computed(() => agent.sessions.map((s) => ({ label: s.title || `对话 ${s.id}`, value: s.id })));
 
-const examples = ["统计各订单状态的数量", "销售额最高的 5 个商品", "各品类订单金额占比（生成图表）"];
+// 示例问题随数据源变化：银行库（oracle-free）给出业务示例，其他数据源给出通用示例
+const examples = computed(() => {
+  const name = dsName.value || "";
+  if (name.includes("oracle-free") || name.includes("银行")) {
+    return ["统计各交易渠道的交易笔数", "查询余额最高的10个账户及客户信息", "统计各分行的交易金额与笔数（生成图表）"];
+  }
+  return ["统计各订单状态的数量", "销售额最高的 5 个商品", "各品类订单金额占比（生成图表）"];
+});
 
 async function loadDatasources() {
   try {
@@ -426,3 +433,4 @@ watch(modelConfigId, (v) => {
   color: #888;
 }
 </style>
+

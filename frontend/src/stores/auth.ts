@@ -43,15 +43,15 @@ export const useAuthStore = defineStore("auth", {
         "smart-query": "ai_query",
         workspace: "workspace",
         reports: "reports",
-        connections: "connections",
         settings: "settings",
         users: "users",
         roles: "roles",
-        audit: "audit",
-        monitor: "monitor",
       };
-      const order = ["smart-query", "workspace", "reports", "connections", "settings", "users", "roles", "audit", "monitor"];
-      return order.find((r) => this.hasPermission(routePerm[r])) || "";
+      const routeAny: Record<string, string[]> = {
+        monitor: ["monitor", "audit"],
+      };
+      const order = ["smart-query", "workspace", "reports", "settings", "users", "roles", "monitor"];
+      return order.find((r) => (routeAny[r] ? this.hasAnyPermission(...routeAny[r]) : this.hasPermission(routePerm[r]))) || "";
     },
   },
 });

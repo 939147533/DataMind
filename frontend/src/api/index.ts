@@ -81,11 +81,11 @@ export const PERMISSION_GROUPS = [
   {
     group: "系统",
     items: [
-      { code: "settings", name: "系统设置", desc: "AI 配置、JDBC 驱动、偏好设置" },
+      { code: "settings", name: "系统设置", desc: "大模型连接配置、偏好设置" },
       { code: "audit", name: "审计日志", desc: "查看操作审计日志" },
       { code: "users", name: "用户管理", desc: "管理用户账号" },
       { code: "roles", name: "角色管理", desc: "管理角色与功能权限" },
-      { code: "monitor", name: "运维监控", desc: "慢查询、连接概览、表结构对比" },
+      { code: "monitor", name: "运维监控", desc: "连接概览、慢查询、表结构对比、审计日志" },
     ],
   },
 ];

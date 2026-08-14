@@ -46,16 +46,16 @@ const collapsed = ref(false);
 const menuItems = [
   { label: "智能查询", key: "smart-query", permission: "ai_query", icon: () => h(NIcon, null, { default: () => "🤖" }) },
   { label: "SQL 工作台", key: "workspace", permission: "workspace", icon: () => h(NIcon, null, { default: () => "🖥️" }) },
-  { label: "连接管理", key: "connections", permission: "connections", icon: () => h(NIcon, null, { default: () => "🔌" }) },
   { label: "可视化报表", key: "reports", permission: "reports", icon: () => h(NIcon, null, { default: () => "📊" }) },
   { label: "用户管理", key: "users", permission: "users", icon: () => h(NIcon, null, { default: () => "👥" }) },
   { label: "角色管理", key: "roles", permission: "roles", icon: () => h(NIcon, null, { default: () => "🛡️" }) },
-  { label: "系统设置", key: "settings", permission: "settings", icon: () => h(NIcon, null, { default: () => "⚙️" }) },
-  { label: "审计日志", key: "audit", permission: "audit", icon: () => h(NIcon, null, { default: () => "📜" }) },
-  { label: "运维监控", key: "monitor", permission: "monitor", icon: () => h(NIcon, null, { default: () => "📈" }) },
+  { label: "系统设置", key: "settings", permissionAny: ["settings", "connections"], icon: () => h(NIcon, null, { default: () => "⚙️" }) },
+  { label: "运维监控", key: "monitor", permissionAny: ["monitor", "audit"], icon: () => h(NIcon, null, { default: () => "📈" }) },
 ];
 const menuOptions = computed(() =>
-  menuItems.filter((m) => auth.hasPermission(m.permission)).map((m) => ({ label: m.label, key: m.key, icon: m.icon })),
+  menuItems
+    .filter((m) => (m.permission ? auth.hasPermission(m.permission) : m.permissionAny ? auth.hasAnyPermission(...m.permissionAny) : true))
+    .map((m) => ({ label: m.label, key: m.key, icon: m.icon })),
 );
 
 const activeKey = computed(() => String(route.name || "workspace"));
@@ -63,12 +63,10 @@ const pageTitle = computed(() => {
   const map: Record<string, string> = {
     "smart-query": "智能查询",
     workspace: "SQL 工作台",
-    connections: "连接管理",
     reports: "可视化报表",
     users: "用户管理",
     roles: "角色管理",
     settings: "系统设置",
-    audit: "审计日志",
     monitor: "运维监控",
   };
   return map[String(route.name)] || "数据库 Agent";

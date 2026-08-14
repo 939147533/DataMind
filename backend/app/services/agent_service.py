@@ -329,7 +329,7 @@ async def agent_chat(
         ds = (await db.execute(select(DataSource).where(DataSource.id == datasource_id))).scalar_one_or_none()
     config = await resolve_model_config(db, session, model_config_id)
     if config is None:
-        yield {"type": "error", "content": "未配置可用的 AI 模型，请到 系统设置 → AI 配置 中添加模型"}
+        yield {"type": "error", "content": "未配置可用的 AI 模型，请到 系统设置 → 大模型连接配置 中添加模型"}
         yield {"type": "done"}
         return
 

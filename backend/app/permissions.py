@@ -20,11 +20,11 @@ PERMISSIONS = [
     {"code": "connections_manage", "name": "连接管理-维护", "group": "连接", "description": "新增/编辑/删除数据源连接"},
     {"code": "reports", "name": "报表-查看", "group": "报表", "description": "查看图表与仪表盘"},
     {"code": "reports_manage", "name": "报表-维护", "group": "报表", "description": "新增/编辑/删除图表与仪表盘"},
-    {"code": "settings", "name": "系统设置", "group": "系统", "description": "AI 配置、JDBC 驱动、偏好设置"},
+    {"code": "settings", "name": "系统设置", "group": "系统", "description": "大模型连接配置、偏好设置"},
     {"code": "audit", "name": "审计日志", "group": "系统", "description": "查看操作审计日志"},
     {"code": "users", "name": "用户管理", "group": "系统", "description": "管理用户账号"},
     {"code": "roles", "name": "角色管理", "group": "系统", "description": "管理角色与功能权限"},
-    {"code": "monitor", "name": "运维监控", "group": "系统", "description": "查看慢查询、连接概览与表结构对比"},
+    {"code": "monitor", "name": "运维监控", "group": "系统", "description": "查看运维监控（连接概览、慢查询、表结构对比、审计日志）"},
 ]
 PERMISSION_NAMES = {p["code"]: p["name"] for p in PERMISSIONS}
 

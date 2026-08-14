@@ -8,14 +8,13 @@
       </div>
       <n-form @keyup.enter="doLogin">
         <n-form-item label="用户名">
-          <n-input v-model:value="username" placeholder="admin" />
+          <n-input v-model:value="username" placeholder="请输入用户名" />
         </n-form-item>
         <n-form-item label="密码">
-          <n-input v-model:value="password" type="password" show-password-on="click" placeholder="admin123" />
+          <n-input v-model:value="password" type="password" show-password-on="click" placeholder="请输入密码" />
         </n-form-item>
         <n-button type="primary" block :loading="loading" @click="doLogin">登 录</n-button>
       </n-form>
-      <div class="login-hint">默认账户：admin / admin123</div>
     </n-card>
   </div>
 </template>
@@ -30,7 +29,7 @@ const auth = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 const message = useMessage();
-const username = ref("admin");
+const username = ref("");
 const password = ref("");
 const loading = ref(false);
 
@@ -78,11 +77,5 @@ async function doLogin() {
   color: #888;
   font-size: 13px;
   margin: 0;
-}
-.login-hint {
-  margin-top: 16px;
-  text-align: center;
-  color: #999;
-  font-size: 12px;
 }
 </style>

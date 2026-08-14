@@ -216,7 +216,7 @@ class PostgreSQLAdapter(BaseDBAdapter):
                 cur.execute(sql)
                 if cur.description:
                     columns = [d[0] for d in cur.description]
-                    rows = [list(r) for r in cur.fetchall()]
+                    rows = [list(r.values()) for r in cur.fetchall()]
                     return {"columns": columns, "rows": rows, "affected_rows": 0, "is_query": True}
                 conn.commit()
                 return {"columns": [], "rows": [], "affected_rows": cur.rowcount, "is_query": False}

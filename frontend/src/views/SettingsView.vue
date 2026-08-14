@@ -1,9 +1,13 @@
 <template>
   <div class="settings-view">
     <n-tabs v-model:value="activeTab" type="line">
-      <n-tab-pane name="ai" tab="AI 配置">
+      <n-tab-pane v-if="canManageConnections" name="connections" tab="数据库连接配置">
+        <ConnectionsView />
+      </n-tab-pane>
+
+      <n-tab-pane v-if="canManageAi" name="ai" tab="大模型连接配置">
         <div class="toolbar">
-          <n-button type="primary" size="small" @click="openAiCreate">＋ 新增 AI 配置</n-button>
+          <n-button type="primary" size="small" @click="openAiCreate">＋ 新增大模型配置</n-button>
         </div>
         <n-grid :cols="2" :x-gap="16" :y-gap="16" responsive="screen" item-responsive>
           <n-grid-item v-for="c in aiConfigs" :key="c.id" span="12 m:12 l:12">
@@ -30,14 +34,7 @@
             </n-card>
           </n-grid-item>
         </n-grid>
-        <n-empty v-if="!aiConfigs.length" description="暂无 AI 配置，添加后即可使用 Agent" style="padding: 60px 0" />
-      </n-tab-pane>
-
-      <n-tab-pane name="driver" tab="JDBC 驱动">
-        <div class="toolbar">
-          <n-button size="small" type="primary" @click="driverModal = true">＋ 上传驱动</n-button>
-        </div>
-        <n-data-table :columns="driverColumns" :data="drivers" size="small" :bordered="false" :loading="driverLoading" />
+        <n-empty v-if="!aiConfigs.length" description="暂无大模型配置，添加后即可使用 Agent" style="padding: 60px 0" />
       </n-tab-pane>
 
       <n-tab-pane name="prefs" tab="偏好设置">
@@ -74,7 +71,7 @@
     </n-tabs>
 
     <!-- AI 配置编辑 -->
-    <n-modal v-model:show="aiModal" preset="card" :title="editingAi ? '编辑 AI 配置' : '新增 AI 配置'" style="width: 560px">
+    <n-modal v-model:show="aiModal" preset="card" :title="editingAi ? '编辑大模型配置' : '新增大模型配置'" style="width: 560px">
       <n-form label-placement="left" label-width="110px">
         <n-form-item label="提供商">
           <n-select v-model:value="aiForm.provider" :options="providerOptions" />
@@ -110,43 +107,31 @@
       </template>
     </n-modal>
 
-    <!-- 驱动上传 -->
-    <n-modal v-model:show="driverModal" preset="card" title="上传 JDBC 驱动" style="width: 480px">
-      <n-form label-placement="left" label-width="100px">
-        <n-form-item label="数据库类型"><n-input v-model:value="driverForm.db_type" placeholder="如 oracle / mysql" /></n-form-item>
-        <n-form-item label="驱动类"><n-input v-model:value="driverForm.driver_class" placeholder="如 oracle.jdbc.OracleDriver" /></n-form-item>
-        <n-form-item label="版本"><n-input v-model:value="driverForm.version" placeholder="如 21.5.0.0" /></n-form-item>
-        <n-form-item label="JAR 文件">
-          <n-upload :default-upload="false" :custom-request="uploadDriver" accept=".jar">
-            <n-button>选择文件</n-button>
-          </n-upload>
-        </n-form-item>
-      </n-form>
-    </n-modal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, h, onMounted, reactive, ref } from "vue";
 import { NButton, NPopconfirm, useMessage } from "naive-ui";
-import type { UploadCustomRequestOptions } from "naive-ui";
 import { configApi } from "../api";
 import type { AIConfig } from "../api";
+import { useAuthStore } from "../stores/auth";
 import { useSettingsStore } from "../stores/settings";
+import ConnectionsView from "./ConnectionsView.vue";
 
 const message = useMessage();
+const auth = useAuthStore();
 const settings = useSettingsStore();
-const activeTab = ref("ai");
+const canManageConnections = computed(() => auth.hasPermission("connections"));
+const canManageAi = computed(() => auth.hasPermission("settings"));
+const activeTab = ref(canManageConnections.value ? "connections" : canManageAi.value ? "ai" : "prefs");
 const aiConfigs = ref<AIConfig[]>([]);
-const drivers = ref<Record<string, unknown>[]>([]);
-const driverLoading = ref(false);
 const aiModal = ref(false);
 const aiSaving = ref(false);
 const editingAi = ref<AIConfig | null>(null);
 const testingAiId = ref<number | null>(null);
 const testingForm = ref(false);
 const aiTestResult = ref<{ ok: boolean; text: string } | null>(null);
-const driverModal = ref(false);
 const savingPrefs = ref(false);
 
 const providerOptions = [
@@ -156,7 +141,6 @@ const providerOptions = [
 ];
 
 const aiForm = reactive({ provider: "openai", api_base: "", model_name: "", api_key: "", max_tokens: 4096, temperature: 0.7, is_active: true, is_default: false });
-const driverForm = reactive({ db_type: "", driver_class: "", version: "" });
 
 const fontSize = computed({
   get: () => Number(settings.editor_font_size || 14),
@@ -184,17 +168,6 @@ async function loadAi() {
     aiConfigs.value = await configApi.listAi();
   } catch (e) {
     message.error((e as Error).message);
-  }
-}
-
-async function loadDrivers() {
-  driverLoading.value = true;
-  try {
-    drivers.value = await configApi.drivers();
-  } catch {
-    /* ignore */
-  } finally {
-    driverLoading.value = false;
   }
 }
 
@@ -306,60 +279,6 @@ async function removeAi(id: number) {
   }
 }
 
-async function uploadDriver(options: UploadCustomRequestOptions) {
-  const file = options.file.file;
-  if (!file) return;
-  const form = new FormData();
-  form.append("file", file);
-  form.append("db_type", driverForm.db_type);
-  form.append("driver_class", driverForm.driver_class);
-  form.append("version", driverForm.version);
-  try {
-    await configApi.uploadDriver(form);
-    options.onFinish();
-    message.success("上传成功");
-    driverModal.value = false;
-    await loadDrivers();
-  } catch (e) {
-    options.onError();
-    message.error((e as Error).message);
-  }
-}
-
-async function removeDriver(id: number) {
-  try {
-    await configApi.deleteDriver(id);
-    message.success("已删除");
-    await loadDrivers();
-  } catch (e) {
-    message.error((e as Error).message);
-  }
-}
-
-const driverColumns = [
-  { title: "ID", key: "id", width: 60 },
-  { title: "数据库类型", key: "db_type", width: 110 },
-  { title: "驱动类", key: "driver_class", ellipsis: { tooltip: true } },
-  { title: "版本", key: "version", width: 110 },
-  { title: "文件", key: "file_name", ellipsis: { tooltip: true } },
-  { title: "大小 (KB)", key: "file_size", width: 90, render: (row: any) => Math.round((row.file_size || 0) / 1024) },
-  { title: "上传时间", key: "upload_time", width: 170 },
-  {
-    title: "操作",
-    key: "actions",
-    width: 80,
-    render: (row: any) =>
-      h(
-        NPopconfirm,
-        { onPositiveClick: () => removeDriver(row.id) },
-        {
-          trigger: () => h(NButton, { size: "tiny", text: true, type: "error" }, { default: () => "删除" }),
-          default: () => "确定删除该驱动？",
-        },
-      ),
-  },
-];
-
 async function savePrefs() {
   savingPrefs.value = true;
   try {
@@ -372,8 +291,7 @@ async function savePrefs() {
 
 onMounted(async () => {
   await settings.load();
-  await loadAi();
-  await loadDrivers();
+  if (canManageAi.value) await loadAi();
 });
 </script>
 
