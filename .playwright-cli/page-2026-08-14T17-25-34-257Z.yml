@@ -1,0 +1,174 @@
+- generic [ref=e1]:
+  - generic [ref=e41]:
+    - complementary [ref=e42]:
+      - generic [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 🗄️
+        - generic [ref=e45]: 数据库 Agent
+      - menu [ref=e46]:
+        - menuitem "智能查询" [ref=e47]:
+          - img [ref=e48] [cursor=pointer]: 🤖
+          - text: 智能查询
+        - menuitem "SQL 工作台" [ref=e49]:
+          - img [ref=e50] [cursor=pointer]: 🖥️
+          - text: SQL 工作台
+        - menuitem "可视化报表" [ref=e51]:
+          - img [ref=e52] [cursor=pointer]: 📊
+          - text: 可视化报表
+        - menuitem "用户管理" [ref=e53]:
+          - img [ref=e54] [cursor=pointer]: 👥
+          - text: 用户管理
+        - menuitem "角色管理" [ref=e55]:
+          - img [ref=e56] [cursor=pointer]: 🛡️
+          - text: 角色管理
+        - menuitem "系统设置" [ref=e57]:
+          - img [ref=e58] [cursor=pointer]: ⚙️
+          - text: 系统设置
+        - menuitem "运维监控" [ref=e59]:
+          - img [ref=e60] [cursor=pointer]: 📈
+          - text: 运维监控
+      - img [ref=e63] [cursor=pointer]
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]: 系统设置
+        - generic [ref=e70]:
+          - button "☀️" [ref=e71] [cursor=pointer]:
+            - generic [ref=e72]: ☀️
+          - button "👤 管理员" [ref=e73] [cursor=pointer]:
+            - generic [ref=e75]: 👤
+            - generic [ref=e76]: 管理员
+      - generic [ref=e1797]:
+        - generic [ref=e1802]:
+          - generic [ref=e1805] [cursor=pointer]: 数据库连接配置
+          - generic [ref=e1809] [cursor=pointer]: 大模型连接配置
+          - generic [ref=e1813] [cursor=pointer]: 偏好设置
+        - generic [ref=e2169]:
+          - button "＋ 新增大模型配置" [ref=e2171] [cursor=pointer]:
+            - generic [ref=e2172]: ＋ 新增大模型配置
+          - generic [ref=e2173]:
+            - generic [ref=e2175]:
+              - heading "OpenAI（或兼容网关） · agnes-2.5-flash 默认 测试 编辑 删除" [ref=e2176]:
+                - heading "OpenAI（或兼容网关） · agnes-2.5-flash" [ref=e2177]
+                - generic [ref=e2179]:
+                  - generic [ref=e2181]: 默认
+                  - button "测试" [ref=e2182] [cursor=pointer]:
+                    - generic [ref=e2183]: 测试
+                  - button "编辑" [ref=e2184] [cursor=pointer]:
+                    - generic [ref=e2185]: 编辑
+                  - button "删除" [ref=e2186] [cursor=pointer]:
+                    - generic [ref=e2187]: 删除
+              - generic [ref=e2188]:
+                - generic [ref=e2189]: API Base：https://apihub.agnes-ai.com/v1
+                - generic [ref=e2190]: 模型：agnes-2.5-flash
+                - generic [ref=e2191]: API Key：已配置 🔒
+                - generic [ref=e2192]: 参数：max_tokens = 4096 · temperature = 0.7
+            - generic [ref=e2194]:
+              - heading "Ollama（本地） · qwen3.6:35b-a3b-q4_K_M 测试 编辑 设为默认 删除" [ref=e2195]:
+                - heading "Ollama（本地） · qwen3.6:35b-a3b-q4_K_M" [ref=e2196]
+                - generic [ref=e2198]:
+                  - button "测试" [ref=e2199] [cursor=pointer]:
+                    - generic [ref=e2200]: 测试
+                  - button "编辑" [ref=e2201] [cursor=pointer]:
+                    - generic [ref=e2202]: 编辑
+                  - button "设为默认" [ref=e2203] [cursor=pointer]:
+                    - generic [ref=e2204]: 设为默认
+                  - button "删除" [ref=e2205] [cursor=pointer]:
+                    - generic [ref=e2206]: 删除
+              - generic [ref=e2207]:
+                - generic [ref=e2208]: API Base：http://100.102.197.1:11434/v1
+                - generic [ref=e2209]: 模型：qwen3.6:35b-a3b-q4_K_M
+                - generic [ref=e2210]: API Key：已配置 🔒
+                - generic [ref=e2211]: 参数：max_tokens = 4096 · temperature = 0.7
+            - generic [ref=e2213]:
+              - heading "OpenAI（或兼容网关） · deepseek-v4-flash 测试 编辑 设为默认 删除" [ref=e2214]:
+                - heading "OpenAI（或兼容网关） · deepseek-v4-flash" [ref=e2215]
+                - generic [ref=e2217]:
+                  - button "测试" [ref=e2218] [cursor=pointer]:
+                    - generic [ref=e2219]: 测试
+                  - button "编辑" [ref=e2220] [cursor=pointer]:
+                    - generic [ref=e2221]: 编辑
+                  - button "设为默认" [ref=e2222] [cursor=pointer]:
+                    - generic [ref=e2223]: 设为默认
+                  - button "删除" [ref=e2224] [cursor=pointer]:
+                    - generic [ref=e2225]: 删除
+              - generic [ref=e2226]:
+                - generic [ref=e2227]: API Base：https://api.deepseek.com
+                - generic [ref=e2228]: 模型：deepseek-v4-flash
+                - generic [ref=e2229]: API Key：已配置 🔒
+                - generic [ref=e2230]: 参数：max_tokens = 4096 · temperature = 0.7
+            - generic [ref=e2232]:
+              - heading "Ollama（本地） · glm-4.7-flash:q4_K_M 测试 编辑 设为默认 删除" [ref=e2233]:
+                - heading "Ollama（本地） · glm-4.7-flash:q4_K_M" [ref=e2234]
+                - generic [ref=e2236]:
+                  - button "测试" [ref=e2237] [cursor=pointer]:
+                    - generic [ref=e2238]: 测试
+                  - button "编辑" [ref=e2239] [cursor=pointer]:
+                    - generic [ref=e2240]: 编辑
+                  - button "设为默认" [ref=e2241] [cursor=pointer]:
+                    - generic [ref=e2242]: 设为默认
+                  - button "删除" [ref=e2243] [cursor=pointer]:
+                    - generic [ref=e2244]: 删除
+              - generic [ref=e2245]:
+                - generic [ref=e2246]: API Base：http://100.102.197.1:11434/v1
+                - generic [ref=e2247]: 模型：glm-4.7-flash:q4_K_M
+                - generic [ref=e2248]: API Key：已配置 🔒
+                - generic [ref=e2249]: 参数：max_tokens = 4096 · temperature = 0.7
+  - dialog [ref=e2252]:
+    - heading "新增大模型配置 close" [ref=e2253]:
+      - heading "新增大模型配置" [ref=e2254]
+      - button "close" [ref=e2255] [cursor=pointer]:
+        - img [ref=e2257]
+    - generic [ref=e2261]:
+      - generic [ref=e2262]:
+        - generic [ref=e2264]: 提供商
+        - generic [active] [ref=e2268] [cursor=pointer]:
+          - generic "OpenAI（或兼容网关）" [ref=e2269]:
+            - generic [ref=e2270]: OpenAI（或兼容网关）
+          - img "loading" [ref=e2271]:
+            - img [ref=e2276]
+      - generic [ref=e2279]:
+        - generic [ref=e2281]: API Base
+        - generic [ref=e2285]:
+          - textbox "留空使用默认；Ollama 填 http://localhost:11434/v1" [ref=e2286]
+          - generic:
+            - generic: 留空使用默认；Ollama 填 http://localhost:11434/v1
+      - generic [ref=e2288]:
+        - generic [ref=e2290]: 模型名称
+        - generic [ref=e2294]:
+          - textbox "如 gpt-4o-mini / claude-3-5-sonnet / qwen2.5" [ref=e2295]
+          - generic:
+            - generic: 如 gpt-4o-mini / claude-3-5-sonnet / qwen2.5
+      - generic [ref=e2297]:
+        - generic [ref=e2299]: API Key
+        - generic [ref=e2302]:
+          - textbox [ref=e2304]
+          - img [ref=e2308] [cursor=pointer]
+      - generic [ref=e2315]:
+        - generic [ref=e2317]:
+          - generic [ref=e2319]: Max Tokens
+          - generic [ref=e2323]:
+            - textbox "请输入" [ref=e2325]: "4096"
+            - generic [ref=e2326]:
+              - button [ref=e2327] [cursor=pointer]:
+                - img [ref=e2330]
+              - button [ref=e2331] [cursor=pointer]:
+                - img [ref=e2334]
+        - generic [ref=e2338]:
+          - generic [ref=e2340]: Temperature
+          - generic [ref=e2344]:
+            - textbox "请输入" [ref=e2346]: "0.7"
+            - generic [ref=e2347]:
+              - button [ref=e2348] [cursor=pointer]:
+                - img [ref=e2351]
+              - button [ref=e2352] [cursor=pointer]:
+                - img [ref=e2355]
+      - generic [ref=e2358]:
+        - generic [ref=e2360]: 启用
+        - switch [checked] [ref=e2362]
+      - generic [ref=e2366]:
+        - generic [ref=e2368]: 设为默认
+        - switch [ref=e2370]
+    - generic [ref=e2374]:
+      - button "测试连通性" [ref=e2375] [cursor=pointer]:
+        - generic [ref=e2376]: 测试连通性
+      - button "保存" [ref=e2377] [cursor=pointer]:
+        - generic [ref=e2378]: 保存

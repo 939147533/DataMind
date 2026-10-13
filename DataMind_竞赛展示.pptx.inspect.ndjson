@@ -1,0 +1,301 @@
+{"kind":"deck","id":"pr/qdacdg","name":"Deck"}
+{"kind":"layout","layoutId":"c1c3c980-3b8e-4173-a83d-d8d2a49de2fa","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"87e08efd-cc31-4cf8-ba46-e57832577f9b","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/b462jh","slide":1,"title":"AI PROGRAMMING COMPETITION · PROJECT SHOWCASE","textShapes":8}
+{"kind":"shape","id":"sh/q5436psn","slide":1,"name":"cover-glow","bbox":[780,60,430,430]}
+{"kind":"textbox","id":"sh/d8v214by","slide":1,"name":"cover-eyebrow","text":"AI PROGRAMMING COMPETITION · PROJECT SHOWCASE","textPreview":"AI PROGRAMMING COMPETITION · PROJECT SHOWCASE","textChars":45,"textLines":1,"bbox":[96,128,800,24]}
+{"kind":"textbox","id":"sh/s7ml8zad","slide":1,"name":"cover-title","text":"DataMind","textPreview":"DataMind","textChars":8,"textLines":1,"bbox":[90,178,720,110]}
+{"kind":"textbox","id":"sh/3itkvatw","slide":1,"name":"cover-subtitle","text":"数据库 Agent Web 应用","textPreview":"数据库 Agent Web 应用","textChars":16,"textLines":1,"bbox":[96,292,720,48]}
+{"kind":"textbox","id":"sh/ihk325sb","slide":1,"name":"cover-claim","text":"让每个人安全、高效地与数据对话","textPreview":"让每个人安全、高效地与数据对话","textChars":15,"textLines":1,"bbox":[96,352,760,40]}
+{"kind":"textbox","id":"sh/54b2xkb2","slide":1,"name":"cover-tag-0","text":"AI Agent","textPreview":"AI Agent","textChars":8,"textLines":1,"bbox":[96,436,210,28]}
+{"kind":"shape","id":"sh/4j2l4fah","slide":1,"name":"cover-tag-line-0","bbox":[96,470,40,3]}
+{"kind":"textbox","id":"sh/nex47et0","slide":1,"name":"cover-tag-1","text":"Multi-Database","textPreview":"Multi-Database","textChars":14,"textLines":1,"bbox":[328,436,210,28]}
+{"kind":"shape","id":"sh/2do3e9sf","slide":1,"name":"cover-tag-line-1","bbox":[328,470,40,3]}
+{"kind":"textbox","id":"sh/w3qdw3ad","slide":1,"name":"cover-tag-2","text":"Security First","textPreview":"Security First","textChars":14,"textLines":1,"bbox":[560,436,210,28]}
+{"kind":"shape","id":"sh/h4zup8by","slide":1,"name":"cover-tag-line-2","bbox":[560,470,40,3]}
+{"kind":"textbox","id":"sh/u18vuts7","slide":1,"name":"cover-version","text":"v2.0.0 · 可运行 · 可测试 · 可部署","textPreview":"v2.0.0 · 可运行 · 可测试 · 可部署","textChars":24,"textLines":1,"bbox":[96,596,600,28]}
+{"kind":"notes","id":"nt/b462jh","slide":1,"text":"开场控制在 15 秒内：这是一个前后端分离、AI Agent 驱动的数据库查询与运维工作台。\n一句话说清用户价值：不会 SQL 的人也能查询，会 SQL 的人更快。"}
+{"kind":"slide","id":"sl/xx5bsd","slide":2,"title":"展示路线","textShapes":16}
+{"kind":"textbox","id":"sh/mlcnm5cr","slide":2,"name":"kicker","text":"展示路线","textPreview":"展示路线","textChars":4,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/9o36hkbi","slide":2,"name":"title","text":"20 页讲清产品价值、技术亮点与工程完整度","textPreview":"20 页讲清产品价值、技术亮点与工程完整度","textChars":21,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/onu5ofux","slide":2,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/balojut8","slide":2,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/a9cnqps3","slide":2,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/xcn6l4be","slide":2,"name":"footer-page","text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/wbe5szat","slide":2,"name":"agenda-num-0","text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[96,178,110,70]}
+{"kind":"textbox","id":"sh/je5onutk","slide":2,"name":"agenda-title-0","text":"为什么做","textPreview":"为什么做","textChars":4,"textLines":1,"bbox":[230,184,300,36]}
+{"kind":"textbox","id":"sh/ydwnupsz","slide":2,"name":"agenda-desc-0","text":"定位、目标用户与真实痛点","textPreview":"定位、目标用户与真实痛点","textChars":12,"textLines":1,"bbox":[230,224,800,28]}
+{"kind":"shape","id":"sh/wzel4fat","slide":2,"name":"agenda-line-0","bbox":[96,268,980,1]}
+{"kind":"textbox","id":"sh/x0n2d0be","slide":2,"name":"agenda-num-1","text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[96,290,110,70]}
+{"kind":"textbox","id":"sh/axw325sn","slide":2,"name":"agenda-title-1","text":"产品能力","textPreview":"产品能力","textChars":4,"textLines":1,"bbox":[230,296,300,36]}
+{"kind":"textbox","id":"sh/by5kbat8","slide":2,"name":"agenda-desc-1","text":"AI 查询、SQL 工作台、报表、元数据","textPreview":"AI 查询、SQL 工作台、报表、元数据","textChars":20,"textLines":1,"bbox":[230,336,800,28]}
+{"kind":"shape","id":"sh/k3el8fap","slide":2,"name":"agenda-line-1","bbox":[96,380,980,1]}
+{"kind":"textbox","id":"sh/l472hkba","slide":2,"name":"agenda-num-2","text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[96,402,110,70]}
+{"kind":"textbox","id":"sh/y1w365sz","slide":2,"name":"agenda-title-2","text":"技术亮点","textPreview":"技术亮点","textChars":4,"textLines":1,"bbox":[230,408,300,36]}
+{"kind":"textbox","id":"sh/j25kfat4","slide":2,"name":"agenda-desc-2","text":"Agent 工具调用、安全执行、跨库适配","textPreview":"Agent 工具调用、安全执行、跨库适配","textChars":20,"textLines":1,"bbox":[230,448,800,28]}
+{"kind":"shape","id":"sh/8rylcza1","slide":2,"name":"agenda-line-2","bbox":[96,492,980,1]}
+{"kind":"textbox","id":"sh/ts72lkrm","slide":2,"name":"agenda-num-3","text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[96,514,110,70]}
+{"kind":"textbox","id":"sh/ho325kjq","slide":2,"name":"agenda-title-3","text":"工程与治理","textPreview":"工程与治理","textChars":5,"textLines":1,"bbox":[230,520,300,36]}
+{"kind":"textbox","id":"sh/gnulwf25","slide":2,"name":"agenda-desc-3","text":"RBAC、审计、监控、测试、部署","textPreview":"RBAC、审计、监控、测试、部署","textChars":16,"textLines":1,"bbox":[230,560,800,28]}
+{"kind":"notes","id":"nt/xx5bsd","slide":2,"text":"先给观众一个清晰的路线图：从为什么做，到产品能力、技术亮点，再到工程治理。\n说明后续每一部分都服务于同一个判断：这是一个可运行、可测试、可部署的完整产品。"}
+{"kind":"slide","id":"sl/pxslcu","slide":3,"title":"项目定位","textShapes":6}
+{"kind":"textbox","id":"sh/n2do7qdc","slide":3,"name":"kicker","text":"项目定位","textPreview":"项目定位","textChars":4,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/o36p0bex","slide":3,"name":"title","text":"一个工具，覆盖从查询到报表的完整数据链路","textPreview":"一个工具，覆盖从查询到报表的完整数据链路","textChars":20,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/p4f69gv2","slide":3,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/ex47u1wf","slide":3,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/fydo36d0","slide":3,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/gzmpwbel","slide":3,"name":"footer-page","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/10v65gv6","slide":3,"name":"positioning-intro","text":"DataMind 是一款开源、智能、跨数据库的 Agent Web 应用。用户可以用自然语言提问，也可以使用传统 SQL 编辑器完成查询、表结构管理、性能分析和报表导出。","textPreview":"DataMind 是一款开源、智能、跨数据库的 Agent Web 应用。用户可以用自然语言提问，也可以使用传统 SQL 编辑器完成查询、表结构管理、性能分析和报表导出。","textChars":85,"textLines":1,"bbox":[72,158,500,130]}
+{"kind":"textbox","id":"sh/yto765wz","slide":3,"name":"positioning-values","text":"AI 驱动：自然语言生成 SQL、解释与优化建议\n多数据库统一：一套工具管理主流关系型数据库与 MongoDB\n高效工作台：编辑器、元数据、导出、报表面板一体化\n轻量可扩展：Python 后端与插件化适配器，便于二次开发","textPreview":"AI 驱动：自然语言生成 SQL、解释与优化建议 | 多数据库统一：一套工具管理主流关系型数据库与 MongoDB | 高效工作台：编辑器、元数据、导出、报表面板一体化 | 轻量可扩展：Python 后端与插件化适配器，便于二次开发","textChars":110,"textLines":4,"bbox":[72,296,500,260]}
+{"kind":"table","id":"tb/yhov6poj","slide":3,"name":"","rows":5,"cols":3,"preview":"用户 | 核心需求 | 典型场景","bbox":[620,158,588,330]}
+{"kind":"notes","id":"nt/pxslcu","slide":3,"text":"强调 DataMind 不只是 SQL 编辑器，而是从连接到查询、分析、报表、审计的完整闭环。\n与常见客户端工具的核心差异：内置 AI Agent、Web 化协作、权限与审计。"}
+{"kind":"slide","id":"sl/oe5tja","slide":4,"title":"为什么需要 DataMind","textShapes":8}
+{"kind":"textbox","id":"sh/i9kri147","slide":4,"name":"kicker","text":"为什么需要 DataMind","textPreview":"为什么需要 DataMind","textChars":14,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/5cvatg3i","slide":4,"name":"title","text":"把高门槛、高风险的数据工作，变成安全可控的对话","textPreview":"把高门槛、高风险的数据工作，变成安全可控的对话","textChars":23,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/kb29kbmd","slide":4,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/7ydsv6lo","slide":4,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/6x4rm143","slide":4,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/t0vaxg3u","slide":4,"name":"footer-page","text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"shape","id":"sh/szm9obm9","slide":4,"name":"pain-surface","bbox":[72,160,548,472]}
+{"kind":"textbox","id":"sh/f2dszql0","slide":4,"name":"pain-title","text":"常见痛点","textPreview":"常见痛点","textChars":4,"textLines":1,"bbox":[104,190,300,36]}
+{"kind":"textbox","id":"sh/u14rql4f","slide":4,"name":"pain-list","text":"业务人员不会写 SQL，取数依赖技术同事\n数据库类型多，不同工具反复切换\nAI 生成 SQL 存在误操作与越权风险\n查询结果难以沉淀为报表与文档\n敏感数据与用户操作缺少权限和审计","textPreview":"业务人员不会写 SQL，取数依赖技术同事 | 数据库类型多，不同工具反复切换 | AI 生成 SQL 存在误操作与越权风险 | 查询结果难以沉淀为报表与文档 | 敏感数据与用户操作缺少权限和审计","textChars":89,"textLines":5,"bbox":[104,244,484,350]}
+{"kind":"shape","id":"sh/8z2dk3ut","slide":4,"name":"solution-surface","bbox":[660,160,548,472]}
+{"kind":"textbox","id":"sh/90but8be","slide":4,"name":"solution-title","text":"DataMind 的解法","textPreview":"DataMind 的解法","textChars":12,"textLines":1,"bbox":[692,190,300,36]}
+{"kind":"textbox","id":"sh/mxkbidcn","slide":4,"name":"solution-list","text":"自然语言查询：输入问题，自动生成 SQL、执行并可视化\n统一适配层：屏蔽多数据库方言差异\n分级安全执行：只读自动、写操作确认、DDL 高危提示\n报表与大屏：结果一键沉淀为图表、仪表盘、分享页\nRBAC + 审计：细粒度权限、全量留痕、可导出","textPreview":"自然语言查询：输入问题，自动生成 SQL、执行并可视化 | 统一适配层：屏蔽多数据库方言差异 | 分级安全执行：只读自动、写操作确认、DDL 高危提示 | 报表与大屏：结果一键沉淀为图表、仪表盘、分享页 | RBAC + 审计：细粒度权限、全量留痕、可导出","textChars":120,"textLines":5,"bbox":[692,244,484,350]}
+{"kind":"notes","id":"nt/oe5tja","slide":4,"text":"用真实工作流举例：产品经理打开网页，输入“本月新增用户按日分组”，系统生成 SQL、返回结果，并可一键生成图表。\n不要逐条念，重点突出从“会写 SQL”到“会描述需求”的降低门槛。"}
+{"kind":"slide","id":"sl/k27ygd","slide":5,"title":"功能全景","textShapes":6}
+{"kind":"textbox","id":"sh/cvi14re1","slide":5,"name":"kicker","text":"功能全景","textPreview":"功能全景","textChars":4,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/bu9kvmxg","slide":5,"name":"title","text":"围绕数据工作流组织，而不是功能堆砌","textPreview":"围绕数据工作流组织，而不是功能堆砌","textChars":17,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/qt0j2hwb","slide":5,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/p8r2tcfq","slide":5,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/o7y107e5","slide":5,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/36p0r2xk","slide":5,"name":"footer-page","text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/25gjyxwz","slide":5,"name":"features-left","text":"连接管理：数据源 CRUD、连接测试、SSH 隧道、环境标签、密码加密\nSQL 工作台：多 Tab 编辑器、对象树、执行历史、结果分页/导出/直接编辑\n元数据管理：表/列/索引/DDL/视图/函数/存储过程/触发器/序列\nAI Agent：NL→SQL、解释优化、多轮会话、工具调用、写操作授权、自动修正","textPreview":"连接管理：数据源 CRUD、连接测试、SSH 隧道、环境标签、密码加密 | SQL 工作台：多 Tab 编辑器、对象树、执行历史、结果分页/导出/直接编辑 | 元数据管理：表/列/索引/DDL/视图/函数/存储过程/触发器/序列 | AI Agent：NL→SQL、解释优化...","textChars":152,"textLines":4,"bbox":[72,172,548,450]}
+{"kind":"textbox","id":"sh/147ipsfe","slide":5,"name":"features-right","text":"文档导出：CSV/JSON/Excel；库文档 Word/Markdown/HTML 异步导出\n可视化报表：图表 CRUD、仪表盘、分享链接、大屏模式\n系统管理：大模型配置、偏好设置、用户角色、审计、定时导出\n运维监控：连接概览、慢查询、表结构对比、Prometheus 指标","textPreview":"文档导出：CSV/JSON/Excel；库文档 Word/Markdown/HTML 异步导出 | 可视化报表：图表 CRUD、仪表盘、分享链接、大屏模式 | 系统管理：大模型配置、偏好设置、用户角色、审计、定时导出 | 运维监控：连接概览、慢查询、表结构对比、Promet...","textChars":138,"textLines":4,"bbox":[660,172,548,450]}
+{"kind":"notes","id":"nt/k27ygd","slide":5,"text":"功能模块不是孤立存在，而是围绕“查询—分析—报表—管理”闭环组织。\n补充工程化细节：定时导出、审计保留期自动清理。"}
+{"kind":"slide","id":"sl/bk1osg","slide":6,"title":"核心亮点 · AI Agent","textShapes":5}
+{"kind":"textbox","id":"sh/h03ulwje","slide":6,"name":"kicker","text":"核心亮点 · AI Agent","textPreview":"核心亮点 · AI Agent","textChars":15,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/uxsbqh03","slide":6,"name":"title","text":"把自然语言变成可信、可解释、可执行的 SQL","textPreview":"把自然语言变成可信、可解释、可执行的 SQL","textChars":22,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/vy1cjm1o","slide":6,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/8vato7ix","slide":6,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/9wjuhcji","slide":6,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/m9sbmx0r","slide":6,"name":"footer-page","text":"6","textPreview":"6","textChars":1,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/7u1cf21c","slide":6,"name":"agent-overview-intro","text":"Agent 不是简单调用大模型，而是围绕 Schema、工具与安全策略构建的查询推理系统。","textPreview":"Agent 不是简单调用大模型，而是围绕 Schema、工具与安全策略构建的查询推理系统。","textChars":45,"textLines":1,"bbox":[72,158,1136,48]}
+{"kind":"table","id":"tb/dk7y90r6","slide":6,"name":"","rows":6,"cols":3,"preview":"能力 | 说明 | 价值","bbox":[72,220,1136,360]}
+{"kind":"notes","id":"nt/bk1osg","slide":6,"text":"强调 Agent 能力的层次：不只是生成 SQL，还包括 Schema 感知、多轮对话、解释优化和流式输出。\n下一页会展开工程实现中的工具调用与失败重试。"}
+{"kind":"slide","id":"sl/9gaz5c","slide":7,"title":"Agent 执行链路","textShapes":16}
+{"kind":"textbox","id":"sh/bm9s3ydo","slide":7,"name":"kicker","text":"Agent 执行链路","textPreview":"Agent 执行链路","textChars":10,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/cnitc3et","slide":7,"name":"title","text":"工具调用 + 失败重试 + few-shot，让结果更可靠","textPreview":"工具调用 + 失败重试 + few-shot，让结果更可靠","textChars":29,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/dobu5ove","slide":7,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/ypkbetwz","slide":7,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/zatc7ydk","slide":7,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/0b2tg3u5","slide":7,"name":"footer-page","text":"7","textPreview":"7","textChars":1,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"shape","id":"sh/lcbu98vq","slide":7,"name":"agent-node-0","bbox":[72,300,190,74]}
+{"kind":"textbox","id":"sh/utgb29wv","slide":7,"name":"agent-node-title-0","text":"用户提问","textPreview":"用户提问","textChars":4,"textLines":1,"bbox":[84,314,166,28]}
+{"kind":"textbox","id":"sh/fepsvedg","slide":7,"name":"agent-node-desc-0","text":"自然语言描述需求","textPreview":"自然语言描述需求","textChars":8,"textLines":1,"bbox":[82,346,170,24]}
+{"kind":"shape","id":"sh/f690rupw","slide":7,"name":"agent-arrow-0","bbox":[266,324,22,26]}
+{"kind":"shape","id":"sh/e5gzyp8b","slide":7,"name":"agent-node-1","bbox":[292,300,190,74]}
+{"kind":"textbox","id":"sh/18rit47m","slide":7,"name":"agent-node-title-1","text":"Agent 推理","textPreview":"Agent 推理","textChars":8,"textLines":1,"bbox":[304,314,166,28]}
+{"kind":"textbox","id":"sh/07i10zq1","slide":7,"name":"agent-node-desc-1","text":"Schema 感知 + 历史 few-shot","textPreview":"Schema 感知 + 历史 few-shot","textChars":23,"textLines":1,"bbox":[302,346,170,24]}
+{"kind":"shape","id":"sh/r2p0napk","slide":7,"name":"agent-arrow-1","bbox":[486,324,22,26]}
+{"kind":"shape","id":"sh/q1gzu58z","slide":7,"name":"agent-node-2","bbox":[512,300,190,74]}
+{"kind":"textbox","id":"sh/d47ipk7q","slide":7,"name":"agent-node-title-2","text":"工具调用","textPreview":"工具调用","textChars":4,"textLines":1,"bbox":[524,314,166,28]}
+{"kind":"textbox","id":"sh/s3yhwfq5","slide":7,"name":"agent-node-desc-2","text":"表结构 / 采样 / EXPLAIN","textPreview":"表结构 / 采样 / EXPLAIN","textChars":18,"textLines":1,"bbox":[522,346,170,24]}
+{"kind":"shape","id":"sh/3yp0japo","slide":7,"name":"agent-arrow-2","bbox":[706,324,22,26]}
+{"kind":"shape","id":"sh/ixwzq583","slide":7,"name":"agent-node-3","bbox":[732,300,190,74]}
+{"kind":"textbox","id":"sh/69wj25sv","slide":7,"name":"agent-node-title-3","text":"生成 SQL","textPreview":"生成 SQL","textChars":6,"textLines":1,"bbox":[744,314,166,28]}
+{"kind":"textbox","id":"sh/7a50batg","slide":7,"name":"agent-node-desc-3","text":"只读查询或写操作","textPreview":"只读查询或写操作","textChars":8,"textLines":1,"bbox":[742,346,170,24]}
+{"kind":"shape","id":"sh/8ve14fa1","slide":7,"name":"agent-arrow-3","bbox":[926,324,22,26]}
+{"kind":"shape","id":"sh/twnid0bm","slide":7,"name":"agent-node-4","bbox":[952,300,190,74]}
+{"kind":"textbox","id":"sh/uxwj65sr","slide":7,"name":"agent-node-title-4","text":"安全执行","textPreview":"安全执行","textChars":4,"textLines":1,"bbox":[964,314,166,28]}
+{"kind":"textbox","id":"sh/vypkfatc","slide":7,"name":"agent-node-desc-4","text":"结果 / 图表 / 解释","textPreview":"结果 / 图表 / 解释","textChars":12,"textLines":1,"bbox":[962,346,170,24]}
+{"kind":"textbox","id":"sh/gzy18fax","slide":7,"name":"agent-loop","text":"失败自动修正：READ 查询错误后，由 LLM 重新生成 SQL，最多重试 3 次","textPreview":"失败自动修正：READ 查询错误后，由 LLM 重新生成 SQL，最多重试 3 次","textChars":41,"textLines":1,"bbox":[72,416,1136,30]}
+{"kind":"textbox","id":"sh/h072hkbi","slide":7,"name":"agent-tools","text":"内置工具：list_tables · get_columns · sample_data · explain　｜　工具调用最多 3 轮　｜　SSE 流式输出","textPreview":"内置工具：list_tables · get_columns · sample_data · explain　｜　工具调用最多 3 轮　｜　SSE 流式输出","textChars":78,"textLines":1,"bbox":[72,460,1136,30]}
+{"kind":"notes","id":"nt/9gaz5c","slide":7,"text":"重点讲“工具调用 + 失败重试 + few-shot”，这是 AI 编程竞赛最看重的工程深度。\n现场演示：输入“查询本月新增用户数并按日分组”，展示思考过程、SQL、结果和图表生成。"}
+{"kind":"slide","id":"sl/b0sli5","slide":8,"title":"核心亮点 · 安全执行","textShapes":5}
+{"kind":"textbox","id":"sh/ra1svyh4","slide":8,"name":"kicker","text":"核心亮点 · 安全执行","textPreview":"核心亮点 · 安全执行","textChars":11,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/sbat43yp","slide":8,"name":"title","text":"AI 可以生成 SQL，但不会拥有不受控的写权限","textPreview":"AI 可以生成 SQL，但不会拥有不受控的写权限","textChars":24,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/tcjax8za","slide":8,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/il8rytgn","slide":8,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/j6hsryh8","slide":8,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/47q903yt","slide":8,"name":"footer-page","text":"8","textPreview":"8","textChars":1,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/2hcbadgr","slide":8,"name":"security-callout","text":"execution_id 暂存待确认执行，5 分钟过期；用户确认后再次鉴权，全程审计。","textPreview":"execution_id 暂存待确认执行，5 分钟过期；用户确认后再次鉴权，全程审计。","textChars":43,"textLines":1,"bbox":[72,502,1136,30]}
+{"kind":"table","id":"tb/wj2x43mp","slide":8,"name":"","rows":5,"cols":3,"preview":"操作类型 | 授权方式 | 执行说明","bbox":[72,172,1136,300]}
+{"kind":"notes","id":"nt/b0sli5","slide":8,"text":"这是项目的信任基础：让 AI 能生成 SQL，但不让 AI 拥有不受控的写权限。\n可对比“直接给 AI 数据库权限”的传统做法，突出安全设计。"}
+{"kind":"slide","id":"sl/wrki9r","slide":9,"title":"SQL 工作台","textShapes":8}
+{"kind":"textbox","id":"sh/0bqp4bat","slide":9,"name":"kicker","text":"SQL 工作台","textPreview":"SQL 工作台","textChars":7,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/fahov698","slide":9,"name":"title","text":"面向开发者的高频查询环境","textPreview":"面向开发者的高频查询环境","textChars":12,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/e98721sn","slide":9,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/p0j61gra","slide":9,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/ozap8bap","slide":9,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/ny1oz694","slide":9,"name":"footer-page","text":"9","textPreview":"9","textChars":1,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"shape","id":"sh/2xs761sj","slide":9,"name":"sql-editor-surface","bbox":[72,160,548,472]}
+{"kind":"textbox","id":"sh/x43650r6","slide":9,"name":"sql-editor-title","text":"编辑器与对象树","textPreview":"编辑器与对象树","textChars":7,"textLines":1,"bbox":[104,190,300,36]}
+{"kind":"textbox","id":"sh/w3apcvql","slide":9,"name":"sql-editor-list","text":"CodeMirror 6：语法高亮、自动补全、SQL 格式化\n多 Tab：并行处理多个查询任务\n对象树：表、视图、索引、触发器等快速浏览\n执行历史：重复查询一键复用","textPreview":"CodeMirror 6：语法高亮、自动补全、SQL 格式化 | 多 Tab：并行处理多个查询任务 | 对象树：表、视图、索引、触发器等快速浏览 | 执行历史：重复查询一键复用","textChars":82,"textLines":4,"bbox":[104,244,484,340]}
+{"kind":"shape","id":"sh/mhovip0f","slide":9,"name":"sql-result-surface","bbox":[660,160,548,472]}
+{"kind":"textbox","id":"sh/n2xwru1k","slide":9,"name":"sql-result-title","text":"结果集与直接编辑","textPreview":"结果集与直接编辑","textChars":8,"textLines":1,"bbox":[692,190,300,36]}
+{"kind":"textbox","id":"sh/o36dkzi5","slide":9,"name":"sql-result-list","text":"虚拟滚动：大数据量下保持流畅\n分页与排序：按需加载，快速定位\n导出：CSV / JSON / Excel\n直接编辑：双击单元格、新增/删除行，写操作走确认链路","textPreview":"虚拟滚动：大数据量下保持流畅 | 分页与排序：按需加载，快速定位 | 导出：CSV / JSON / Excel | 直接编辑：双击单元格、新增/删除行，写操作走确认链路","textChars":79,"textLines":4,"bbox":[692,244,484,340]}
+{"kind":"notes","id":"nt/wrki9r","slide":9,"text":"SQL 工作台解决“效率”问题：多 Tab、对象树、执行历史和结果集编辑减少重复操作。\n结果集直接编辑仍然复用 execute_sql，自动完成分类、鉴权与审计。"}
+{"kind":"slide","id":"sl/i9m2rr","slide":10,"title":"元数据管理","textShapes":5}
+{"kind":"textbox","id":"sh/x8jqx4jq","slide":10,"name":"kicker","text":"元数据管理","textPreview":"元数据管理","textChars":5,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/a58rmpkz","slide":10,"name":"title","text":"从对象浏览到结构对比，一次看清数据资产","textPreview":"从对象浏览到结构对比，一次看清数据资产","textChars":19,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/b618vu1k","slide":10,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/o3q9kz2t","slide":10,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/p4zqtkje","slide":10,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/2187ipk3","slide":10,"name":"footer-page","text":"10","textPreview":"10","textChars":2,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/n2h8ru1o","slide":10,"name":"metadata-intro","text":"对象树支持常见数据库对象与收藏，并提供表结构对比（schema diff），帮助团队识别变更风险。","textPreview":"对象树支持常见数据库对象与收藏，并提供表结构对比（schema diff），帮助团队识别变更风险。","textChars":49,"textLines":1,"bbox":[72,158,1136,48]}
+{"kind":"table","id":"tb/h0v210fu","slide":10,"name":"","rows":5,"cols":2,"preview":"能力 | 支持内容","bbox":[72,220,1136,320]}
+{"kind":"notes","id":"nt/i9m2rr","slide":10,"text":"强调 DDL 提取已经按数据库方言实现：MySQL SHOW CREATE、PostgreSQL pg_get_functiondef、Oracle dbms_metadata。\n表结构对比用于变更审计，也是运维监控的一部分。"}
+{"kind":"slide","id":"sl/wx73k3","slide":11,"title":"跨数据库适配","textShapes":5}
+{"kind":"textbox","id":"sh/v6l8fet0","slide":11,"name":"kicker","text":"跨数据库适配","textPreview":"跨数据库适配","textChars":6,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/w7u9ojal","slide":11,"name":"title","text":"上层服务无感知，底层方言被统一封装","textPreview":"上层服务无感知，底层方言被统一封装","textChars":17,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/h83qh4b6","slide":11,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/i9crq9sr","slide":11,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/jalsjetc","slide":11,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/4bu9sjax","slide":11,"name":"footer-page","text":"11","textPreview":"11","textChars":2,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/5w3alobi","slide":11,"name":"adapter-intro","text":"BaseDBAdapter 定义统一接口：connect / test / metadata / execute / explain / schema_summary。ConnectionInfo 统一承载连接参数与 SSH 隧道。","textPreview":"BaseDBAdapter 定义统一接口：connect / test / metadata / execute / explain / schema_summary。ConnectionInfo 统一承载连接参数与 SSH 隧道。","textChars":116,"textLines":1,"bbox":[72,160,1136,68]}
+{"kind":"table","id":"tb/zmlknatg","slide":11,"name":"","rows":7,"cols":3,"preview":"数据库 | 适配方式 | 关键能力","bbox":[72,246,1136,356]}
+{"kind":"notes","id":"nt/wx73k3","slide":11,"text":"重点讲“同一套 Agent 工具如何屏蔽数据库方言差异”。\n例如获取表结构在不同数据库里调用不同 SQL，但上层服务无感知。"}
+{"kind":"slide","id":"sl/dwan2z","slide":12,"title":"可视化报表","textShapes":13}
+{"kind":"textbox","id":"sh/svy147el","slide":12,"name":"kicker","text":"可视化报表","textPreview":"可视化报表","textChars":5,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/ru50b2x0","slide":12,"name":"title","text":"查询结果直接变成可分享、可展示的看板","textPreview":"查询结果直接变成可分享、可展示的看板","textChars":18,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/69wj2xwf","slide":12,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/107ihcf2","slide":12,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/gzy18rex","slide":12,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/fyp0fmxc","slide":12,"name":"footer-page","text":"12","textPreview":"12","textChars":2,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"shape","id":"sh/exgj6hwr","slide":12,"name":"report-col-0","bbox":[72,178,348,330]}
+{"kind":"textbox","id":"sh/p4rilwfe","slide":12,"name":"report-title-0","text":"图表","textPreview":"图表","textChars":2,"textLines":1,"bbox":[100,210,292,38]}
+{"kind":"textbox","id":"sh/o3i1cret","slide":12,"name":"report-sub-0","text":"柱状图 / 折线图 / 饼图","textPreview":"柱状图 / 折线图 / 饼图","textChars":14,"textLines":1,"bbox":[100,264,292,60]}
+{"kind":"textbox","id":"sh/uloni1kb","slide":12,"name":"report-desc-0","text":"自定义 SQL → 图表","textPreview":"自定义 SQL → 图表","textChars":12,"textLines":1,"bbox":[100,334,292,130]}
+{"kind":"shape","id":"sh/vmxor61w","slide":12,"name":"report-col-1","bbox":[466,178,348,330]}
+{"kind":"textbox","id":"sh/gnq5kbih","slide":12,"name":"report-title-1","text":"仪表盘","textPreview":"仪表盘","textChars":3,"textLines":1,"bbox":[494,210,292,38]}
+{"kind":"textbox","id":"sh/hoz6tgj2","slide":12,"name":"report-sub-1","text":"gridstack 拖拽布局","textPreview":"gridstack 拖拽布局","textChars":14,"textLines":1,"bbox":[494,264,292,60]}
+{"kind":"textbox","id":"sh/ip8nml0n","slide":12,"name":"report-desc-1","text":"多图表组合展示","textPreview":"多图表组合展示","textChars":7,"textLines":1,"bbox":[494,334,292,130]}
+{"kind":"shape","id":"sh/3qhovq18","slide":12,"name":"report-col-2","bbox":[860,178,348,330]}
+{"kind":"textbox","id":"sh/4rq5ovid","slide":12,"name":"report-title-2","text":"分享与大屏","textPreview":"分享与大屏","textChars":5,"textLines":1,"bbox":[888,210,292,38]}
+{"kind":"textbox","id":"sh/5sz6xgjy","slide":12,"name":"report-sub-2","text":"分享链接 + 大屏模式","textPreview":"分享链接 + 大屏模式","textChars":11,"textLines":1,"bbox":[888,264,292,60]}
+{"kind":"textbox","id":"sh/yt4nahk3","slide":12,"name":"report-desc-2","text":"跨团队、跨设备查看","textPreview":"跨团队、跨设备查看","textChars":9,"textLines":1,"bbox":[888,334,292,130]}
+{"kind":"notes","id":"nt/dwan2z","slide":12,"text":"报表模块让查询结果不止停留在表格里，而是可以直接形成可复用的看板。\n大屏模式适合项目路演和监控展示场景。"}
+{"kind":"slide","id":"sl/2wtk1o","slide":13,"title":"系统管理 · AI 配置","textShapes":5}
+{"kind":"textbox","id":"sh/s3m58fux","slide":13,"name":"kicker","text":"系统管理 · AI 配置","textPreview":"系统管理 · AI 配置","textChars":12,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/72d4fatc","slide":13,"name":"title","text":"模型可插拔，Key 只加密存储，前端不回显明文","textPreview":"模型可插拔，Key 只加密存储，前端不回显明文","textChars":23,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/614n65cr","slide":13,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/50vmd0v6","slide":13,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/kzm54vul","slide":13,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/jed4bad0","slide":13,"name":"footer-page","text":"13","textPreview":"13","textChars":2,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/xcbm90va","slide":13,"name":"ai-config-note","text":"默认模型在系统设置中选择；对话创建时选择该会话使用的模型，创建后不可切换以保证上下文一致。","textPreview":"默认模型在系统设置中选择；对话创建时选择该会话使用的模型，创建后不可切换以保证上下文一致。","textChars":45,"textLines":1,"bbox":[72,486,1136,48]}
+{"kind":"table","id":"tb/ba5k3ix4","slide":13,"name":"","rows":4,"cols":3,"preview":"Provider | 接入方式 | 配置说明","bbox":[72,168,1136,280]}
+{"kind":"notes","id":"nt/2wtk1o","slide":13,"text":"重点讲 Provider 抽象：OpenAICompatProvider 与 ClaudeProvider 统一 chat / stream / ping。\n未配置 Key 时 validate 快速失败，不会等待 SDK 超时。"}
+{"kind":"slide","id":"sl/m5ngak","slide":14,"title":"用户与角色","textShapes":7}
+{"kind":"textbox","id":"sh/t8j29cj6","slide":14,"name":"kicker","text":"用户与角色","textPreview":"用户与角色","textChars":5,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/658jyx0v","slide":14,"name":"title","text":"RBAC 权限从页面控制到 SQL 操作级别","textPreview":"RBAC 权限从页面控制到 SQL 操作级别","textChars":22,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/r61k7210","slide":14,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/gba14rix","slide":14,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/1cj2dcji","slide":14,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/e9sj2h0r","slide":14,"name":"footer-page","text":"14","textPreview":"14","textChars":2,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/fa1kbm1c","slide":14,"name":"rbac-left","text":"5 个内置角色：admin、运维、分析师、只读用户等预设能力\n自定义角色：权限码按功能分组，灵活组合\n页面控制：路由守卫按 permission / permissionAny 控制","textPreview":"5 个内置角色：admin、运维、分析师、只读用户等预设能力 | 自定义角色：权限码按功能分组，灵活组合 | 页面控制：路由守卫按 permission / permissionAny 控制","textChars":91,"textLines":3,"bbox":[72,172,548,380]}
+{"kind":"textbox","id":"sh/wfq1sn2d","slide":14,"name":"rbac-right-title","text":"SQL 权限三层拆分","textPreview":"SQL 权限三层拆分","textChars":10,"textLines":1,"bbox":[660,172,400,36]}
+{"kind":"textbox","id":"sh/xwrmtwjm","slide":14,"name":"rbac-note","text":"运维监控路由允许 monitor 或 audit 任一权限进入，页内各 Tab 再按权限显示。","textPreview":"运维监控路由允许 monitor 或 audit 任一权限进入，页内各 Tab 再按权限显示。","textChars":47,"textLines":1,"bbox":[660,492,548,64]}
+{"kind":"table","id":"tb/gnyh8neh","slide":14,"name":"","rows":4,"cols":3,"preview":"操作 | 权限码 | 说明","bbox":[660,220,548,250]}
+{"kind":"notes","id":"nt/m5ngak","slide":14,"text":"权限模型是用户 → 角色 → permissions（JSON），admin 角色为 [*]。\n重点说明 SQL 操作不是粗粒度开关，而是 READ / DML / DDL 分别授权。"}
+{"kind":"slide","id":"sl/4swad5","slide":15,"title":"审计与监控","textShapes":8}
+{"kind":"textbox","id":"sh/sbalwr2d","slide":15,"name":"kicker","text":"审计与监控","textPreview":"审计与监控","textChars":5,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/ra1k3mls","slide":15,"name":"title","text":"让每一次操作都可追溯、可观察","textPreview":"让每一次操作都可追溯、可观察","textChars":14,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/q9s3uhkn","slide":15,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/5oj21c32","slide":15,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/4nals72h","slide":15,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/3mhkz2lw","slide":15,"name":"footer-page","text":"15","textPreview":"15","textChars":2,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"shape","id":"sh/il83qxkb","slide":15,"name":"audit-surface","bbox":[72,160,548,472]}
+{"kind":"textbox","id":"sh/pk3mdw36","slide":15,"name":"audit-title","text":"审计日志","textPreview":"审计日志","textChars":4,"textLines":1,"bbox":[104,190,300,36]}
+{"kind":"textbox","id":"sh/ojul4b2l","slide":15,"name":"audit-list","text":"登录、SQL 执行、Agent 动作全量留痕\n操作类型、SQL 文本、状态可追溯\n导出 CSV / XLSX\naudit_retention_days 默认 180 天自动清理","textPreview":"登录、SQL 执行、Agent 动作全量留痕 | 操作类型、SQL 文本、状态可追溯 | 导出 CSV / XLSX | audit_retention_days 默认 180 天自动清理","textChars":88,"textLines":4,"bbox":[104,244,484,350]}
+{"kind":"shape","id":"sh/el03a9of","slide":15,"name":"monitor-surface","bbox":[660,160,548,472]}
+{"kind":"textbox","id":"sh/zmtkju5k","slide":15,"name":"monitor-title","text":"运维监控","textPreview":"运维监控","textChars":4,"textLines":1,"bbox":[692,190,300,36]}
+{"kind":"textbox","id":"sh/0n2lcz65","slide":15,"name":"monitor-list","text":"连接概览与慢查询统计\n表结构对比（schema diff）\n定时导出任务状态\n/metrics 暴露 Prometheus 指标","textPreview":"连接概览与慢查询统计 | 表结构对比（schema diff） | 定时导出任务状态 | /metrics 暴露 Prometheus 指标","textChars":64,"textLines":4,"bbox":[692,244,484,350]}
+{"kind":"notes","id":"nt/4swad5","slide":15,"text":"审计与监控是系统可治理的体现，也是企业级部署的关键。\n强调审计导出与自动清理，以及 Prometheus 指标对运维友好。"}
+{"kind":"slide","id":"sl/3hsnzs","slide":16,"title":"工程化与可观测性","textShapes":17}
+{"kind":"textbox","id":"sh/xsryt0jq","slide":16,"name":"kicker","text":"工程化与可观测性","textPreview":"工程化与可观测性","textChars":8,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/ap0fyl0z","slide":16,"name":"title","text":"不只做功能，也关注可测试、可监控、可部署","textPreview":"不只做功能，也关注可测试、可监控、可部署","textChars":20,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/vq9wrq1k","slide":16,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/8nixwbit","slide":16,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/9orepgje","slide":16,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/mlgfu103","slide":16,"name":"footer-page","text":"16","textPreview":"16","textChars":2,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"shape","id":"sh/nm9wn618","slide":16,"name":"eng-surface-0","bbox":[72,170,266,150]}
+{"kind":"textbox","id":"sh/sj2x8fid","slide":16,"name":"eng-number-0","text":"21","textPreview":"21","textChars":2,"textLines":1,"bbox":[90,194,230,54]}
+{"kind":"textbox","id":"sh/tkby1kzi","slide":16,"name":"eng-label-0","text":"后端测试文件","textPreview":"后端测试文件","textChars":6,"textLines":1,"bbox":[90,254,230,30]}
+{"kind":"textbox","id":"sh/l0ji5szm","slide":16,"name":"eng-desc-0","text":"约 115 个 pytest 用例","textPreview":"约 115 个 pytest 用例","textChars":17,"textLines":1,"bbox":[90,282,230,28]}
+{"kind":"shape","id":"sh/0zahcny1","slide":16,"name":"eng-surface-1","bbox":[362,170,266,150]}
+{"kind":"textbox","id":"sh/zyh03ihg","slide":16,"name":"eng-number-1","text":"95+","textPreview":"95+","textChars":3,"textLines":1,"bbox":[380,194,230,54]}
+{"kind":"textbox","id":"sh/yx8zaxgb","slide":16,"name":"eng-label-1","text":"API 端点","textPreview":"API 端点","textChars":6,"textLines":1,"bbox":[380,254,230,30]}
+{"kind":"textbox","id":"sh/dwzi1szq","slide":16,"name":"eng-desc-1","text":"15 个路由模块","textPreview":"15 个路由模块","textChars":8,"textLines":1,"bbox":[380,282,230,28]}
+{"kind":"shape","id":"sh/cvqh8ny5","slide":16,"name":"eng-surface-2","bbox":[652,170,266,150]}
+{"kind":"textbox","id":"sh/buh0zihk","slide":16,"name":"eng-number-2","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[670,194,230,54]}
+{"kind":"textbox","id":"sh/qt8z6dgz","slide":16,"name":"eng-label-2","text":"命令部署","textPreview":"命令部署","textChars":4,"textLines":1,"bbox":[670,254,230,30]}
+{"kind":"textbox","id":"sh/hs3idczu","slide":16,"name":"eng-desc-2","text":"Docker Compose 一键启动","textPreview":"Docker Compose 一键启动","textChars":19,"textLines":1,"bbox":[670,282,230,28]}
+{"kind":"shape","id":"sh/wruhk7y9","slide":16,"name":"eng-surface-3","bbox":[942,170,266,150]}
+{"kind":"textbox","id":"sh/g72twfax","slide":16,"name":"eng-number-3","text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[960,194,230,54]}
+{"kind":"textbox","id":"sh/18va5kri","slide":16,"name":"eng-label-3","text":"监控信号","textPreview":"监控信号","textChars":4,"textLines":1,"bbox":[960,254,230,30]}
+{"kind":"textbox","id":"sh/e5kbu5sr","slide":16,"name":"eng-desc-3","text":"请求量 / 延迟 / SQL 执行","textPreview":"请求量 / 延迟 / SQL 执行","textChars":17,"textLines":1,"bbox":[960,282,230,28]}
+{"kind":"textbox","id":"sh/f6ts3atc","slide":16,"name":"eng-details","text":"测试：后端 pytest、前端构建校验、Playwright E2E 脚本\n调度：每分钟扫描定时导出任务，复用 export_service\n监控：慢查询、连接概览、表结构对比、Prometheus 指标\n部署：Docker 多阶段构建，数据卷 dbagent-data 持久化","textPreview":"测试：后端 pytest、前端构建校验、Playwright E2E 脚本 | 调度：每分钟扫描定时导出任务，复用 export_service | 监控：慢查询、连接概览、表结构对比、Prometheus 指标 | 部署：Docker 多阶段构建，数据卷 dbagent-...","textChars":139,"textLines":4,"bbox":[72,356,1136,230]}
+{"kind":"notes","id":"nt/3hsnzs","slide":16,"text":"工程化能力是竞赛加分项，但不要展开太深，用数据和截图快速证明。\n可补充：后端约 43 个 Python 文件、前端约 32 个源文件。"}
+{"kind":"slide","id":"sl/k0i2qs","slide":17,"title":"系统架构","textShapes":10}
+{"kind":"textbox","id":"sh/udcraxcv","slide":17,"name":"arch-kicker","text":"系统架构","textPreview":"系统架构","textChars":4,"textLines":1,"bbox":[72,42,500,24]}
+{"kind":"textbox","id":"sh/h03alsbm","slide":17,"name":"arch-title","text":"分层清晰，扩展点明确","textPreview":"分层清晰，扩展点明确","textChars":10,"textLines":1,"bbox":[72,70,1100,58]}
+{"kind":"shape","id":"sh/gzu9cnu1","slide":17,"name":"arch-accent","bbox":[72,134,56,5]}
+{"kind":"shape","id":"sh/7al8fitk","slide":17,"name":"arch-layer-0","bbox":[150,186,980,82]}
+{"kind":"textbox","id":"sh/69cr6dcz","slide":17,"name":"arch-layer-title-0","text":"前端 · Vue 3","textPreview":"前端 · Vue 3","textChars":10,"textLines":1,"bbox":[172,198,250,30]}
+{"kind":"textbox","id":"sh/tc3qhsba","slide":17,"name":"arch-layer-desc-0","text":"Vite · TypeScript · Pinia · Naive UI · CodeMirror 6 · ECharts · gridstack","textPreview":"Vite · TypeScript · Pinia · Naive UI · CodeMirror 6 · ECharts · gridstack","textChars":73,"textLines":1,"bbox":[172,232,936,26]}
+{"kind":"shape","id":"sh/sbu98nup","slide":17,"name":"arch-arrow-0","bbox":[210,266,26,30]}
+{"kind":"shape","id":"sh/r65sr2to","slide":17,"name":"arch-layer-1","bbox":[150,296,980,82]}
+{"kind":"textbox","id":"sh/q5wrihs3","slide":17,"name":"arch-layer-title-1","text":"后端 API · FastAPI","textPreview":"后端 API · FastAPI","textChars":16,"textLines":1,"bbox":[172,308,250,30]}
+{"kind":"textbox","id":"sh/ojy9k32t","slide":17,"name":"arch-layer-desc-1","text":"15 个路由模块 · 业务服务层 · 统一响应与异常处理","textPreview":"15 个路由模块 · 业务服务层 · 统一响应与异常处理","textChars":28,"textLines":1,"bbox":[172,342,936,26]}
+{"kind":"shape","id":"sh/pk7at83e","slide":17,"name":"arch-arrow-1","bbox":[210,376,26,30]}
+{"kind":"shape","id":"sh/2xwritkn","slide":17,"name":"arch-layer-2","bbox":[150,406,980,82]}
+{"kind":"textbox","id":"sh/nipsryl8","slide":17,"name":"arch-layer-title-2","text":"数据库适配层","textPreview":"数据库适配层","textChars":6,"textLines":1,"bbox":[172,418,250,30]}
+{"kind":"textbox","id":"sh/0ve9g32x","slide":17,"name":"arch-layer-desc-2","text":"BaseDBAdapter → SQLite / MySQL / PostgreSQL / Oracle / MongoDB","textPreview":"BaseDBAdapter → SQLite / MySQL / PostgreSQL / Oracle / MongoDB","textChars":62,"textLines":1,"bbox":[172,452,936,26]}
+{"kind":"shape","id":"sh/1wnqp83i","slide":17,"name":"arch-arrow-2","bbox":[210,486,26,30]}
+{"kind":"shape","id":"sh/etwretkr","slide":17,"name":"arch-layer-3","bbox":[150,516,980,82]}
+{"kind":"textbox","id":"sh/fu58nylc","slide":17,"name":"arch-layer-title-3","text":"目标数据库","textPreview":"目标数据库","textChars":5,"textLines":1,"bbox":[172,528,250,30]}
+{"kind":"textbox","id":"sh/sre9cj2l","slide":17,"name":"arch-layer-desc-3","text":"应用状态存 SQLite，数据源按类型分发执行","textPreview":"应用状态存 SQLite，数据源按类型分发执行","textChars":23,"textLines":1,"bbox":[172,562,936,26]}
+{"kind":"notes","id":"nt/k0i2qs","slide":17,"text":"强调两个可扩展点：数据库适配器和 LLM Provider 抽象。\n补充：OceanBase、GoldenDB 复用 MySQLAdapter，后续新增数据库成本低。"}
+{"kind":"slide","id":"sl/4dos13","slide":18,"title":"产品界面","textShapes":5}
+{"kind":"textbox","id":"sh/grel0vil","slide":18,"name":"kicker","text":"产品界面","textPreview":"产品界面","textChars":4,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/fq5krqh0","slide":18,"name":"title","text":"每个高频场景都有对应的工作台视图","textPreview":"每个高频场景都有对应的工作台视图","textChars":16,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/epw3yl0v","slide":18,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/pw7mx0zi","slide":18,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/ovyl4vix","slide":18,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/3u54vqhc","slide":18,"name":"footer-page","text":"18","textPreview":"18","textChars":2,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/5032lgzy","slide":18,"name":"interface-note","text":"登录入口：http://127.0.0.1:5174　·　演示账号：admin / admin123","textPreview":"登录入口：http://127.0.0.1:5174　·　演示账号：admin / admin123","textChars":50,"textLines":1,"bbox":[72,534,1136,30]}
+{"kind":"table","id":"tb/ry5wvqpc","slide":18,"name":"","rows":5,"cols":3,"preview":"场景 | 核心视图 | 关键能力","bbox":[72,168,1136,330]}
+{"kind":"notes","id":"nt/4dos13","slide":18,"text":"现场按“智能查询 → 结果转图表 → 保存报表 → 审计日志”顺序演示。\n如果时间有限，优先演示 AI Agent 和写操作确认弹窗。"}
+{"kind":"slide","id":"sl/0kwehs","slide":19,"title":"创新点与技术难点","textShapes":8}
+{"kind":"textbox","id":"sh/ed4fyp4r","slide":19,"name":"kicker","text":"创新点与技术难点","textPreview":"创新点与技术难点","textChars":8,"textLines":1,"bbox":[72,40,500,24]}
+{"kind":"textbox","id":"sh/1gvy94ni","slide":19,"name":"title","text":"工程封装让大模型能力变得稳定、安全、可用","textPreview":"工程封装让大模型能力变得稳定、安全、可用","textChars":20,"textLines":1,"bbox":[72,66,1100,58]}
+{"kind":"shape","id":"sh/0fmx0zmx","slide":19,"name":"title-accent","bbox":[72,130,56,5]}
+{"kind":"shape","id":"sh/rqdg3u5g","slide":19,"name":"footer-line","bbox":[72,676,1136,1]}
+{"kind":"textbox","id":"sh/qpkfup4v","slide":19,"name":"footer-left","text":"DataMind · 数据库 Agent Web 应用","textPreview":"DataMind · 数据库 Agent Web 应用","textChars":27,"textLines":1,"bbox":[72,686,500,18]}
+{"kind":"textbox","id":"sh/dcvy5kn6","slide":19,"name":"footer-page","text":"19","textPreview":"19","textChars":2,"textLines":1,"bbox":[1108,686,100,18]}
+{"kind":"textbox","id":"sh/cbmxwfml","slide":19,"name":"innov-title","text":"创新点","textPreview":"创新点","textChars":3,"textLines":1,"bbox":[72,172,300,34]}
+{"kind":"textbox","id":"sh/3mtwza54","slide":19,"name":"innov-list","text":"自然语言到 SQL 的 Agent 闭环：工具调用、失败重试、few-shot 增强\n写操作分级确认，让 AI 可用且可控\n跨数据库适配层，统一多源元数据与查询体验\n查询结果一键转图表、仪表盘、分享大屏\nRBAC + 全量审计 + Prometheus 指标，具备企业级完整性","textPreview":"自然语言到 SQL 的 Agent 闭环：工具调用、失败重试、few-shot 增强 | 写操作分级确认，让 AI 可用且可控 | 跨数据库适配层，统一多源元数据与查询体验 | 查询结果一键转图表、仪表盘、分享大屏 | RBAC + 全量审计 + Prometheus 指标...","textChars":138,"textLines":5,"bbox":[72,222,548,400]}
+{"kind":"textbox","id":"sh/2lkfq54j","slide":19,"name":"difficulty-title","text":"技术难点","textPreview":"技术难点","textChars":4,"textLines":1,"bbox":[660,172,300,34]}
+{"kind":"textbox","id":"sh/872xsj6h","slide":19,"name":"difficulty-list","text":"多数据库方言抽象与 DDL / 序列元数据提取\n控制 Agent 工具调用轮次与 token 成本\nSSE 流式事件在前端的逐步渲染\n结果集直接编辑与写操作确认链路\nSSH 隧道连接与敏感信息加密","textPreview":"多数据库方言抽象与 DDL / 序列元数据提取 | 控制 Agent 工具调用轮次与 token 成本 | SSE 流式事件在前端的逐步渲染 | 结果集直接编辑与写操作确认链路 | SSH 隧道连接与敏感信息加密","textChars":98,"textLines":5,"bbox":[660,222,548,400]}
+{"kind":"notes","id":"nt/0kwehs","slide":19,"text":"挑 2–3 个最有差异化的点展开，例如“失败自动修正重试”和“写操作确认协议”。\n表明团队不是简单调用大模型，而是做了可靠的工程封装。"}
+{"kind":"slide","id":"sl/od2234","slide":20,"title":"总结与展望","textShapes":18}
+{"kind":"textbox","id":"sh/a9o7a9gb","slide":20,"name":"close-kicker","text":"总结与展望","textPreview":"总结与展望","textChars":5,"textLines":1,"bbox":[72,44,500,24]}
+{"kind":"textbox","id":"sh/xcf654f2","slide":20,"name":"close-title","text":"用 AI Agent 重新定义数据库查询与数据协作","textPreview":"用 AI Agent 重新定义数据库查询与数据协作","textChars":25,"textLines":1,"bbox":[72,76,1100,62]}
+{"kind":"textbox","id":"sh/wb6pczyh","slide":20,"name":"close-summary","text":"DataMind 已完成自然语言查询、安全执行、跨库适配、报表、权限审计、监控、定时导出与 Docker 部署。","textPreview":"DataMind 已完成自然语言查询、安全执行、跨库适配、报表、权限审计、监控、定时导出与 Docker 部署。","textChars":56,"textLines":1,"bbox":[72,156,1080,48]}
+{"kind":"textbox","id":"sh/n6dozux0","slide":20,"name":"close-num-0","text":"7","textPreview":"7","textChars":1,"textLines":1,"bbox":[72,226,250,48]}
+{"kind":"textbox","id":"sh/m5476pgf","slide":20,"name":"close-label-0","text":"数据库类型","textPreview":"数据库类型","textChars":5,"textLines":1,"bbox":[72,276,250,26]}
+{"kind":"textbox","id":"sh/98f614fq","slide":20,"name":"close-desc-0","text":"跨库适配","textPreview":"跨库适配","textChars":4,"textLines":1,"bbox":[72,304,250,22]}
+{"kind":"textbox","id":"sh/876p8zyl","slide":20,"name":"close-num-1","text":"115+","textPreview":"115+","textChars":4,"textLines":1,"bbox":[352,226,250,48]}
+{"kind":"textbox","id":"sh/zidovuxo","slide":20,"name":"close-label-1","text":"测试用例","textPreview":"测试用例","textChars":4,"textLines":1,"bbox":[352,276,250,26]}
+{"kind":"textbox","id":"sh/eh4n2pg3","slide":20,"name":"close-desc-1","text":"可测试","textPreview":"可测试","textChars":3,"textLines":1,"bbox":[352,304,250,22]}
+{"kind":"textbox","id":"sh/wbep0ry1","slide":20,"name":"close-num-2","text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[632,226,250,48]}
+{"kind":"textbox","id":"sh/xc7q9wfm","slide":20,"name":"close-label-2","text":"命令部署","textPreview":"命令部署","textChars":4,"textLines":1,"bbox":[632,276,250,26]}
+{"kind":"textbox","id":"sh/apw7yhgv","slide":20,"name":"close-desc-2","text":"可部署","textPreview":"可部署","textChars":3,"textLines":1,"bbox":[632,304,250,22]}
+{"kind":"textbox","id":"sh/va5o7mxg","slide":20,"name":"close-num-3","text":"v2.0.0","textPreview":"v2.0.0","textChars":6,"textLines":1,"bbox":[912,226,250,48]}
+{"kind":"textbox","id":"sh/8nepwryp","slide":20,"name":"close-label-3","text":"产品版本","textPreview":"产品版本","textChars":4,"textLines":1,"bbox":[912,276,250,26]}
+{"kind":"textbox","id":"sh/9on65wfa","slide":20,"name":"close-desc-3","text":"可运行","textPreview":"可运行","textChars":3,"textLines":1,"bbox":[912,304,250,22]}
+{"kind":"textbox","id":"sh/mlw7uhgz","slide":20,"name":"close-plan-title","text":"下一步路线","textPreview":"下一步路线","textChars":5,"textLines":1,"bbox":[72,368,300,34]}
+{"kind":"textbox","id":"sh/nm5o3mx4","slide":20,"name":"close-roadmap","text":"补齐更多数据库适配器与 DDL / 序列能力\n扩展 Agent 工具：索引建议、慢查询根因分析\n增强图表高级能力与协作工作区\n建设会话级 Prompt 模板与模型评测体系","textPreview":"补齐更多数据库适配器与 DDL / 序列能力 | 扩展 Agent 工具：索引建议、慢查询根因分析 | 增强图表高级能力与协作工作区 | 建设会话级 Prompt 模板与模型评测体系","textChars":85,"textLines":4,"bbox":[72,416,700,220]}
+{"kind":"textbox","id":"sh/sjyp8by9","slide":20,"name":"close-ask","text":"演示入口：http://127.0.0.1:5174 · admin / admin123","textPreview":"演示入口：http://127.0.0.1:5174 · admin / admin123","textChars":45,"textLines":1,"bbox":[72,648,800,30]}
+{"kind":"notes","id":"nt/od2234","slide":20,"text":"最后回到用户价值：让每个人都能安全、高效地与数据对话。\n预留 Q&A：准备数据安全、AI 准确率、与现有数据库工具差异三个常见问题。"}

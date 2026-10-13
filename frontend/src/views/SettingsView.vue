@@ -36,38 +36,6 @@
         </n-grid>
         <n-empty v-if="!aiConfigs.length" description="暂无大模型配置，添加后即可使用 Agent" style="padding: 60px 0" />
       </n-tab-pane>
-
-      <n-tab-pane name="prefs" tab="偏好设置">
-        <n-card size="small" style="max-width: 560px">
-          <n-form label-placement="left" label-width="120px">
-            <n-form-item label="界面主题">
-              <n-radio-group v-model:value="settings.theme" @update:value="settings.setTheme">
-                <n-radio value="light">亮色</n-radio>
-                <n-radio value="dark">暗色</n-radio>
-              </n-radio-group>
-            </n-form-item>
-            <n-form-item label="语言">
-              <n-select v-model:value="settings.language" :options="[{ label: '简体中文', value: 'zh' }, { label: 'English', value: 'en' }]" style="width: 200px" />
-            </n-form-item>
-            <n-form-item label="编辑器字号">
-              <n-input-number v-model:value="fontSize" :min="10" :max="28" style="width: 160px" />
-            </n-form-item>
-            <n-form-item label="Tab 宽度">
-              <n-input-number v-model:value="tabSize" :min="2" :max="8" style="width: 160px" />
-            </n-form-item>
-            <n-form-item label="自动补全">
-              <n-switch v-model:value="autocomplete" />
-            </n-form-item>
-            <n-form-item label="审计日志保留(天)">
-              <n-input-number v-model:value="auditRetentionDays" :min="1" :max="3650" style="width: 160px" />
-              <span class="pref-hint">超出天数的审计日志在服务启动时自动清理</span>
-            </n-form-item>
-            <n-form-item label="">
-              <n-button type="primary" :loading="savingPrefs" @click="savePrefs">保存设置</n-button>
-            </n-form-item>
-          </n-form>
-        </n-card>
-      </n-tab-pane>
     </n-tabs>
 
     <!-- AI 配置编辑 -->
@@ -116,15 +84,13 @@ import { NButton, NPopconfirm, useMessage } from "naive-ui";
 import { configApi } from "../api";
 import type { AIConfig } from "../api";
 import { useAuthStore } from "../stores/auth";
-import { useSettingsStore } from "../stores/settings";
 import ConnectionsView from "./ConnectionsView.vue";
 
 const message = useMessage();
 const auth = useAuthStore();
-const settings = useSettingsStore();
 const canManageConnections = computed(() => auth.hasPermission("connections"));
 const canManageAi = computed(() => auth.hasPermission("settings"));
-const activeTab = ref(canManageConnections.value ? "connections" : canManageAi.value ? "ai" : "prefs");
+const activeTab = ref(canManageConnections.value ? "connections" : "ai");
 const aiConfigs = ref<AIConfig[]>([]);
 const aiModal = ref(false);
 const aiSaving = ref(false);
@@ -132,7 +98,6 @@ const editingAi = ref<AIConfig | null>(null);
 const testingAiId = ref<number | null>(null);
 const testingForm = ref(false);
 const aiTestResult = ref<{ ok: boolean; text: string } | null>(null);
-const savingPrefs = ref(false);
 
 const providerOptions = [
   { label: "OpenAI（或兼容网关）", value: "openai" },
@@ -141,23 +106,6 @@ const providerOptions = [
 ];
 
 const aiForm = reactive({ provider: "openai", api_base: "", model_name: "", api_key: "", max_tokens: 4096, temperature: 0.7, is_active: true, is_default: false });
-
-const fontSize = computed({
-  get: () => Number(settings.editor_font_size || 14),
-  set: (v) => (settings.editor_font_size = String(v)),
-});
-const tabSize = computed({
-  get: () => Number(settings.editor_tab_size || 4),
-  set: (v) => (settings.editor_tab_size = String(v)),
-});
-const autocomplete = computed({
-  get: () => settings.autocomplete === "true",
-  set: (v) => (settings.autocomplete = String(v)),
-});
-const auditRetentionDays = computed({
-  get: () => Number(settings.audit_retention_days || 180),
-  set: (v) => (settings.audit_retention_days = String(v)),
-});
 
 function providerLabel(p: string) {
   return providerOptions.find((o) => o.value === p)?.label || p;
@@ -279,18 +227,7 @@ async function removeAi(id: number) {
   }
 }
 
-async function savePrefs() {
-  savingPrefs.value = true;
-  try {
-    await settings.save();
-    message.success("设置已保存");
-  } finally {
-    savingPrefs.value = false;
-  }
-}
-
 onMounted(async () => {
-  await settings.load();
   if (canManageAi.value) await loadAi();
 });
 </script>
@@ -315,10 +252,5 @@ onMounted(async () => {
   font-size: 13px;
   color: #666;
   line-height: 1.9;
-}
-.pref-hint {
-  margin-left: 10px;
-  font-size: 12px;
-  color: #888;
 }
 </style>

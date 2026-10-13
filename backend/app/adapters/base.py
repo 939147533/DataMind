@@ -8,6 +8,40 @@ class AdapterError(Exception):
     """适配器层错误（连接失败、未安装驱动等）。"""
 
 
+_NUMERIC_LENGTH_TYPES = re.compile(r"decimal|numeric|number", re.IGNORECASE)
+
+
+def base_data_type(data_type: str = "") -> str:
+    """去掉长度/精度修饰并小写，用于表结构对比时的类型比较。"""
+    return re.sub(r"\([^)]*\)", "", data_type or "").strip().lower()
+
+
+def column_length(
+    data_type: str = "",
+    char_length=None,
+    numeric_precision=None,
+    numeric_scale=None,
+) -> str:
+    """规范化列长度/精度：字符类型取字符长度，数值类型取 precision[,scale]，其余返回空串。
+
+    优先使用驱动返回的长度/精度元数据；缺失时回退解析声明类型中的括号部分（如 SQLite 的 VARCHAR(255)）。
+    """
+    if char_length not in (None, "", 0, "0"):
+        try:
+            return str(int(char_length))
+        except (TypeError, ValueError):
+            return str(char_length)
+    if numeric_precision not in (None, "", 0, "0") and _NUMERIC_LENGTH_TYPES.search(data_type or ""):
+        try:
+            precision = str(int(numeric_precision))
+            scale = int(numeric_scale) if numeric_scale not in (None, "", 0, "0") else 0
+        except (TypeError, ValueError):
+            return str(numeric_precision)
+        return f"{precision},{scale}" if scale else precision
+    match = re.search(r"\(([^)]*)\)", data_type or "")
+    return match.group(1).strip() if match else ""
+
+
 @dataclass
 class ConnectionInfo:
     db_type: str = "sqlite"

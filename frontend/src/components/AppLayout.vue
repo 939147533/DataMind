@@ -49,7 +49,7 @@ const menuItems = [
   { label: "可视化报表", key: "reports", permission: "reports", icon: () => h(NIcon, null, { default: () => "📊" }) },
   { label: "用户管理", key: "users", permission: "users", icon: () => h(NIcon, null, { default: () => "👥" }) },
   { label: "角色管理", key: "roles", permission: "roles", icon: () => h(NIcon, null, { default: () => "🛡️" }) },
-  { label: "系统设置", key: "settings", permissionAny: ["settings", "connections"], icon: () => h(NIcon, null, { default: () => "⚙️" }) },
+  { label: "连接管理", key: "settings", permissionAny: ["settings", "connections"], icon: () => h(NIcon, null, { default: () => "⚙️" }) },
   { label: "运维监控", key: "monitor", permissionAny: ["monitor", "audit"], icon: () => h(NIcon, null, { default: () => "📈" }) },
 ];
 const menuOptions = computed(() =>
@@ -66,7 +66,7 @@ const pageTitle = computed(() => {
     reports: "可视化报表",
     users: "用户管理",
     roles: "角色管理",
-    settings: "系统设置",
+    settings: "连接管理",
     monitor: "运维监控",
   };
   return map[String(route.name)] || "数据库 Agent";

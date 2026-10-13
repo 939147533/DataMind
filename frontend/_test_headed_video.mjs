@@ -1,0 +1,18 @@
+import { chromium } from "playwright";
+import fs from "node:fs";
+import path from "node:path";
+const out = "E:\\视频及材料\\recording\\headed_test";
+fs.rmSync(out, { recursive: true, force: true });
+fs.mkdirSync(out, { recursive: true });
+const browser = await chromium.launch({ channel: "chrome", headless: false, args: ["--start-maximized", "--hide-crash-restore-bubble"] });
+const context = await browser.newContext({ viewport: { width: 1920, height: 1080 }, acceptDownloads: true, recordVideo: { dir: out, size: { width: 1920, height: 1080 } } });
+const page = await context.newPage();
+await page.goto("http://127.0.0.1:5174", { waitUntil: "domcontentloaded", timeout: 30000 });
+await page.waitForSelector(".login-card", { timeout: 30000 });
+await page.waitForTimeout(5000);
+const video = page.video();
+await context.close();
+await browser.close();
+const vpath = await video.path();
+console.log("VIDEO_PATH=" + vpath);
+console.log("VIDEO_SIZE=" + fs.statSync(vpath).size);

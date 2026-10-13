@@ -18,14 +18,15 @@
         </div>
       </div>
       <div class="screen-body">
-        <DashboardGrid
-          v-if="gridLayout"
-          :charts="charts"
-          :layout="gridLayout"
-          :dark="true"
-          :data-map="dataMap"
-          :error-map="errorMap"
-        />
+        <div v-if="gridLayout" class="grid-wrap" :style="gridWrapStyle">
+          <DashboardGrid
+            :charts="charts"
+            :layout="gridLayout"
+            :dark="true"
+            :data-map="dataMap"
+            :error-map="errorMap"
+          />
+        </div>
         <div v-if="!charts.length" class="screen-empty">暂无图表</div>
       </div>
     </div>
@@ -52,14 +53,12 @@ const props = withDefaults(
 const emit = defineEmits<{ (e: "close"): void }>();
 
 const screenEl = ref<HTMLElement>();
-const size = reactive({ w: 1280, h: 720 });
 const isFullscreen = ref(false);
 const dataMap = reactive<Record<number, { columns: string[]; rows: unknown[][] } | null>>({});
 const errorMap = reactive<Record<number, string>>({});
 const lastUpdated = ref("");
 const minInterval = ref(0);
 let timers: Record<number, number> = {};
-let ro: ResizeObserver | null = null;
 let fullscreenListener: (() => void) | null = null;
 
 function parseLayout(): Record<string, any> {
@@ -80,11 +79,20 @@ function parseOptions(chart: ChartWithData): Record<string, any> {
   }
 }
 
-const chartMap = computed(() => {
-  const m: Record<number, ChartWithData> = {};
-  props.charts.forEach((c) => (m[c.id] = c));
-  return m;
-});
+// 大屏统一以固定尺寸卡片展示：宽 1200、高 480（每卡片占 4 行）
+const CARD_WIDTH = 1200;
+const CARD_HEIGHT = 480;
+const CARD_ROWS = 4;
+
+function cardItems(): any[] {
+  return props.charts.map((c, i) => ({
+    chart_id: c.id,
+    x: 0,
+    y: i * CARD_ROWS,
+    w: 12,
+    h: CARD_ROWS,
+  }));
+}
 
 function intervalFor(chart: ChartWithData): number {
   const own = Number(parseOptions(chart).refresh_interval);
@@ -95,12 +103,16 @@ function intervalFor(chart: ChartWithData): number {
 
 const gridLayout = computed(() => {
   const lo = parseLayout();
-  const items = (lo.items || []).filter((it: any) => chartMap.value[it.chart_id]);
-  const maxRow = Math.max(1, ...items.map((it: any) => (it.y || 0) + (it.h || 4)));
-  const headerH = props.showHeader ? 58 : 0;
-  const rowHeight = Math.max(32, Math.min(140, Math.floor((size.h - headerH - 20) / maxRow)));
+  const rowHeight = CARD_HEIGHT / CARD_ROWS;
+  const items = cardItems();
   return JSON.stringify({ ...lo, columns: 12, rowHeight, margin: 8, items });
 });
+
+// 网格整体水平居中，窄屏时自适应收窄
+const gridWrapStyle = computed(() => ({
+  width: `min(${CARD_WIDTH}px, 100%)`,
+  margin: "0 auto",
+}));
 
 async function refreshChart(chart: ChartWithData) {
   if (!props.loadChart) return;
@@ -146,14 +158,6 @@ function onFsChange() {
 
 onMounted(() => {
   schedule();
-  ro = new ResizeObserver((entries) => {
-    const r = entries[0]?.contentRect;
-    if (r) {
-      size.w = r.width;
-      size.h = r.height;
-    }
-  });
-  if (screenEl.value) ro.observe(screenEl.value);
   fullscreenListener = onFsChange;
   document.addEventListener("fullscreenchange", fullscreenListener);
 });
@@ -163,8 +167,6 @@ watch(() => props.charts, schedule, { deep: false });
 onBeforeUnmount(() => {
   for (const k in timers) clearInterval(timers[k]);
   timers = {};
-  ro?.disconnect();
-  ro = null;
   if (fullscreenListener) document.removeEventListener("fullscreenchange", fullscreenListener);
 });
 </script>
@@ -175,14 +177,18 @@ onBeforeUnmount(() => {
   inset: 0;
   z-index: 1000;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  padding: 16px;
   background: radial-gradient(1200px 700px at 20% 10%, #0e1c3c 0%, #060b1a 55%, #030612 100%);
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .screen {
-  width: min(100vw, calc(100vh * 16 / 9));
-  height: min(100vh, calc(100vw * 9 / 16));
+  flex: 0 0 auto;
+  width: min(calc(100vw - 32px), calc((100vh - 32px) * 16 / 9));
+  min-height: min(calc(100vh - 32px), calc((100vw - 32px) * 9 / 16));
+  height: auto;
+  margin: auto;
   display: flex;
   flex-direction: column;
   background:
@@ -190,12 +196,13 @@ onBeforeUnmount(() => {
     radial-gradient(700px 400px at 90% 100%, rgba(54, 207, 201, 0.1), transparent 60%),
     #0a1122;
   border-radius: 12px;
-  overflow: hidden;
 }
 .screen.fullscreen {
   border-radius: 0;
   width: 100vw;
   height: 100vh;
+  min-height: 0;
+  overflow-y: auto;
 }
 .screen-header {
   height: 58px;
@@ -254,10 +261,14 @@ onBeforeUnmount(() => {
   color: #bcd2ff;
 }
 .screen-body {
-  flex: 1;
-  min-height: 0;
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 10px 12px 12px;
-  overflow: hidden;
+}
+.grid-wrap {
+  width: 100%;
 }
 .screen-empty {
   display: flex;

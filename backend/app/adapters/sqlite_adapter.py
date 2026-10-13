@@ -3,7 +3,7 @@ import sqlite3
 from pathlib import Path
 
 from .. import config
-from .base import AdapterError, BaseDBAdapter
+from .base import AdapterError, BaseDBAdapter, column_length
 
 
 class SQLiteAdapter(BaseDBAdapter):
@@ -67,6 +67,7 @@ class SQLiteAdapter(BaseDBAdapter):
                 {
                     "name": r["name"],
                     "data_type": r["type"] or "",
+                    "length": column_length(r["type"]),
                     "nullable": not bool(r["notnull"]),
                     "default": r["dflt_value"],
                     "primary_key": bool(r["pk"]),

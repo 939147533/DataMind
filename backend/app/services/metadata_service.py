@@ -4,6 +4,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..adapters import AdapterError
+from ..adapters.base import base_data_type, column_length
 from ..models import DataSource, FavoritedTable
 from .sql_service import build_adapter, execute_sql, get_datasource
 
@@ -195,6 +196,31 @@ async def delete_table_row(db: AsyncSession, ds_id: int, table: str, data, user_
 
 
 # ---------- 表结构对比 ----------
+def diff_columns(src_columns: list[dict], tgt_columns: list[dict]) -> list[dict]:
+    """比较两个来源的同名列，返回类型或长度/精度发生变化的列。"""
+    src = {c["name"]: c for c in src_columns}
+    tgt = {c["name"]: c for c in tgt_columns}
+    changed = []
+    for name in sorted(set(src) & set(tgt)):
+        source, target = src[name], tgt[name]
+        source_type = base_data_type(source.get("data_type") or "")
+        target_type = base_data_type(target.get("data_type") or "")
+        source_length = source.get("length") or column_length(source.get("data_type") or "")
+        target_length = target.get("length") or column_length(target.get("data_type") or "")
+        if (source_type, source_length) == (target_type, target_length):
+            continue
+        changed.append(
+            {
+                "column": name,
+                "source_type": source_type,
+                "target_type": target_type,
+                "source_length": source_length,
+                "target_length": target_length,
+            }
+        )
+    return changed
+
+
 async def compare_schemas(db: AsyncSession, source_ds_id: int, target_ds_id: int, schema: str = "") -> dict:
     src = await get_datasource(db, source_ds_id)
     tgt = await get_datasource(db, target_ds_id)
@@ -208,20 +234,13 @@ async def compare_schemas(db: AsyncSession, source_ds_id: int, target_ds_id: int
         tgt_tables = set(tgt_adapter.get_tables(schema) or [])
         table_diffs = []
         for table in sorted(src_tables & tgt_tables):
-            src_cols = {c["name"]: c for c in src_adapter.get_table_columns(table, schema)}
-            tgt_cols = {c["name"]: c for c in tgt_adapter.get_table_columns(table, schema)}
-            added = sorted(set(tgt_cols) - set(src_cols))
-            removed = sorted(set(src_cols) - set(tgt_cols))
-            changed = []
-            for name in sorted(set(src_cols) & set(tgt_cols)):
-                if (src_cols[name].get("data_type") or "") != (tgt_cols[name].get("data_type") or ""):
-                    changed.append(
-                        {
-                            "column": name,
-                            "source_type": src_cols[name].get("data_type") or "",
-                            "target_type": tgt_cols[name].get("data_type") or "",
-                        }
-                    )
+            src_columns = src_adapter.get_table_columns(table, schema) or []
+            tgt_columns = tgt_adapter.get_table_columns(table, schema) or []
+            src_names = {c["name"] for c in src_columns}
+            tgt_names = {c["name"] for c in tgt_columns}
+            added = sorted(tgt_names - src_names)
+            removed = sorted(src_names - tgt_names)
+            changed = diff_columns(src_columns, tgt_columns)
             if added or removed or changed:
                 table_diffs.append({"table": table, "added_columns": added, "removed_columns": removed, "changed_columns": changed})
         return {

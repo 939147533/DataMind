@@ -1,0 +1,51 @@
+*** Begin Patch
+*** Update File: backend/app/services/agent_service.py
+@@
+ def _extract_json(text: str) -> dict:
+     text = text.strip()
+     if text.startswith("```"):
+         text = text.strip("`")
+         if text.startswith("json"):
+             text = text[4:]
+     start, end = text.find("{"), text.rfind("}")
+     if start < 0 or end < start:
+         raise ValueError("模型未返回 JSON")
+     return json.loads(text[start : end + 1])
++
++
++async def _chat_json_with_retry(provider, messages, attempts: int = 3) -> dict:
++    """调用模型并解析 JSON；空响应/非 JSON 等瞬时失败自动重试。"""
++    last_exc: Exception | None = None
++    for _ in range(attempts):
++        try:
++            raw = await provider.chat(messages, json_mode=True)
++            return _extract_json(raw)
++        except (LLMError, ValueError, json.JSONDecodeError) as exc:
++            last_exc = exc
++            await asyncio.sleep(1)
++    assert last_exc is not None
++    raise last_exc
+@@
+-    try:
+-        raw = await provider.chat(messages, json_mode=True)
+-        parsed = _extract_json(raw)
+-    except (LLMError, ValueError, json.JSONDecodeError) as exc:
++    try:
++        parsed = await _chat_json_with_retry(provider, messages)
++    except (LLMError, ValueError, json.JSONDecodeError) as exc:
+         await _record_audit(db, user_id, "agent_action", message, "AGENT", ds.id if ds else None, "failed", client_ip)
+         yield {"type": "error", "content": f"AI 调用失败: {exc}"}
+         yield {"type": "done"}
+         return
+@@
+-        try:
+-            raw = await provider.chat(messages, json_mode=True)
+-            parsed = _extract_json(raw)
+-        except (LLMError, ValueError, json.JSONDecodeError) as exc:
++        try:
++            parsed = await _chat_json_with_retry(provider, messages)
++        except (LLMError, ValueError, json.JSONDecodeError) as exc:
+             yield {"type": "error", "content": f"AI 调用失败: {exc}"}
+             yield {"type": "done"}
+             return
+*** End Patch

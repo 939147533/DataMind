@@ -166,10 +166,7 @@ const exportDbOptions = [
 onMounted(async () => {
   await connections.load();
   if (!workspace.tabs.length) {
-    workspace.addTab(
-      "-- 在此输入 SQL，例如：\nSELECT * FROM users LIMIT 50;\n\n-- 支持多条语句；写操作需要二次确认",
-      "查询 1",
-    );
+    workspace.addTab("", "查询 1");
   }
   loadHistory();
   loadSaved();

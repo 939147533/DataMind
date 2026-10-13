@@ -170,6 +170,20 @@ def _extract_json(text: str) -> dict:
     return json.loads(text[start : end + 1])
 
 
+async def _chat_json_with_retry(provider, messages, attempts: int = 3) -> dict:
+    """调用模型并解析 JSON；空响应/非 JSON 等瞬时失败自动重试。"""
+    last_exc: Exception | None = None
+    for _ in range(attempts):
+        try:
+            raw = await provider.chat(messages, json_mode=True)
+            return _extract_json(raw)
+        except (LLMError, ValueError, json.JSONDecodeError) as exc:
+            last_exc = exc
+            await asyncio.sleep(1)
+    assert last_exc is not None
+    raise last_exc
+
+
 def _truncate_result(columns: list, rows: list) -> tuple[list, list, int, bool]:
     total = len(rows)
     truncated = False
@@ -329,7 +343,7 @@ async def agent_chat(
         ds = (await db.execute(select(DataSource).where(DataSource.id == datasource_id))).scalar_one_or_none()
     config = await resolve_model_config(db, session, model_config_id)
     if config is None:
-        yield {"type": "error", "content": "未配置可用的 AI 模型，请到 系统设置 → 大模型连接配置 中添加模型"}
+        yield {"type": "error", "content": "未配置可用的 AI 模型，请到 连接管理 → 大模型连接配置 中添加模型"}
         yield {"type": "done"}
         return
 
@@ -363,8 +377,7 @@ async def agent_chat(
     messages = build_messages(system, history, message)
 
     try:
-        raw = await provider.chat(messages, json_mode=True)
-        parsed = _extract_json(raw)
+        parsed = await _chat_json_with_retry(provider, messages)
     except (LLMError, ValueError, json.JSONDecodeError) as exc:
         await _record_audit(db, user_id, "agent_action", message, "AGENT", ds.id if ds else None, "failed", client_ip)
         yield {"type": "error", "content": f"AI 调用失败: {exc}"}
@@ -389,8 +402,7 @@ async def agent_chat(
             }
         )
         try:
-            raw = await provider.chat(messages, json_mode=True)
-            parsed = _extract_json(raw)
+            parsed = await _chat_json_with_retry(provider, messages)
         except (LLMError, ValueError, json.JSONDecodeError) as exc:
             yield {"type": "error", "content": f"AI 调用失败: {exc}"}
             yield {"type": "done"}

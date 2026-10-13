@@ -1,0 +1,210 @@
+- generic [ref=e5137]:
+  - complementary [ref=e5138]:
+    - generic [ref=e5139] [cursor=pointer]:
+      - generic [ref=e5140]: 🗄️
+      - generic [ref=e5141]: 数据库 Agent
+    - menu [ref=e5142]:
+      - menuitem "智能查询" [ref=e5143]:
+        - img [ref=e5144] [cursor=pointer]: 🤖
+        - text: 智能查询
+      - menuitem "SQL 工作台" [ref=e5145]:
+        - img [ref=e5146] [cursor=pointer]: 🖥️
+        - text: SQL 工作台
+      - menuitem "可视化报表" [ref=e5147]:
+        - img [ref=e5148] [cursor=pointer]: 📊
+        - text: 可视化报表
+      - menuitem "系统设置" [ref=e5149]:
+        - img [ref=e5150] [cursor=pointer]: ⚙️
+        - text: 系统设置
+      - menuitem "运维监控" [ref=e5151]:
+        - img [ref=e5152] [cursor=pointer]: 📈
+        - text: 运维监控
+    - img [ref=e5155] [cursor=pointer]
+  - generic [ref=e5159]:
+    - generic [ref=e5160]:
+      - generic [ref=e5161]: SQL 工作台
+      - generic [ref=e5162]:
+        - button "☀️" [ref=e5163] [cursor=pointer]:
+          - generic [ref=e5164]: ☀️
+        - button "👤 技术查询一号" [ref=e5165] [cursor=pointer]:
+          - generic [ref=e5167]: 👤
+          - generic [ref=e5168]: 技术查询一号
+    - generic [ref=e6134]:
+      - complementary [ref=e6135]:
+        - generic [ref=e6136]:
+          - generic [ref=e6140] [cursor=pointer]:
+            - generic "本地演示库 (SQLite)" [ref=e6141]:
+              - generic [ref=e6142]: 本地演示库 (SQLite)
+            - img "loading" [ref=e6143]:
+              - img [ref=e6148]
+          - generic [ref=e6150]:
+            - generic [ref=e6155]:
+              - generic [ref=e6158] [cursor=pointer]: 对象
+              - generic [ref=e6162] [cursor=pointer]: 历史
+              - generic [ref=e6166] [cursor=pointer]: 收藏
+            - generic [ref=e6170]:
+              - generic [ref=e6172]:
+                - img [ref=e6176] [cursor=pointer]
+                - generic [ref=e6179] [cursor=pointer]: 📌 收藏
+              - generic [ref=e6181]:
+                - img [ref=e6185] [cursor=pointer]
+                - generic [ref=e6188] [cursor=pointer]: 📁 表
+              - generic [ref=e6190]:
+                - img [ref=e6194] [cursor=pointer]
+                - generic [ref=e6197] [cursor=pointer]: 👁️ 视图
+              - generic [ref=e6199]:
+                - img [ref=e6203] [cursor=pointer]
+                - generic [ref=e6206] [cursor=pointer]: ƒ 函数
+              - generic [ref=e6208]:
+                - img [ref=e6212] [cursor=pointer]
+                - generic [ref=e6215] [cursor=pointer]: ⚙️ 存储过程
+              - generic [ref=e6217]:
+                - img [ref=e6221] [cursor=pointer]
+                - generic [ref=e6224] [cursor=pointer]: 🔔 触发器
+              - generic [ref=e6226]:
+                - img [ref=e6230] [cursor=pointer]
+                - generic [ref=e6233] [cursor=pointer]: 🔢 序列
+      - generic [ref=e6236]:
+        - generic [ref=e6237]:
+          - generic [ref=e6243]:
+            - generic [ref=e6245] [cursor=pointer]:
+              - generic [ref=e6246]: 查询 1
+              - button "close" [ref=e6247]:
+                - img [ref=e6249]
+            - generic [ref=e6255] [cursor=pointer]:
+              - generic [ref=e6256]: users
+              - button "close" [ref=e6257]:
+                - img [ref=e6259]
+          - generic [ref=e6265]:
+            - button "＋ 新建" [ref=e6266] [cursor=pointer]:
+              - generic [ref=e6267]: ＋ 新建
+            - button "▶ 执行" [ref=e6268] [cursor=pointer]:
+              - generic [ref=e6269]: ▶ 执行
+            - button "格式化" [ref=e6270] [cursor=pointer]:
+              - generic [ref=e6271]: 格式化
+            - button "收藏" [ref=e6272] [cursor=pointer]:
+              - generic [ref=e6273]: 收藏
+            - button "导出库文档 ▾" [ref=e6274] [cursor=pointer]:
+              - generic [ref=e6275]: 导出库文档 ▾
+        - generic [ref=e6279]:
+          - generic [ref=e6282]: "1"
+          - textbox [ref=e6283]:
+            - generic [ref=e6284]: SELECT * FROM "users" LIMIT 100;
+        - generic [ref=e6286]:
+          - generic [ref=e6287]:
+            - generic [ref=e6289]: READ
+            - generic [ref=e6290]: 共 8 行
+            - generic [ref=e6291]: 影响 0 行
+            - generic [ref=e6292]: 耗时 2 ms
+            - button "CSV" [ref=e6293] [cursor=pointer]:
+              - generic [ref=e6294]: CSV
+            - button "Excel" [ref=e6295] [cursor=pointer]:
+              - generic [ref=e6296]: Excel
+            - button "JSON" [ref=e6297] [cursor=pointer]:
+              - generic [ref=e6298]: JSON
+          - generic [ref=e6301]:
+            - table [ref=e6303]:
+              - rowgroup [ref=e6310]:
+                - row "id username email age created_at" [ref=e6311]:
+                  - columnheader "id" [ref=e6312]:
+                    - generic [ref=e6315]: id
+                  - columnheader "username" [ref=e6316]:
+                    - generic [ref=e6319]: username
+                  - columnheader "email" [ref=e6320]:
+                    - generic [ref=e6323]: email
+                  - columnheader "age" [ref=e6324]:
+                    - generic [ref=e6327]: age
+                  - columnheader "created_at" [ref=e6328]:
+                    - generic [ref=e6331]: created_at
+            - table [ref=e6334]:
+              - rowgroup [ref=e6341]:
+                - row "1 alice alice@example.com 28 2026-01-05 09:12:00" [ref=e6342]:
+                  - cell "1" [ref=e6343]:
+                    - generic [ref=e6344]: "1"
+                  - cell "alice" [ref=e6345]:
+                    - generic [ref=e6346]: alice
+                  - cell "alice@example.com" [ref=e6347]:
+                    - generic [ref=e6348]: alice@example.com
+                  - cell "28" [ref=e6349]:
+                    - generic [ref=e6350]: "28"
+                  - cell "2026-01-05 09:12:00" [ref=e6351]:
+                    - generic [ref=e6352]: 2026-01-05 09:12:00
+                - row "2 bob bob@example.com 34 2026-01-12 14:30:00" [ref=e6353]:
+                  - cell "2" [ref=e6354]:
+                    - generic [ref=e6355]: "2"
+                  - cell "bob" [ref=e6356]:
+                    - generic [ref=e6357]: bob
+                  - cell "bob@example.com" [ref=e6358]:
+                    - generic [ref=e6359]: bob@example.com
+                  - cell "34" [ref=e6360]:
+                    - generic [ref=e6361]: "34"
+                  - cell "2026-01-12 14:30:00" [ref=e6362]:
+                    - generic [ref=e6363]: 2026-01-12 14:30:00
+                - row "3 carol carol@example.com 25 2026-02-03 10:00:00" [ref=e6364]:
+                  - cell "3" [ref=e6365]:
+                    - generic [ref=e6366]: "3"
+                  - cell "carol" [ref=e6367]:
+                    - generic [ref=e6368]: carol
+                  - cell "carol@example.com" [ref=e6369]:
+                    - generic [ref=e6370]: carol@example.com
+                  - cell "25" [ref=e6371]:
+                    - generic [ref=e6372]: "25"
+                  - cell "2026-02-03 10:00:00" [ref=e6373]:
+                    - generic [ref=e6374]: 2026-02-03 10:00:00
+                - row "4 dave dave@example.com 41 2026-02-15 16:45:00" [ref=e6375]:
+                  - cell "4" [ref=e6376]:
+                    - generic [ref=e6377]: "4"
+                  - cell "dave" [ref=e6378]:
+                    - generic [ref=e6379]: dave
+                  - cell "dave@example.com" [ref=e6380]:
+                    - generic [ref=e6381]: dave@example.com
+                  - cell "41" [ref=e6382]:
+                    - generic [ref=e6383]: "41"
+                  - cell "2026-02-15 16:45:00" [ref=e6384]:
+                    - generic [ref=e6385]: 2026-02-15 16:45:00
+                - row "5 eve eve@example.com 30 2026-03-02 08:20:00" [ref=e6386]:
+                  - cell "5" [ref=e6387]:
+                    - generic [ref=e6388]: "5"
+                  - cell "eve" [ref=e6389]:
+                    - generic [ref=e6390]: eve
+                  - cell "eve@example.com" [ref=e6391]:
+                    - generic [ref=e6392]: eve@example.com
+                  - cell "30" [ref=e6393]:
+                    - generic [ref=e6394]: "30"
+                  - cell "2026-03-02 08:20:00" [ref=e6395]:
+                    - generic [ref=e6396]: 2026-03-02 08:20:00
+                - row "6 frank frank@example.com 22 2026-03-18 11:05:00" [ref=e6397]:
+                  - cell "6" [ref=e6398]:
+                    - generic [ref=e6399]: "6"
+                  - cell "frank" [ref=e6400]:
+                    - generic [ref=e6401]: frank
+                  - cell "frank@example.com" [ref=e6402]:
+                    - generic [ref=e6403]: frank@example.com
+                  - cell "22" [ref=e6404]:
+                    - generic [ref=e6405]: "22"
+                  - cell "2026-03-18 11:05:00" [ref=e6406]:
+                    - generic [ref=e6407]: 2026-03-18 11:05:00
+                - row "7 grace grace@example.com 37 2026-04-01 13:40:00" [ref=e6408]:
+                  - cell "7" [ref=e6409]:
+                    - generic [ref=e6410]: "7"
+                  - cell "grace" [ref=e6411]:
+                    - generic [ref=e6412]: grace
+                  - cell "grace@example.com" [ref=e6413]:
+                    - generic [ref=e6414]: grace@example.com
+                  - cell "37" [ref=e6415]:
+                    - generic [ref=e6416]: "37"
+                  - cell "2026-04-01 13:40:00" [ref=e6417]:
+                    - generic [ref=e6418]: 2026-04-01 13:40:00
+                - row "8 heidi heidi@example.com 29 2026-04-20 09:55:00" [ref=e6419]:
+                  - cell "8" [ref=e6420]:
+                    - generic [ref=e6421]: "8"
+                  - cell "heidi" [ref=e6422]:
+                    - generic [ref=e6423]: heidi
+                  - cell "heidi@example.com" [ref=e6424]:
+                    - generic [ref=e6425]: heidi@example.com
+                  - cell "29" [ref=e6426]:
+                    - generic [ref=e6427]: "29"
+                  - cell "2026-04-20 09:55:00" [ref=e6428]:
+                    - generic [ref=e6429]: 2026-04-20 09:55:00
+      - complementary [ref=e6430]:
+        - generic "展开 Agent" [ref=e6431] [cursor=pointer]: 🤖

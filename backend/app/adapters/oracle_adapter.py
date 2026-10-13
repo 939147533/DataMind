@@ -1,5 +1,5 @@
 """Oracle 适配器（oracledb thin 模式）。"""
-from .base import AdapterError, BaseDBAdapter
+from .base import AdapterError, BaseDBAdapter, column_length
 
 
 def _import_oracledb():
@@ -62,7 +62,7 @@ class OracleAdapter(BaseDBAdapter):
     def get_table_columns(self, table: str, schema: str = "") -> list[dict]:
         owner = (schema or self.conn.username).upper()
         rows = self._query(
-            "SELECT column_name AS name, data_type AS data_type, nullable, "
+            "SELECT column_name AS name, data_type AS data_type, char_length, data_precision, data_scale, nullable, "
             "data_default AS default_value, column_id "
             "FROM all_tab_columns WHERE owner=:owner AND table_name=:tname ORDER BY column_id",
             {"owner": owner, "tname": table.upper()},
@@ -78,6 +78,7 @@ class OracleAdapter(BaseDBAdapter):
             {
                 "name": r["name"],
                 "data_type": r["data_type"] or "",
+                "length": column_length(r["data_type"], r["char_length"], r["data_precision"], r["data_scale"]),
                 "nullable": r["nullable"] == "Y",
                 "default": r["default_value"],
                 "primary_key": r["name"] in pk_cols,

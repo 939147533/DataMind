@@ -1,0 +1,269 @@
+- generic [ref=e1]:
+  - generic [ref=e41]:
+    - complementary [ref=e42]:
+      - generic [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 🗄️
+        - generic [ref=e45]: 数据库 Agent
+      - menu [ref=e46]:
+        - menuitem "智能查询" [ref=e47]:
+          - img [ref=e48] [cursor=pointer]: 🤖
+          - text: 智能查询
+        - menuitem "SQL 工作台" [ref=e49]:
+          - img [ref=e50] [cursor=pointer]: 🖥️
+          - text: SQL 工作台
+        - menuitem "可视化报表" [ref=e51]:
+          - img [ref=e52] [cursor=pointer]: 📊
+          - text: 可视化报表
+        - menuitem "用户管理" [ref=e53]:
+          - img [ref=e54] [cursor=pointer]: 👥
+          - text: 用户管理
+        - menuitem "角色管理" [ref=e55]:
+          - img [ref=e56] [cursor=pointer]: 🛡️
+          - text: 角色管理
+        - menuitem "系统设置" [ref=e57]:
+          - img [ref=e58] [cursor=pointer]: ⚙️
+          - text: 系统设置
+        - menuitem "运维监控" [ref=e59]:
+          - img [ref=e60] [cursor=pointer]: 📈
+          - text: 运维监控
+      - img [ref=e63] [cursor=pointer]
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]: SQL 工作台
+        - generic [ref=e70]:
+          - button "☀️" [ref=e71] [cursor=pointer]:
+            - generic [ref=e72]: ☀️
+          - button "👤 管理员" [ref=e73] [cursor=pointer]:
+            - generic [ref=e75]: 👤
+            - generic [ref=e76]: 管理员
+      - generic [ref=e2428]:
+        - complementary [ref=e2429]:
+          - generic [ref=e2430]:
+            - generic [ref=e2434] [cursor=pointer]:
+              - generic "本地演示库 (SQLite)" [ref=e2526]:
+                - generic [ref=e2527]: 本地演示库 (SQLite)
+              - img "loading" [ref=e2435]:
+                - img [ref=e2440]
+            - generic [ref=e2442]:
+              - generic [ref=e2447]:
+                - generic [ref=e2450] [cursor=pointer]: 对象
+                - generic [ref=e2454] [cursor=pointer]: 历史
+                - generic [ref=e2458] [cursor=pointer]: 收藏
+              - generic [active] [ref=e2528]:
+                - generic [ref=e2530]:
+                  - img [ref=e2534] [cursor=pointer]
+                  - generic [ref=e2537] [cursor=pointer]: 📌 收藏
+                - generic [ref=e2539]:
+                  - img [ref=e2593] [cursor=pointer]
+                  - generic [ref=e2546] [cursor=pointer]: 📁 表
+                - generic [ref=e2597] [cursor=pointer]:
+                  - generic [ref=e2598]: 📄 categories
+                  - button "⭐" [ref=e2600]:
+                    - generic [ref=e2601]: ⭐
+                - generic [ref=e2604] [cursor=pointer]:
+                  - generic [ref=e2605]: 📄 order_logs
+                  - button "⭐" [ref=e2607]:
+                    - generic [ref=e2608]: ⭐
+                - generic [ref=e2611] [cursor=pointer]:
+                  - generic [ref=e2612]: 📄 orders
+                  - button "⭐" [ref=e2614]:
+                    - generic [ref=e2615]: ⭐
+                - generic [ref=e2618] [cursor=pointer]:
+                  - generic [ref=e2619]: 📄 products
+                  - button "⭐" [ref=e2621]:
+                    - generic [ref=e2622]: ⭐
+                - generic [ref=e2625] [cursor=pointer]:
+                  - generic [ref=e2626]: 📄 users
+                  - button "⭐" [ref=e2628]:
+                    - generic [ref=e2629]: ⭐
+                - generic [ref=e2548]:
+                  - img [ref=e2552] [cursor=pointer]
+                  - generic [ref=e2555] [cursor=pointer]: 👁️ 视图
+                - generic [ref=e2557]:
+                  - img [ref=e2561] [cursor=pointer]
+                  - generic [ref=e2564] [cursor=pointer]: ƒ 函数
+                - generic [ref=e2566]:
+                  - img [ref=e2570] [cursor=pointer]
+                  - generic [ref=e2573] [cursor=pointer]: ⚙️ 存储过程
+                - generic [ref=e2575]:
+                  - img [ref=e2579] [cursor=pointer]
+                  - generic [ref=e2582] [cursor=pointer]: 🔔 触发器
+                - generic [ref=e2584]:
+                  - img [ref=e2588] [cursor=pointer]
+                  - generic [ref=e2591] [cursor=pointer]: 🔢 序列
+        - generic [ref=e2465]:
+          - generic [ref=e2466]:
+            - generic [ref=e2472]:
+              - generic [ref=e2474] [cursor=pointer]:
+                - generic [ref=e2475]: 查询 1
+                - button "close" [ref=e2476]:
+                  - img [ref=e2478]
+              - generic [ref=e2632] [cursor=pointer]:
+                - generic [ref=e2633]: users
+                - button "close" [ref=e2634]:
+                  - img [ref=e2636]
+            - generic [ref=e2484]:
+              - button "＋ 新建" [ref=e2485] [cursor=pointer]:
+                - generic [ref=e2486]: ＋ 新建
+              - button "▶ 执行" [ref=e2487] [cursor=pointer]:
+                - generic [ref=e2488]: ▶ 执行
+              - button "格式化" [ref=e2489] [cursor=pointer]:
+                - generic [ref=e2490]: 格式化
+              - button "收藏" [ref=e2491] [cursor=pointer]:
+                - generic [ref=e2492]: 收藏
+              - button "导出库文档 ▾" [ref=e2493] [cursor=pointer]:
+                - generic [ref=e2494]: 导出库文档 ▾
+          - generic [ref=e2498]:
+            - generic [ref=e2501]: "1"
+            - textbox [ref=e2505]:
+              - generic [ref=e2506]: SELECT * FROM "users" LIMIT 100;
+          - generic [ref=e2641]:
+            - generic [ref=e2642]:
+              - generic [ref=e2644]: READ
+              - generic [ref=e2645]: 共 8 行
+              - generic [ref=e2646]: 影响 0 行
+              - generic [ref=e2647]: 耗时 1 ms
+              - generic [ref=e2648]: 双击单元格编辑
+              - button "＋ 新增行" [ref=e2649] [cursor=pointer]:
+                - generic [ref=e2650]: ＋ 新增行
+              - button "CSV" [ref=e2651] [cursor=pointer]:
+                - generic [ref=e2652]: CSV
+              - button "Excel" [ref=e2653] [cursor=pointer]:
+                - generic [ref=e2654]: Excel
+              - button "JSON" [ref=e2655] [cursor=pointer]:
+                - generic [ref=e2656]: JSON
+            - generic [ref=e2659]:
+              - table [ref=e2661]:
+                - rowgroup [ref=e2669]:
+                  - row "id username email age created_at 操作" [ref=e2670]:
+                    - columnheader "id" [ref=e2671]:
+                      - generic [ref=e2674]: id
+                    - columnheader "username" [ref=e2675]:
+                      - generic [ref=e2678]: username
+                    - columnheader "email" [ref=e2679]:
+                      - generic [ref=e2682]: email
+                    - columnheader "age" [ref=e2683]:
+                      - generic [ref=e2686]: age
+                    - columnheader "created_at" [ref=e2687]:
+                      - generic [ref=e2690]: created_at
+                    - columnheader "操作" [ref=e2691]:
+                      - generic [ref=e2693]: 操作
+              - table [ref=e2696]:
+                - rowgroup [ref=e2704]:
+                  - row "1 alice alice@example.com 28 2026-01-05 09:12:00 删除" [ref=e2705]:
+                    - cell "1" [ref=e2706]:
+                      - generic [ref=e2707]: "1"
+                    - cell "alice" [ref=e2708]:
+                      - generic [ref=e2710]: alice
+                    - cell "alice@example.com" [ref=e2711]:
+                      - generic [ref=e2713]: alice@example.com
+                    - cell "28" [ref=e2714]:
+                      - generic [ref=e2716]: "28"
+                    - cell "2026-01-05 09:12:00" [ref=e2717]:
+                      - generic [ref=e2719]: 2026-01-05 09:12:00
+                    - cell "删除" [ref=e2720]:
+                      - button "删除" [ref=e2721] [cursor=pointer]:
+                        - generic [ref=e2722]: 删除
+                  - row "2 bob bob@example.com 34 2026-01-12 14:30:00 删除" [ref=e2723]:
+                    - cell "2" [ref=e2724]:
+                      - generic [ref=e2725]: "2"
+                    - cell "bob" [ref=e2726]:
+                      - generic [ref=e2728]: bob
+                    - cell "bob@example.com" [ref=e2729]:
+                      - generic [ref=e2731]: bob@example.com
+                    - cell "34" [ref=e2732]:
+                      - generic [ref=e2734]: "34"
+                    - cell "2026-01-12 14:30:00" [ref=e2735]:
+                      - generic [ref=e2737]: 2026-01-12 14:30:00
+                    - cell "删除" [ref=e2738]:
+                      - button "删除" [ref=e2739] [cursor=pointer]:
+                        - generic [ref=e2740]: 删除
+                  - row "3 carol carol@example.com 25 2026-02-03 10:00:00 删除" [ref=e2741]:
+                    - cell "3" [ref=e2742]:
+                      - generic [ref=e2743]: "3"
+                    - cell "carol" [ref=e2744]:
+                      - generic [ref=e2746]: carol
+                    - cell "carol@example.com" [ref=e2747]:
+                      - generic [ref=e2749]: carol@example.com
+                    - cell "25" [ref=e2750]:
+                      - generic [ref=e2752]: "25"
+                    - cell "2026-02-03 10:00:00" [ref=e2753]:
+                      - generic [ref=e2755]: 2026-02-03 10:00:00
+                    - cell "删除" [ref=e2756]:
+                      - button "删除" [ref=e2757] [cursor=pointer]:
+                        - generic [ref=e2758]: 删除
+                  - row "4 dave dave@example.com 41 2026-02-15 16:45:00 删除" [ref=e2759]:
+                    - cell "4" [ref=e2760]:
+                      - generic [ref=e2761]: "4"
+                    - cell "dave" [ref=e2762]:
+                      - generic [ref=e2764]: dave
+                    - cell "dave@example.com" [ref=e2765]:
+                      - generic [ref=e2767]: dave@example.com
+                    - cell "41" [ref=e2768]:
+                      - generic [ref=e2770]: "41"
+                    - cell "2026-02-15 16:45:00" [ref=e2771]:
+                      - generic [ref=e2773]: 2026-02-15 16:45:00
+                    - cell "删除" [ref=e2774]:
+                      - button "删除" [ref=e2775] [cursor=pointer]:
+                        - generic [ref=e2776]: 删除
+                  - row "5 eve eve@example.com 30 2026-03-02 08:20:00 删除" [ref=e2777]:
+                    - cell "5" [ref=e2778]:
+                      - generic [ref=e2779]: "5"
+                    - cell "eve" [ref=e2780]:
+                      - generic [ref=e2782]: eve
+                    - cell "eve@example.com" [ref=e2783]:
+                      - generic [ref=e2785]: eve@example.com
+                    - cell "30" [ref=e2786]:
+                      - generic [ref=e2788]: "30"
+                    - cell "2026-03-02 08:20:00" [ref=e2789]:
+                      - generic [ref=e2791]: 2026-03-02 08:20:00
+                    - cell "删除" [ref=e2792]:
+                      - button "删除" [ref=e2793] [cursor=pointer]:
+                        - generic [ref=e2794]: 删除
+                  - row "6 frank frank@example.com 22 2026-03-18 11:05:00 删除" [ref=e2795]:
+                    - cell "6" [ref=e2796]:
+                      - generic [ref=e2797]: "6"
+                    - cell "frank" [ref=e2798]:
+                      - generic [ref=e2800]: frank
+                    - cell "frank@example.com" [ref=e2801]:
+                      - generic [ref=e2803]: frank@example.com
+                    - cell "22" [ref=e2804]:
+                      - generic [ref=e2806]: "22"
+                    - cell "2026-03-18 11:05:00" [ref=e2807]:
+                      - generic [ref=e2809]: 2026-03-18 11:05:00
+                    - cell "删除" [ref=e2810]:
+                      - button "删除" [ref=e2811] [cursor=pointer]:
+                        - generic [ref=e2812]: 删除
+                  - row "7 grace grace@example.com 37 2026-04-01 13:40:00 删除" [ref=e2813]:
+                    - cell "7" [ref=e2814]:
+                      - generic [ref=e2815]: "7"
+                    - cell "grace" [ref=e2816]:
+                      - generic [ref=e2818]: grace
+                    - cell "grace@example.com" [ref=e2819]:
+                      - generic [ref=e2821]: grace@example.com
+                    - cell "37" [ref=e2822]:
+                      - generic [ref=e2824]: "37"
+                    - cell "2026-04-01 13:40:00" [ref=e2825]:
+                      - generic [ref=e2827]: 2026-04-01 13:40:00
+                    - cell "删除" [ref=e2828]:
+                      - button "删除" [ref=e2829] [cursor=pointer]:
+                        - generic [ref=e2830]: 删除
+                  - row "8 heidi heidi@example.com 29 2026-04-20 09:55:00 删除" [ref=e2831]:
+                    - cell "8" [ref=e2832]:
+                      - generic [ref=e2833]: "8"
+                    - cell "heidi" [ref=e2834]:
+                      - generic [ref=e2836]: heidi
+                    - cell "heidi@example.com" [ref=e2837]:
+                      - generic [ref=e2839]: heidi@example.com
+                    - cell "29" [ref=e2840]:
+                      - generic [ref=e2842]: "29"
+                    - cell "2026-04-20 09:55:00" [ref=e2843]:
+                      - generic [ref=e2845]: 2026-04-20 09:55:00
+                    - cell "删除" [ref=e2846]:
+                      - button "删除" [ref=e2847] [cursor=pointer]:
+                        - generic [ref=e2848]: 删除
+        - complementary [ref=e2511]:
+          - generic "展开 Agent" [ref=e2512] [cursor=pointer]: 🤖
+  - generic [ref=e2851]:
+    - img [ref=e2854]
+    - generic [ref=e2858]: 执行完成：8 行 · 1 ms

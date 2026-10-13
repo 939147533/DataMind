@@ -1,0 +1,61 @@
+- generic [ref=e1]:
+  - generic [ref=e41]:
+    - complementary [ref=e42]:
+      - generic [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 🗄️
+        - generic [ref=e45]: 数据库 Agent
+      - menu [ref=e46]:
+        - menuitem "智能查询" [ref=e47]:
+          - img [ref=e48] [cursor=pointer]: 🤖
+          - text: 智能查询
+        - menuitem "SQL 工作台" [ref=e49]:
+          - img [ref=e50] [cursor=pointer]: 🖥️
+          - text: SQL 工作台
+        - menuitem "可视化报表" [ref=e51]:
+          - img [ref=e52] [cursor=pointer]: 📊
+          - text: 可视化报表
+        - menuitem "用户管理" [ref=e53]:
+          - img [ref=e54] [cursor=pointer]: 👥
+          - text: 用户管理
+        - menuitem "角色管理" [ref=e55]:
+          - img [ref=e56] [cursor=pointer]: 🛡️
+          - text: 角色管理
+        - menuitem "系统设置" [ref=e57]:
+          - img [ref=e58] [cursor=pointer]: ⚙️
+          - text: 系统设置
+        - menuitem "运维监控" [ref=e59]:
+          - img [ref=e60] [cursor=pointer]: 📈
+          - text: 运维监控
+      - img [ref=e63] [cursor=pointer]
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]: 可视化报表
+        - generic [ref=e70]:
+          - button "☀️" [ref=e71] [cursor=pointer]:
+            - generic [ref=e72]: ☀️
+          - button "👤 管理员" [ref=e73] [cursor=pointer]:
+            - generic [ref=e75]: 👤
+            - generic [ref=e76]: 管理员
+      - generic [ref=e1339]:
+        - generic [ref=e1344]:
+          - generic [ref=e1347] [cursor=pointer]: 图表管理
+          - generic [ref=e1351] [cursor=pointer]: 仪表盘
+        - generic [ref=e1392]:
+          - button "＋ 新建仪表盘" [active] [ref=e1394] [cursor=pointer]:
+            - generic [ref=e1395]: ＋ 新建仪表盘
+          - generic [ref=e1443]:
+            - heading "经营分析驾驶舱 编辑布局 大屏 分享 删除" [ref=e1444]:
+              - heading "经营分析驾驶舱" [ref=e1445]
+              - generic [ref=e1447]:
+                - button "编辑布局" [ref=e1448] [cursor=pointer]:
+                  - generic [ref=e1449]: 编辑布局
+                - button "大屏" [ref=e1450] [cursor=pointer]:
+                  - generic [ref=e1451]: 大屏
+                - button "分享" [ref=e1452] [cursor=pointer]:
+                  - generic [ref=e1453]: 分享
+                - button "删除" [ref=e1454] [cursor=pointer]:
+                  - generic [ref=e1455]: 删除
+            - generic [ref=e1456]: 0 个图表 · 未分享
+  - generic [ref=e1458]:
+    - img [ref=e1461]
+    - generic [ref=e1465]: 创建成功

@@ -1,0 +1,731 @@
+- generic [ref=e1]:
+  - generic [ref=e41]:
+    - complementary [ref=e42]:
+      - generic [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 🗄️
+        - generic [ref=e45]: 数据库 Agent
+      - menu [ref=e46]:
+        - menuitem "智能查询" [ref=e47]:
+          - img [ref=e48] [cursor=pointer]: 🤖
+          - text: 智能查询
+        - menuitem "SQL 工作台" [ref=e49]:
+          - img [ref=e50] [cursor=pointer]: 🖥️
+          - text: SQL 工作台
+        - menuitem "可视化报表" [ref=e51]:
+          - img [ref=e52] [cursor=pointer]: 📊
+          - text: 可视化报表
+        - menuitem "用户管理" [ref=e53]:
+          - img [ref=e54] [cursor=pointer]: 👥
+          - text: 用户管理
+        - menuitem "角色管理" [ref=e55]:
+          - img [ref=e56] [cursor=pointer]: 🛡️
+          - text: 角色管理
+        - menuitem "系统设置" [ref=e57]:
+          - img [ref=e58] [cursor=pointer]: ⚙️
+          - text: 系统设置
+        - menuitem "运维监控" [ref=e59]:
+          - img [ref=e60] [cursor=pointer]: 📈
+          - text: 运维监控
+      - img [ref=e63] [cursor=pointer]
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]: SQL 工作台
+        - generic [ref=e70]:
+          - button "☀️" [ref=e71] [cursor=pointer]:
+            - generic [ref=e72]: ☀️
+          - button "👤 管理员" [active] [ref=e73] [cursor=pointer]:
+            - generic [ref=e75]: 👤
+            - generic [ref=e76]: 管理员
+      - generic [ref=e2428]:
+        - complementary [ref=e2429]:
+          - generic [ref=e2430]:
+            - generic [ref=e2434] [cursor=pointer]:
+              - generic "本地演示库 (SQLite)" [ref=e2526]:
+                - generic [ref=e2527]: 本地演示库 (SQLite)
+              - img "loading" [ref=e2435]:
+                - img [ref=e2440]
+            - generic [ref=e2442]:
+              - generic [ref=e2447]:
+                - generic [ref=e2450] [cursor=pointer]: 对象
+                - generic [ref=e2454] [cursor=pointer]: 历史
+                - generic [ref=e2458] [cursor=pointer]: 收藏
+              - generic [ref=e2528]:
+                - generic [ref=e2530]:
+                  - img [ref=e2534] [cursor=pointer]
+                  - generic [ref=e2537] [cursor=pointer]: 📌 收藏
+                - generic [ref=e2539]:
+                  - img [ref=e2593] [cursor=pointer]
+                  - generic [ref=e2546] [cursor=pointer]: 📁 表
+                - generic [ref=e2597] [cursor=pointer]:
+                  - generic [ref=e2598]: 📄 categories
+                  - button "⭐" [ref=e2600]:
+                    - generic [ref=e2601]: ⭐
+                - generic [ref=e2604] [cursor=pointer]:
+                  - generic [ref=e2605]: 📄 order_logs
+                  - button "⭐" [ref=e2607]:
+                    - generic [ref=e2608]: ⭐
+                - generic [ref=e2611] [cursor=pointer]:
+                  - generic [ref=e2612]: 📄 orders
+                  - button "⭐" [ref=e2614]:
+                    - generic [ref=e2615]: ⭐
+                - generic [ref=e2618] [cursor=pointer]:
+                  - generic [ref=e2619]: 📄 products
+                  - button "⭐" [ref=e2621]:
+                    - generic [ref=e2622]: ⭐
+                - generic [ref=e2625] [cursor=pointer]:
+                  - generic [ref=e2626]: 📄 users
+                  - button "⭐" [ref=e2628]:
+                    - generic [ref=e2629]: ⭐
+                - generic [ref=e2548]:
+                  - img [ref=e2552] [cursor=pointer]
+                  - generic [ref=e2555] [cursor=pointer]: 👁️ 视图
+                - generic [ref=e2557]:
+                  - img [ref=e2561] [cursor=pointer]
+                  - generic [ref=e2564] [cursor=pointer]: ƒ 函数
+                - generic [ref=e2566]:
+                  - img [ref=e2570] [cursor=pointer]
+                  - generic [ref=e2573] [cursor=pointer]: ⚙️ 存储过程
+                - generic [ref=e2575]:
+                  - img [ref=e2579] [cursor=pointer]
+                  - generic [ref=e2582] [cursor=pointer]: 🔔 触发器
+                - generic [ref=e2584]:
+                  - img [ref=e2588] [cursor=pointer]
+                  - generic [ref=e2591] [cursor=pointer]: 🔢 序列
+        - generic [ref=e2465]:
+          - generic [ref=e2466]:
+            - generic [ref=e2472]:
+              - generic [ref=e2474] [cursor=pointer]:
+                - generic [ref=e2475]: 查询 1
+                - button "close" [ref=e2476]:
+                  - img [ref=e2478]
+              - generic [ref=e2632] [cursor=pointer]:
+                - generic [ref=e2633]: users
+                - button "close" [ref=e2634]:
+                  - img [ref=e2636]
+            - generic [ref=e2484]:
+              - button "＋ 新建" [ref=e2485] [cursor=pointer]:
+                - generic [ref=e2486]: ＋ 新建
+              - button "▶ 执行" [ref=e2487] [cursor=pointer]:
+                - generic [ref=e2488]: ▶ 执行
+              - button "格式化" [ref=e2489] [cursor=pointer]:
+                - generic [ref=e2490]: 格式化
+              - button "收藏" [ref=e2491] [cursor=pointer]:
+                - generic [ref=e2492]: 收藏
+              - button "导出库文档 ▾" [ref=e2493] [cursor=pointer]:
+                - generic [ref=e2494]: 导出库文档 ▾
+          - generic [ref=e2498]:
+            - generic [ref=e2501]: "1"
+            - textbox [ref=e2505]:
+              - generic [ref=e2506]: SELECT * FROM "users" LIMIT 100;
+          - generic [ref=e2641]:
+            - generic [ref=e2642]:
+              - generic [ref=e2644]: READ
+              - generic [ref=e2645]: 共 8 行
+              - generic [ref=e2646]: 影响 0 行
+              - generic [ref=e2647]: 耗时 2 ms
+              - generic [ref=e3263]: 双击单元格编辑
+              - button "＋ 新增行" [ref=e3264] [cursor=pointer]:
+                - generic [ref=e3265]: ＋ 新增行
+              - button "CSV" [ref=e2651] [cursor=pointer]:
+                - generic [ref=e2652]: CSV
+              - button "Excel" [ref=e2653] [cursor=pointer]:
+                - generic [ref=e2654]: Excel
+              - button "JSON" [ref=e2655] [cursor=pointer]:
+                - generic [ref=e2656]: JSON
+            - generic [ref=e3268]:
+              - table [ref=e3270]:
+                - rowgroup [ref=e3278]:
+                  - row "id username email age created_at 操作" [ref=e3279]:
+                    - columnheader "id" [ref=e3280]:
+                      - generic [ref=e3283]: id
+                    - columnheader "username" [ref=e3284]:
+                      - generic [ref=e3287]: username
+                    - columnheader "email" [ref=e3288]:
+                      - generic [ref=e3291]: email
+                    - columnheader "age" [ref=e3292]:
+                      - generic [ref=e3295]: age
+                    - columnheader "created_at" [ref=e3296]:
+                      - generic [ref=e3299]: created_at
+                    - columnheader "操作" [ref=e3300]:
+                      - generic [ref=e3302]: 操作
+              - table [ref=e3305]:
+                - rowgroup [ref=e3313]:
+                  - row "1 alice alice@example.com 28 2026-01-05 09:12:00 删除" [ref=e3314]:
+                    - cell "1" [ref=e3315]:
+                      - generic [ref=e3316]: "1"
+                    - cell "alice" [ref=e3317]:
+                      - generic [ref=e3319]: alice
+                    - cell "alice@example.com" [ref=e3320]:
+                      - generic [ref=e3322]: alice@example.com
+                    - cell "28" [ref=e3323]:
+                      - generic [ref=e3325]: "28"
+                    - cell "2026-01-05 09:12:00" [ref=e3326]:
+                      - generic [ref=e3328]: 2026-01-05 09:12:00
+                    - cell "删除" [ref=e3329]:
+                      - button "删除" [ref=e3330] [cursor=pointer]:
+                        - generic [ref=e3331]: 删除
+                  - row "2 bob bob@example.com 34 2026-01-12 14:30:00 删除" [ref=e3332]:
+                    - cell "2" [ref=e3333]:
+                      - generic [ref=e3334]: "2"
+                    - cell "bob" [ref=e3335]:
+                      - generic [ref=e3337]: bob
+                    - cell "bob@example.com" [ref=e3338]:
+                      - generic [ref=e3340]: bob@example.com
+                    - cell "34" [ref=e3341]:
+                      - generic [ref=e3343]: "34"
+                    - cell "2026-01-12 14:30:00" [ref=e3344]:
+                      - generic [ref=e3346]: 2026-01-12 14:30:00
+                    - cell "删除" [ref=e3347]:
+                      - button "删除" [ref=e3348] [cursor=pointer]:
+                        - generic [ref=e3349]: 删除
+                  - row "3 carol carol@example.com 25 2026-02-03 10:00:00 删除" [ref=e3350]:
+                    - cell "3" [ref=e3351]:
+                      - generic [ref=e3352]: "3"
+                    - cell "carol" [ref=e3353]:
+                      - generic [ref=e3355]: carol
+                    - cell "carol@example.com" [ref=e3356]:
+                      - generic [ref=e3358]: carol@example.com
+                    - cell "25" [ref=e3359]:
+                      - generic [ref=e3361]: "25"
+                    - cell "2026-02-03 10:00:00" [ref=e3362]:
+                      - generic [ref=e3364]: 2026-02-03 10:00:00
+                    - cell "删除" [ref=e3365]:
+                      - button "删除" [ref=e3366] [cursor=pointer]:
+                        - generic [ref=e3367]: 删除
+                  - row "4 dave dave@example.com 41 2026-02-15 16:45:00 删除" [ref=e3368]:
+                    - cell "4" [ref=e3369]:
+                      - generic [ref=e3370]: "4"
+                    - cell "dave" [ref=e3371]:
+                      - generic [ref=e3373]: dave
+                    - cell "dave@example.com" [ref=e3374]:
+                      - generic [ref=e3376]: dave@example.com
+                    - cell "41" [ref=e3377]:
+                      - generic [ref=e3379]: "41"
+                    - cell "2026-02-15 16:45:00" [ref=e3380]:
+                      - generic [ref=e3382]: 2026-02-15 16:45:00
+                    - cell "删除" [ref=e3383]:
+                      - button "删除" [ref=e3384] [cursor=pointer]:
+                        - generic [ref=e3385]: 删除
+                  - row "5 eve eve@example.com 30 2026-03-02 08:20:00 删除" [ref=e3386]:
+                    - cell "5" [ref=e3387]:
+                      - generic [ref=e3388]: "5"
+                    - cell "eve" [ref=e3389]:
+                      - generic [ref=e3391]: eve
+                    - cell "eve@example.com" [ref=e3392]:
+                      - generic [ref=e3394]: eve@example.com
+                    - cell "30" [ref=e3395]:
+                      - generic [ref=e3397]: "30"
+                    - cell "2026-03-02 08:20:00" [ref=e3398]:
+                      - generic [ref=e3400]: 2026-03-02 08:20:00
+                    - cell "删除" [ref=e3401]:
+                      - button "删除" [ref=e3402] [cursor=pointer]:
+                        - generic [ref=e3403]: 删除
+                  - row "6 frank frank@example.com 22 2026-03-18 11:05:00 删除" [ref=e3404]:
+                    - cell "6" [ref=e3405]:
+                      - generic [ref=e3406]: "6"
+                    - cell "frank" [ref=e3407]:
+                      - generic [ref=e3409]: frank
+                    - cell "frank@example.com" [ref=e3410]:
+                      - generic [ref=e3412]: frank@example.com
+                    - cell "22" [ref=e3413]:
+                      - generic [ref=e3415]: "22"
+                    - cell "2026-03-18 11:05:00" [ref=e3416]:
+                      - generic [ref=e3418]: 2026-03-18 11:05:00
+                    - cell "删除" [ref=e3419]:
+                      - button "删除" [ref=e3420] [cursor=pointer]:
+                        - generic [ref=e3421]: 删除
+                  - row "7 grace grace@example.com 37 2026-04-01 13:40:00 删除" [ref=e3422]:
+                    - cell "7" [ref=e3423]:
+                      - generic [ref=e3424]: "7"
+                    - cell "grace" [ref=e3425]:
+                      - generic [ref=e3427]: grace
+                    - cell "grace@example.com" [ref=e3428]:
+                      - generic [ref=e3430]: grace@example.com
+                    - cell "37" [ref=e3431]:
+                      - generic [ref=e3433]: "37"
+                    - cell "2026-04-01 13:40:00" [ref=e3434]:
+                      - generic [ref=e3436]: 2026-04-01 13:40:00
+                    - cell "删除" [ref=e3437]:
+                      - button "删除" [ref=e3438] [cursor=pointer]:
+                        - generic [ref=e3439]: 删除
+                  - row "8 heidi heidi@example.com 29 2026-04-20 09:55:00 删除" [ref=e3440]:
+                    - cell "8" [ref=e3441]:
+                      - generic [ref=e3442]: "8"
+                    - cell "heidi" [ref=e3443]:
+                      - generic [ref=e3445]: heidi
+                    - cell "heidi@example.com" [ref=e3446]:
+                      - generic [ref=e3448]: heidi@example.com
+                    - cell "29" [ref=e3449]:
+                      - generic [ref=e3451]: "29"
+                    - cell "2026-04-20 09:55:00" [ref=e3452]:
+                      - generic [ref=e3454]: 2026-04-20 09:55:00
+                    - cell "删除" [ref=e3455]:
+                      - button "删除" [ref=e3456] [cursor=pointer]:
+                        - generic [ref=e3457]: 删除
+        - complementary [ref=e2511]:
+          - generic [ref=e3513]:
+            - generic [ref=e3514]:
+              - generic [ref=e3515]: 🤖 AI Agent
+              - generic [ref=e3517]: 本地演示库 (SQLite)
+              - button "—" [ref=e3518] [cursor=pointer]:
+                - generic [ref=e3519]: —
+            - generic [ref=e3520]:
+              - generic [ref=e3523] [cursor=pointer]:
+                - generic "查询所有机构，列出机构号、机构名称、机构…" [ref=e3524]:
+                  - generic [ref=e3525]: 查询所有机构，列出机构号、机构名称、机构…
+                - img "loading" [ref=e3526]:
+                  - img [ref=e3531]
+              - button "新建" [ref=e3533] [cursor=pointer]:
+                - generic [ref=e3534]: 新建
+              - button "删除" [ref=e3535] [cursor=pointer]:
+                - generic [ref=e3536]: 删除
+            - generic [ref=e3537]:
+              - generic [ref=e3538]: 模型
+              - generic [ref=e3541] [cursor=pointer]:
+                - generic "openai · agnes-2.5-flash" [ref=e3542]:
+                  - generic [ref=e3543]: openai · agnes-2.5-flash
+                - img "loading" [ref=e3544]:
+                  - img [ref=e3549]
+            - generic [ref=e3551]:
+              - generic [ref=e3552]: 查询所有机构，列出机构号、机构名称、机构层级和所在地区，按机构号排序
+              - generic [ref=e3553]: 查询成功，共返回 **55 条**机构记录，已按机构号升序排列。结果包含机构号、机构名称、机构层级、所在地区四列，覆盖总行、分行、支行等层级，以及北京、上海、深圳、广州、杭州、成都等地区。
+              - generic [ref=e3555]:
+                - code [ref=e3557]: SELECT ORG_ID AS "机构号", ORG_NAME AS "机构名称", ORG_LEVEL AS "机构层级", REGION AS "所在地区" FROM BANK.T_ORG ORDER BY ORG_ID
+                - generic [ref=e3558]:
+                  - button "填入编辑器" [ref=e3559] [cursor=pointer]:
+                    - generic [ref=e3560]: 填入编辑器
+                  - button "执行" [ref=e3561] [cursor=pointer]:
+                    - generic [ref=e3562]: 执行
+              - generic [ref=e3563]:
+                - generic [ref=e3566]:
+                  - table [ref=e3568]:
+                    - rowgroup [ref=e3574]:
+                      - row "机构号 机构名称 机构层级 所在地区" [ref=e3575]:
+                        - columnheader "机构号" [ref=e3576]:
+                          - generic [ref=e3579]: 机构号
+                        - columnheader "机构名称" [ref=e3580]:
+                          - generic [ref=e3583]: 机构名称
+                        - columnheader "机构层级" [ref=e3584]:
+                          - generic [ref=e3587]: 机构层级
+                        - columnheader "所在地区" [ref=e3588]:
+                          - generic [ref=e3591]: 所在地区
+                  - table [ref=e3592]:
+                    - rowgroup [ref=e3598]:
+                      - row "1 中国模拟银行总行 HEAD 北京" [ref=e3599]:
+                        - cell "1" [ref=e3600]:
+                          - generic [ref=e3601]: "1"
+                        - cell "中国模拟银行总行" [ref=e3602]:
+                          - generic [ref=e3603]: 中国模拟银行总行
+                        - cell "HEAD" [ref=e3604]:
+                          - generic [ref=e3605]: HEAD
+                        - cell "北京" [ref=e3606]:
+                          - generic [ref=e3607]: 北京
+                      - row "101 中国模拟银行上海分行 BRANCH 上海" [ref=e3608]:
+                        - cell "101" [ref=e3609]:
+                          - generic [ref=e3610]: "101"
+                        - cell "中国模拟银行上海分行" [ref=e3611]:
+                          - generic [ref=e3612]: 中国模拟银行上海分行
+                        - cell "BRANCH" [ref=e3613]:
+                          - generic [ref=e3614]: BRANCH
+                        - cell "上海" [ref=e3615]:
+                          - generic [ref=e3616]: 上海
+                      - row "102 中国模拟银行北京分行 BRANCH 北京" [ref=e3617]:
+                        - cell "102" [ref=e3618]:
+                          - generic [ref=e3619]: "102"
+                        - cell "中国模拟银行北京分行" [ref=e3620]:
+                          - generic [ref=e3621]: 中国模拟银行北京分行
+                        - cell "BRANCH" [ref=e3622]:
+                          - generic [ref=e3623]: BRANCH
+                        - cell "北京" [ref=e3624]:
+                          - generic [ref=e3625]: 北京
+                      - row "103 中国模拟银行深圳分行 BRANCH 深圳" [ref=e3626]:
+                        - cell "103" [ref=e3627]:
+                          - generic [ref=e3628]: "103"
+                        - cell "中国模拟银行深圳分行" [ref=e3629]:
+                          - generic [ref=e3630]: 中国模拟银行深圳分行
+                        - cell "BRANCH" [ref=e3631]:
+                          - generic [ref=e3632]: BRANCH
+                        - cell "深圳" [ref=e3633]:
+                          - generic [ref=e3634]: 深圳
+                      - row "104 中国模拟银行广州分行 BRANCH 广州" [ref=e3635]:
+                        - cell "104" [ref=e3636]:
+                          - generic [ref=e3637]: "104"
+                        - cell "中国模拟银行广州分行" [ref=e3638]:
+                          - generic [ref=e3639]: 中国模拟银行广州分行
+                        - cell "BRANCH" [ref=e3640]:
+                          - generic [ref=e3641]: BRANCH
+                        - cell "广州" [ref=e3642]:
+                          - generic [ref=e3643]: 广州
+                      - row "105 中国模拟银行杭州分行 BRANCH 杭州" [ref=e3644]:
+                        - cell "105" [ref=e3645]:
+                          - generic [ref=e3646]: "105"
+                        - cell "中国模拟银行杭州分行" [ref=e3647]:
+                          - generic [ref=e3648]: 中国模拟银行杭州分行
+                        - cell "BRANCH" [ref=e3649]:
+                          - generic [ref=e3650]: BRANCH
+                        - cell "杭州" [ref=e3651]:
+                          - generic [ref=e3652]: 杭州
+                      - row "106 中国模拟银行成都分行 BRANCH 成都" [ref=e3653]:
+                        - cell "106" [ref=e3654]:
+                          - generic [ref=e3655]: "106"
+                        - cell "中国模拟银行成都分行" [ref=e3656]:
+                          - generic [ref=e3657]: 中国模拟银行成都分行
+                        - cell "BRANCH" [ref=e3658]:
+                          - generic [ref=e3659]: BRANCH
+                        - cell "成都" [ref=e3660]:
+                          - generic [ref=e3661]: 成都
+                      - row "201 中国模拟银行浦东支行 SUB_BRANCH 上海" [ref=e3662]:
+                        - cell "201" [ref=e3663]:
+                          - generic [ref=e3664]: "201"
+                        - cell "中国模拟银行浦东支行" [ref=e3665]:
+                          - generic [ref=e3666]: 中国模拟银行浦东支行
+                        - cell "SUB_BRANCH" [ref=e3667]:
+                          - generic [ref=e3668]: SUB_BRANCH
+                        - cell "上海" [ref=e3669]:
+                          - generic [ref=e3670]: 上海
+                      - row "202 中国模拟银行徐汇支行 SUB_BRANCH 北京" [ref=e3671]:
+                        - cell "202" [ref=e3672]:
+                          - generic [ref=e3673]: "202"
+                        - cell "中国模拟银行徐汇支行" [ref=e3674]:
+                          - generic [ref=e3675]: 中国模拟银行徐汇支行
+                        - cell "SUB_BRANCH" [ref=e3676]:
+                          - generic [ref=e3677]: SUB_BRANCH
+                        - cell "北京" [ref=e3678]:
+                          - generic [ref=e3679]: 北京
+                      - row "203 中国模拟银行静安支行 SUB_BRANCH 深圳" [ref=e3680]:
+                        - cell "203" [ref=e3681]:
+                          - generic [ref=e3682]: "203"
+                        - cell "中国模拟银行静安支行" [ref=e3683]:
+                          - generic [ref=e3684]: 中国模拟银行静安支行
+                        - cell "SUB_BRANCH" [ref=e3685]:
+                          - generic [ref=e3686]: SUB_BRANCH
+                        - cell "深圳" [ref=e3687]:
+                          - generic [ref=e3688]: 深圳
+                      - row "204 中国模拟银行朝阳支行 SUB_BRANCH 广州" [ref=e3689]:
+                        - cell "204" [ref=e3690]:
+                          - generic [ref=e3691]: "204"
+                        - cell "中国模拟银行朝阳支行" [ref=e3692]:
+                          - generic [ref=e3693]: 中国模拟银行朝阳支行
+                        - cell "SUB_BRANCH" [ref=e3694]:
+                          - generic [ref=e3695]: SUB_BRANCH
+                        - cell "广州" [ref=e3696]:
+                          - generic [ref=e3697]: 广州
+                      - row "205 中国模拟银行海淀支行 SUB_BRANCH 杭州" [ref=e3698]:
+                        - cell "205" [ref=e3699]:
+                          - generic [ref=e3700]: "205"
+                        - cell "中国模拟银行海淀支行" [ref=e3701]:
+                          - generic [ref=e3702]: 中国模拟银行海淀支行
+                        - cell "SUB_BRANCH" [ref=e3703]:
+                          - generic [ref=e3704]: SUB_BRANCH
+                        - cell "杭州" [ref=e3705]:
+                          - generic [ref=e3706]: 杭州
+                      - row "206 中国模拟银行西城支行 SUB_BRANCH 成都" [ref=e3707]:
+                        - cell "206" [ref=e3708]:
+                          - generic [ref=e3709]: "206"
+                        - cell "中国模拟银行西城支行" [ref=e3710]:
+                          - generic [ref=e3711]: 中国模拟银行西城支行
+                        - cell "SUB_BRANCH" [ref=e3712]:
+                          - generic [ref=e3713]: SUB_BRANCH
+                        - cell "成都" [ref=e3714]:
+                          - generic [ref=e3715]: 成都
+                      - row "207 中国模拟银行福田支行 SUB_BRANCH 上海" [ref=e3716]:
+                        - cell "207" [ref=e3717]:
+                          - generic [ref=e3718]: "207"
+                        - cell "中国模拟银行福田支行" [ref=e3719]:
+                          - generic [ref=e3720]: 中国模拟银行福田支行
+                        - cell "SUB_BRANCH" [ref=e3721]:
+                          - generic [ref=e3722]: SUB_BRANCH
+                        - cell "上海" [ref=e3723]:
+                          - generic [ref=e3724]: 上海
+                      - row "208 中国模拟银行南山支行 SUB_BRANCH 北京" [ref=e3725]:
+                        - cell "208" [ref=e3726]:
+                          - generic [ref=e3727]: "208"
+                        - cell "中国模拟银行南山支行" [ref=e3728]:
+                          - generic [ref=e3729]: 中国模拟银行南山支行
+                        - cell "SUB_BRANCH" [ref=e3730]:
+                          - generic [ref=e3731]: SUB_BRANCH
+                        - cell "北京" [ref=e3732]:
+                          - generic [ref=e3733]: 北京
+                      - row "209 中国模拟银行罗湖支行 SUB_BRANCH 深圳" [ref=e3734]:
+                        - cell "209" [ref=e3735]:
+                          - generic [ref=e3736]: "209"
+                        - cell "中国模拟银行罗湖支行" [ref=e3737]:
+                          - generic [ref=e3738]: 中国模拟银行罗湖支行
+                        - cell "SUB_BRANCH" [ref=e3739]:
+                          - generic [ref=e3740]: SUB_BRANCH
+                        - cell "深圳" [ref=e3741]:
+                          - generic [ref=e3742]: 深圳
+                      - row "210 中国模拟银行天河支行 SUB_BRANCH 广州" [ref=e3743]:
+                        - cell "210" [ref=e3744]:
+                          - generic [ref=e3745]: "210"
+                        - cell "中国模拟银行天河支行" [ref=e3746]:
+                          - generic [ref=e3747]: 中国模拟银行天河支行
+                        - cell "SUB_BRANCH" [ref=e3748]:
+                          - generic [ref=e3749]: SUB_BRANCH
+                        - cell "广州" [ref=e3750]:
+                          - generic [ref=e3751]: 广州
+                      - row "211 中国模拟银行越秀支行 SUB_BRANCH 杭州" [ref=e3752]:
+                        - cell "211" [ref=e3753]:
+                          - generic [ref=e3754]: "211"
+                        - cell "中国模拟银行越秀支行" [ref=e3755]:
+                          - generic [ref=e3756]: 中国模拟银行越秀支行
+                        - cell "SUB_BRANCH" [ref=e3757]:
+                          - generic [ref=e3758]: SUB_BRANCH
+                        - cell "杭州" [ref=e3759]:
+                          - generic [ref=e3760]: 杭州
+                      - row "212 中国模拟银行西湖支行 SUB_BRANCH 成都" [ref=e3761]:
+                        - cell "212" [ref=e3762]:
+                          - generic [ref=e3763]: "212"
+                        - cell "中国模拟银行西湖支行" [ref=e3764]:
+                          - generic [ref=e3765]: 中国模拟银行西湖支行
+                        - cell "SUB_BRANCH" [ref=e3766]:
+                          - generic [ref=e3767]: SUB_BRANCH
+                        - cell "成都" [ref=e3768]:
+                          - generic [ref=e3769]: 成都
+                      - row "213 中国模拟银行拱墅支行 SUB_BRANCH 上海" [ref=e3770]:
+                        - cell "213" [ref=e3771]:
+                          - generic [ref=e3772]: "213"
+                        - cell "中国模拟银行拱墅支行" [ref=e3773]:
+                          - generic [ref=e3774]: 中国模拟银行拱墅支行
+                        - cell "SUB_BRANCH" [ref=e3775]:
+                          - generic [ref=e3776]: SUB_BRANCH
+                        - cell "上海" [ref=e3777]:
+                          - generic [ref=e3778]: 上海
+                - generic [ref=e3779]: 共 55 行 · 97 ms
+              - generic [ref=e3780]: 按分行层级统计近30天各个分行的交易笔数、交易总额，生成图表
+              - generic [ref=e3781]: 近30天各分行成功交易统计如下： - **广州分行**：交易笔数161笔，交易总额2155.34万元，均居首位。 - **深圳分行**：89笔，1072.05万元，排名第二。 - **成都分行**：135笔，850.03万元，笔数较多但总额第三。 - **北京分行**：45笔，699.08万元。 - **杭州分行**：32笔，669.22万元。 - **上海分行**：79笔，555.54万元。 **结论**：广州分行交易最活跃，总额与笔数领先；深圳分行单笔金额较高；成都分行笔数虽多但总额偏低。6家分行合计交易541笔，总交易额约6004万元。
+              - generic [ref=e3783]:
+                - code [ref=e3785]: SELECT o.ORG_NAME AS "机构名称", COUNT(*) AS "交易笔数", SUM(t.AMOUNT) AS "交易总额" FROM BANK.T_TRANS_LOG t JOIN BANK.T_ORG o ON t.ORG_ID = o.ORG_ID WHERE o.ORG_LEVEL = 'BRANCH' AND t.TRANS_TIME >= TRUNC(SYSDATE)-30 AND UPPER(t.STATUS) = 'SUCCESS' GROUP BY o.ORG_ID, o.ORG_NAME ORDER BY SUM(t.AMOUNT) DESC
+                - generic [ref=e3786]:
+                  - button "填入编辑器" [ref=e3787] [cursor=pointer]:
+                    - generic [ref=e3788]: 填入编辑器
+                  - button "执行" [ref=e3789] [cursor=pointer]:
+                    - generic [ref=e3790]: 执行
+              - generic [ref=e3791]:
+                - generic [ref=e3794]:
+                  - table [ref=e3796]:
+                    - rowgroup [ref=e3801]:
+                      - row "机构名称 交易笔数 交易总额" [ref=e3802]:
+                        - columnheader "机构名称" [ref=e3803]:
+                          - generic [ref=e3806]: 机构名称
+                        - columnheader "交易笔数" [ref=e3807]:
+                          - generic [ref=e3810]: 交易笔数
+                        - columnheader "交易总额" [ref=e3811]:
+                          - generic [ref=e3814]: 交易总额
+                  - table [ref=e3815]:
+                    - rowgroup [ref=e3820]:
+                      - row "中国模拟银行广州分行 161 21553378" [ref=e3821]:
+                        - cell "中国模拟银行广州分行" [ref=e3822]:
+                          - generic [ref=e3823]: 中国模拟银行广州分行
+                        - cell "161" [ref=e3824]:
+                          - generic [ref=e3825]: "161"
+                        - cell "21553378" [ref=e3826]:
+                          - generic [ref=e3827]: "21553378"
+                      - row "中国模拟银行深圳分行 89 10720493" [ref=e3828]:
+                        - cell "中国模拟银行深圳分行" [ref=e3829]:
+                          - generic [ref=e3830]: 中国模拟银行深圳分行
+                        - cell "89" [ref=e3831]:
+                          - generic [ref=e3832]: "89"
+                        - cell "10720493" [ref=e3833]:
+                          - generic [ref=e3834]: "10720493"
+                      - row "中国模拟银行成都分行 135 8500297" [ref=e3835]:
+                        - cell "中国模拟银行成都分行" [ref=e3836]:
+                          - generic [ref=e3837]: 中国模拟银行成都分行
+                        - cell "135" [ref=e3838]:
+                          - generic [ref=e3839]: "135"
+                        - cell "8500297" [ref=e3840]:
+                          - generic [ref=e3841]: "8500297"
+                      - row "中国模拟银行北京分行 45 6990773" [ref=e3842]:
+                        - cell "中国模拟银行北京分行" [ref=e3843]:
+                          - generic [ref=e3844]: 中国模拟银行北京分行
+                        - cell "45" [ref=e3845]:
+                          - generic [ref=e3846]: "45"
+                        - cell "6990773" [ref=e3847]:
+                          - generic [ref=e3848]: "6990773"
+                      - row "中国模拟银行杭州分行 32 6692229" [ref=e3849]:
+                        - cell "中国模拟银行杭州分行" [ref=e3850]:
+                          - generic [ref=e3851]: 中国模拟银行杭州分行
+                        - cell "32" [ref=e3852]:
+                          - generic [ref=e3853]: "32"
+                        - cell "6692229" [ref=e3854]:
+                          - generic [ref=e3855]: "6692229"
+                      - row "中国模拟银行上海分行 79 5555365" [ref=e3856]:
+                        - cell "中国模拟银行上海分行" [ref=e3857]:
+                          - generic [ref=e3858]: 中国模拟银行上海分行
+                        - cell "79" [ref=e3859]:
+                          - generic [ref=e3860]: "79"
+                        - cell "5555365" [ref=e3861]:
+                          - generic [ref=e3862]: "5555365"
+                - generic [ref=e3863]: 共 6 行 · 122 ms
+              - generic [ref=e3865]: 近30天成功交易笔数和金额趋势，生成图表
+              - generic [ref=e3866]: 近30天成功交易数据（示例为7月15日至7月24日，共10天）显示： - **总成功交易笔数**：6,091笔，日均约609笔。 - **总成功交易金额**：约5.97亿元，日均约5,975万元。 - **单日峰值**：7月21日金额最高（8,776万元），7月19日笔数最多（650笔）。 - **单日低谷**：7月23日金额最低（4,277万元），7月20日笔数最少（553笔）。 整体趋势：交易笔数在553~650之间波动，金额在4,277万~8,776万之间波动，未呈现明显的持续上升或下降趋势，业务量相对稳定但单日波动较大。
+              - generic [ref=e3868]:
+                - code [ref=e3870]: SELECT TRUNC(t.TRANS_TIME) AS 交易日期, COUNT(*) AS 交易笔数, SUM(t.AMOUNT) AS 交易总额 FROM BANK.T_TRANS_LOG t WHERE t.TRANS_TIME >= TRUNC(SYSDATE) - 30 AND UPPER(t.STATUS) = 'SUCCESS' GROUP BY TRUNC(t.TRANS_TIME) ORDER BY 交易日期
+                - generic [ref=e3871]:
+                  - button "填入编辑器" [ref=e3872] [cursor=pointer]:
+                    - generic [ref=e3873]: 填入编辑器
+                  - button "执行" [ref=e3874] [cursor=pointer]:
+                    - generic [ref=e3875]: 执行
+              - generic [ref=e3876]:
+                - generic [ref=e3879]:
+                  - table [ref=e3881]:
+                    - rowgroup [ref=e3886]:
+                      - row "交易日期 交易笔数 交易总额" [ref=e3887]:
+                        - columnheader "交易日期" [ref=e3888]:
+                          - generic [ref=e3891]: 交易日期
+                        - columnheader "交易笔数" [ref=e3892]:
+                          - generic [ref=e3895]: 交易笔数
+                        - columnheader "交易总额" [ref=e3896]:
+                          - generic [ref=e3899]: 交易总额
+                  - table [ref=e3900]:
+                    - rowgroup [ref=e3905]:
+                      - row "2026-07-15T00:00:00 591 55468424" [ref=e3906]:
+                        - cell "2026-07-15T00:00:00" [ref=e3907]:
+                          - generic [ref=e3908]: 2026-07-15T00:00:00
+                        - cell "591" [ref=e3909]:
+                          - generic [ref=e3910]: "591"
+                        - cell "55468424" [ref=e3911]:
+                          - generic [ref=e3912]: "55468424"
+                      - row "2026-07-16T00:00:00 625 49796820" [ref=e3913]:
+                        - cell "2026-07-16T00:00:00" [ref=e3914]:
+                          - generic [ref=e3915]: 2026-07-16T00:00:00
+                        - cell "625" [ref=e3916]:
+                          - generic [ref=e3917]: "625"
+                        - cell "49796820" [ref=e3918]:
+                          - generic [ref=e3919]: "49796820"
+                      - row "2026-07-17T00:00:00 624 54930859" [ref=e3920]:
+                        - cell "2026-07-17T00:00:00" [ref=e3921]:
+                          - generic [ref=e3922]: 2026-07-17T00:00:00
+                        - cell "624" [ref=e3923]:
+                          - generic [ref=e3924]: "624"
+                        - cell "54930859" [ref=e3925]:
+                          - generic [ref=e3926]: "54930859"
+                      - row "2026-07-18T00:00:00 624 63649090" [ref=e3927]:
+                        - cell "2026-07-18T00:00:00" [ref=e3928]:
+                          - generic [ref=e3929]: 2026-07-18T00:00:00
+                        - cell "624" [ref=e3930]:
+                          - generic [ref=e3931]: "624"
+                        - cell "63649090" [ref=e3932]:
+                          - generic [ref=e3933]: "63649090"
+                      - row "2026-07-19T00:00:00 650 82031961" [ref=e3934]:
+                        - cell "2026-07-19T00:00:00" [ref=e3935]:
+                          - generic [ref=e3936]: 2026-07-19T00:00:00
+                        - cell "650" [ref=e3937]:
+                          - generic [ref=e3938]: "650"
+                        - cell "82031961" [ref=e3939]:
+                          - generic [ref=e3940]: "82031961"
+                      - row "2026-07-20T00:00:00 553 49040365" [ref=e3941]:
+                        - cell "2026-07-20T00:00:00" [ref=e3942]:
+                          - generic [ref=e3943]: 2026-07-20T00:00:00
+                        - cell "553" [ref=e3944]:
+                          - generic [ref=e3945]: "553"
+                        - cell "49040365" [ref=e3946]:
+                          - generic [ref=e3947]: "49040365"
+                      - row "2026-07-21T00:00:00 635 87759679" [ref=e3948]:
+                        - cell "2026-07-21T00:00:00" [ref=e3949]:
+                          - generic [ref=e3950]: 2026-07-21T00:00:00
+                        - cell "635" [ref=e3951]:
+                          - generic [ref=e3952]: "635"
+                        - cell "87759679" [ref=e3953]:
+                          - generic [ref=e3954]: "87759679"
+                      - row "2026-07-22T00:00:00 573 49293204" [ref=e3955]:
+                        - cell "2026-07-22T00:00:00" [ref=e3956]:
+                          - generic [ref=e3957]: 2026-07-22T00:00:00
+                        - cell "573" [ref=e3958]:
+                          - generic [ref=e3959]: "573"
+                        - cell "49293204" [ref=e3960]:
+                          - generic [ref=e3961]: "49293204"
+                      - row "2026-07-23T00:00:00 601 42768664" [ref=e3962]:
+                        - cell "2026-07-23T00:00:00" [ref=e3963]:
+                          - generic [ref=e3964]: 2026-07-23T00:00:00
+                        - cell "601" [ref=e3965]:
+                          - generic [ref=e3966]: "601"
+                        - cell "42768664" [ref=e3967]:
+                          - generic [ref=e3968]: "42768664"
+                      - row "2026-07-24T00:00:00 615 62746990" [ref=e3969]:
+                        - cell "2026-07-24T00:00:00" [ref=e3970]:
+                          - generic [ref=e3971]: 2026-07-24T00:00:00
+                        - cell "615" [ref=e3972]:
+                          - generic [ref=e3973]: "615"
+                        - cell "62746990" [ref=e3974]:
+                          - generic [ref=e3975]: "62746990"
+                      - row "2026-07-25T00:00:00 541 57905726" [ref=e3976]:
+                        - cell "2026-07-25T00:00:00" [ref=e3977]:
+                          - generic [ref=e3978]: 2026-07-25T00:00:00
+                        - cell "541" [ref=e3979]:
+                          - generic [ref=e3980]: "541"
+                        - cell "57905726" [ref=e3981]:
+                          - generic [ref=e3982]: "57905726"
+                      - row "2026-07-26T00:00:00 595 67343909" [ref=e3983]:
+                        - cell "2026-07-26T00:00:00" [ref=e3984]:
+                          - generic [ref=e3985]: 2026-07-26T00:00:00
+                        - cell "595" [ref=e3986]:
+                          - generic [ref=e3987]: "595"
+                        - cell "67343909" [ref=e3988]:
+                          - generic [ref=e3989]: "67343909"
+                      - row "2026-07-27T00:00:00 598 67094659" [ref=e3990]:
+                        - cell "2026-07-27T00:00:00" [ref=e3991]:
+                          - generic [ref=e3992]: 2026-07-27T00:00:00
+                        - cell "598" [ref=e3993]:
+                          - generic [ref=e3994]: "598"
+                        - cell "67094659" [ref=e3995]:
+                          - generic [ref=e3996]: "67094659"
+                      - row "2026-07-28T00:00:00 611 61707201" [ref=e3997]:
+                        - cell "2026-07-28T00:00:00" [ref=e3998]:
+                          - generic [ref=e3999]: 2026-07-28T00:00:00
+                        - cell "611" [ref=e4000]:
+                          - generic [ref=e4001]: "611"
+                        - cell "61707201" [ref=e4002]:
+                          - generic [ref=e4003]: "61707201"
+                      - row "2026-07-29T00:00:00 577 48388808" [ref=e4004]:
+                        - cell "2026-07-29T00:00:00" [ref=e4005]:
+                          - generic [ref=e4006]: 2026-07-29T00:00:00
+                        - cell "577" [ref=e4007]:
+                          - generic [ref=e4008]: "577"
+                        - cell "48388808" [ref=e4009]:
+                          - generic [ref=e4010]: "48388808"
+                      - row "2026-07-30T00:00:00 614 73931799" [ref=e4011]:
+                        - cell "2026-07-30T00:00:00" [ref=e4012]:
+                          - generic [ref=e4013]: 2026-07-30T00:00:00
+                        - cell "614" [ref=e4014]:
+                          - generic [ref=e4015]: "614"
+                        - cell "73931799" [ref=e4016]:
+                          - generic [ref=e4017]: "73931799"
+                      - row "2026-07-31T00:00:00 576 68879978" [ref=e4018]:
+                        - cell "2026-07-31T00:00:00" [ref=e4019]:
+                          - generic [ref=e4020]: 2026-07-31T00:00:00
+                        - cell "576" [ref=e4021]:
+                          - generic [ref=e4022]: "576"
+                        - cell "68879978" [ref=e4023]:
+                          - generic [ref=e4024]: "68879978"
+                      - row "2026-08-01T00:00:00 597 62440526" [ref=e4025]:
+                        - cell "2026-08-01T00:00:00" [ref=e4026]:
+                          - generic [ref=e4027]: 2026-08-01T00:00:00
+                        - cell "597" [ref=e4028]:
+                          - generic [ref=e4029]: "597"
+                        - cell "62440526" [ref=e4030]:
+                          - generic [ref=e4031]: "62440526"
+                      - row "2026-08-02T00:00:00 599 52622101" [ref=e4032]:
+                        - cell "2026-08-02T00:00:00" [ref=e4033]:
+                          - generic [ref=e4034]: 2026-08-02T00:00:00
+                        - cell "599" [ref=e4035]:
+                          - generic [ref=e4036]: "599"
+                        - cell "52622101" [ref=e4037]:
+                          - generic [ref=e4038]: "52622101"
+                      - row "2026-08-03T00:00:00 617 72032073" [ref=e4039]:
+                        - cell "2026-08-03T00:00:00" [ref=e4040]:
+                          - generic [ref=e4041]: 2026-08-03T00:00:00
+                        - cell "617" [ref=e4042]:
+                          - generic [ref=e4043]: "617"
+                        - cell "72032073" [ref=e4044]:
+                          - generic [ref=e4045]: "72032073"
+                - generic [ref=e4046]: 共 29 行 · 135 ms
+            - generic [ref=e4048]:
+              - generic [ref=e4050]:
+                - textbox "输入自然语言查询，Enter 发送，Shift+Enter 换行" [ref=e4051]
+                - generic: 输入自然语言查询，Enter 发送，Shift+Enter 换行
+              - generic [ref=e4052]:
+                - generic [ref=e4053]: 模型将自动生成并执行 SQL
+                - button "发送" [disabled] [ref=e4054]:
+                  - generic [ref=e4055]: 发送
+  - generic [ref=e4060] [cursor=pointer]: 退出登录

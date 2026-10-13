@@ -1,5 +1,5 @@
 """PostgreSQL 适配器。"""
-from .base import AdapterError, BaseDBAdapter
+from .base import AdapterError, BaseDBAdapter, column_length
 
 
 def _import_psycopg():
@@ -66,7 +66,9 @@ class PostgreSQLAdapter(BaseDBAdapter):
     def get_table_columns(self, table: str, schema: str = "") -> list[dict]:
         sch = schema or "public"
         rows = self._query(
-            "SELECT column_name AS name, data_type AS data_type, is_nullable='YES' AS nullable, "
+            "SELECT column_name AS name, data_type AS data_type, "
+            "character_maximum_length AS char_length, numeric_precision, numeric_scale, "
+            "is_nullable='YES' AS nullable, "
             "column_default AS default_value, is_identity='YES' AS auto_increment, "
             "COALESCE((SELECT true FROM pg_index i JOIN pg_attribute a ON a.attrelid=i.indrelid "
             "AND a.attnum=ANY(i.indkey) WHERE i.indrelid=(quote_ident(%s)||'.'||quote_ident(%s))::regclass "
@@ -79,6 +81,7 @@ class PostgreSQLAdapter(BaseDBAdapter):
             {
                 "name": r["name"],
                 "data_type": r["data_type"] or "",
+                "length": column_length(r["data_type"], r["char_length"], r["numeric_precision"], r["numeric_scale"]),
                 "nullable": bool(r["nullable"]),
                 "default": r["default_value"],
                 "primary_key": bool(r["primary_key"]),

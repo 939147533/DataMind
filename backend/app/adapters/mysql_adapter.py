@@ -1,5 +1,5 @@
 """MySQL 适配器（OceanBase / GoldenDB 复用本适配器，协议兼容）。"""
-from .base import AdapterError, BaseDBAdapter
+from .base import AdapterError, BaseDBAdapter, column_length
 
 
 def _import_pymysql():
@@ -66,6 +66,7 @@ class MySQLAdapter(BaseDBAdapter):
         db = schema or self._db()
         rows = self._query(
             "SELECT column_name AS name, data_type AS data_type, "
+            "character_maximum_length AS char_length, numeric_precision, numeric_scale, "
             "is_nullable='YES' AS nullable, column_default AS default_value, "
             "column_key='PRI' AS primary_key, extra LIKE '%%auto_increment%%' AS auto_increment, "
             "column_comment AS comment "
@@ -77,6 +78,7 @@ class MySQLAdapter(BaseDBAdapter):
             {
                 "name": r["name"],
                 "data_type": r["data_type"] or "",
+                "length": column_length(r["data_type"], r["char_length"], r["numeric_precision"], r["numeric_scale"]),
                 "nullable": bool(r["nullable"]),
                 "default": r["default_value"],
                 "primary_key": bool(r["primary_key"]),

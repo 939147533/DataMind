@@ -1,0 +1,79 @@
+- generic [ref=e41]:
+  - complementary [ref=e42]:
+    - generic [ref=e43] [cursor=pointer]:
+      - generic [ref=e44]: 🗄️
+      - generic [ref=e45]: 数据库 Agent
+    - menu [ref=e46]:
+      - menuitem "智能查询" [ref=e47]:
+        - img [ref=e48] [cursor=pointer]: 🤖
+        - text: 智能查询
+      - menuitem "SQL 工作台" [ref=e49]:
+        - img [ref=e50] [cursor=pointer]: 🖥️
+        - text: SQL 工作台
+      - menuitem "可视化报表" [ref=e51]:
+        - img [ref=e52] [cursor=pointer]: 📊
+        - text: 可视化报表
+      - menuitem "用户管理" [ref=e53]:
+        - img [ref=e54] [cursor=pointer]: 👥
+        - text: 用户管理
+      - menuitem "角色管理" [ref=e55]:
+        - img [ref=e56] [cursor=pointer]: 🛡️
+        - text: 角色管理
+      - menuitem "系统设置" [ref=e57]:
+        - img [ref=e58] [cursor=pointer]: ⚙️
+        - text: 系统设置
+      - menuitem "运维监控" [ref=e59]:
+        - img [ref=e60] [cursor=pointer]: 📈
+        - text: 运维监控
+    - img [ref=e63] [cursor=pointer]
+  - generic [ref=e67]:
+    - generic [ref=e68]:
+      - generic [ref=e69]: 数据库 Agent
+      - generic [ref=e70]:
+        - button "☀️" [ref=e71] [cursor=pointer]:
+          - generic [ref=e72]: ☀️
+        - button "👤 管理员" [ref=e73] [cursor=pointer]:
+          - generic [ref=e75]: 👤
+          - generic [ref=e76]: 管理员
+    - generic [ref=e1466]:
+      - generic [ref=e1467]:
+        - button "← 返回" [ref=e1468] [cursor=pointer]:
+          - generic [ref=e1469]: ← 返回
+        - generic [ref=e1470]: 经营分析驾驶舱
+        - generic [ref=e1471]:
+          - button "保存布局" [ref=e1472] [cursor=pointer]:
+            - generic [ref=e1473]: 保存布局
+          - button "大屏预览" [ref=e1474] [cursor=pointer]:
+            - generic [ref=e1475]: 大屏预览
+      - generic [ref=e1477]:
+        - generic [ref=e1478]:
+          - generic [ref=e1480]: 全局刷新间隔(秒)
+          - generic [ref=e1484]:
+            - textbox "请输入" [ref=e1486]: "0"
+            - generic [ref=e1487]:
+              - button [disabled] [ref=e1488]:
+                - img [ref=e1491]
+              - button [ref=e1492] [cursor=pointer]:
+                - img [ref=e1495]
+        - generic [ref=e1498]:
+          - generic [ref=e1500]: 列数
+          - generic [ref=e1504]:
+            - textbox "请输入" [ref=e1506]: "12"
+            - generic [ref=e1507]:
+              - button [ref=e1508] [cursor=pointer]:
+                - img [ref=e1511]
+              - button [ref=e1512] [cursor=pointer]:
+                - img [ref=e1515]
+        - generic [ref=e1518]:
+          - generic [ref=e1520]: 行高(px)
+          - generic [ref=e1524]:
+            - textbox "请输入" [ref=e1526]: "44"
+            - generic [ref=e1527]:
+              - button [ref=e1528] [cursor=pointer]:
+                - img [ref=e1531]
+              - button [ref=e1532] [cursor=pointer]:
+                - img [ref=e1535]
+        - generic [ref=e1540]: 拖拽/缩放图表卡片以调整布局，保存后生效；大屏按 16:9 自适应展示。
+      - generic [ref=e1543]:
+        - img [ref=e1546]
+        - generic [ref=e1549]: 该仪表盘暂无图表

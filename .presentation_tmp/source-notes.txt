@@ -1,0 +1,4 @@
+Source: E:/Code/DataMind/docs/competition_ppt_outline.md
+Source repo: E:/Code/DataMind
+No external images or third-party assets were used.
+Deck statistics are derived from local repository files (backend/app, frontend/src, backend/tests).

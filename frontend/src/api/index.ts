@@ -81,7 +81,7 @@ export const PERMISSION_GROUPS = [
   {
     group: "系统",
     items: [
-      { code: "settings", name: "系统设置", desc: "大模型连接配置、偏好设置" },
+      { code: "settings", name: "系统设置", desc: "大模型连接配置" },
       { code: "audit", name: "审计日志", desc: "查看操作审计日志" },
       { code: "users", name: "用户管理", desc: "管理用户账号" },
       { code: "roles", name: "角色管理", desc: "管理角色与功能权限" },
@@ -469,6 +469,8 @@ export interface SchemaColumnDiff {
   column: string;
   source_type: string;
   target_type: string;
+  source_length?: string;
+  target_length?: string;
 }
 
 export interface SchemaTableDiff {

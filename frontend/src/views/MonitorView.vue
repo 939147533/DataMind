@@ -57,69 +57,23 @@
         </template>
       </n-tab-pane>
 
-      <n-tab-pane v-if="canViewSchedule" name="schedule" tab="定时任务">
-        <div class="toolbar">
-          <n-button size="small" type="primary" @click="openScheduleModal">新建任务</n-button>
-          <n-button size="small" @click="loadSchedules">刷新</n-button>
-          <span class="hint">按间隔周期导出报表/订阅推送（复用导出服务）</span>
-        </div>
-        <n-data-table :columns="scheduleColumns" :data="scheduleItems" size="small" :loading="loadingSchedule" :bordered="false" />
-        <n-modal v-model:show="scheduleModalShow" preset="card" title="新建定时任务" style="width: 560px">
-          <div class="schedule-form">
-            <div class="form-row">
-              <span class="form-label">名称</span>
-              <n-input v-model:value="scheduleForm.name" placeholder="任务名称" />
-            </div>
-            <div class="form-row">
-              <span class="form-label">数据源</span>
-              <n-select v-model:value="scheduleForm.datasource_id" :options="dsOptions" placeholder="选择数据源" />
-            </div>
-            <div class="form-row">
-              <span class="form-label">SQL</span>
-              <n-input v-model:value="scheduleForm.sql_text" type="textarea" :rows="4" placeholder="SELECT ..." />
-            </div>
-            <div class="form-row">
-              <span class="form-label">格式</span>
-              <n-select v-model:value="scheduleForm.format" :options="[{ label: 'CSV', value: 'csv' }, { label: 'Excel', value: 'xlsx' }, { label: 'JSON', value: 'json' }]" />
-            </div>
-            <div class="form-row">
-              <span class="form-label">间隔(分钟)</span>
-              <n-input-number v-model:value="scheduleForm.interval_minutes" :min="1" style="width: 160px" />
-            </div>
-            <div class="form-row">
-              <span class="form-label">启用</span>
-              <n-switch v-model:value="scheduleForm.enabled" />
-            </div>
-          </div>
-          <template #footer>
-            <div style="text-align: right">
-              <n-button size="small" style="margin-right: 8px" @click="scheduleModalShow = false">取消</n-button>
-              <n-button size="small" type="primary" :loading="savingSchedule" @click="createSchedule">创建</n-button>
-            </div>
-          </template>
-        </n-modal>
-      </n-tab-pane>
-
     </n-tabs>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, h, onMounted, reactive, ref } from "vue";
-import { NButton, NSwitch, NTag, useMessage } from "naive-ui";
-import type { DatasourceStat, MonitorOverview, SchemaDiffResult, SchemaTableDiff, ScheduleTask, SlowQueryItem } from "../api";
-import { monitorApi, scheduleApi } from "../api";
+import { computed, onMounted, reactive, ref } from "vue";
+import type { DatasourceStat, MonitorOverview, SchemaDiffResult, SchemaTableDiff, SlowQueryItem } from "../api";
+import { monitorApi } from "../api";
 import { useAuthStore } from "../stores/auth";
 import { useConnectionsStore } from "../stores/connections";
 import AuditView from "./AuditView.vue";
 
 const connections = useConnectionsStore();
 const auth = useAuthStore();
-const message = useMessage();
 const canViewMonitor = computed(() => auth.hasPermission("monitor"));
 const canViewAudit = computed(() => auth.hasPermission("audit"));
-const canViewSchedule = computed(() => auth.hasPermission("reports_manage"));
-const activeTab = ref(canViewMonitor.value ? "overview" : canViewSchedule.value ? "schedule" : "audit");
+const activeTab = ref(canViewMonitor.value ? "overview" : "audit");
 const overview = ref<MonitorOverview | null>(null);
 const loadingOverview = ref(false);
 const thresholdMs = ref(1000);
@@ -130,18 +84,6 @@ const loadingSlow = ref(false);
 const diffForm = reactive<{ source_ds_id: number | null; target_ds_id: number | null }>({ source_ds_id: null, target_ds_id: null });
 const diffResult = ref<SchemaDiffResult | null>(null);
 const loadingDiff = ref(false);
-const scheduleItems = ref<ScheduleTask[]>([]);
-const loadingSchedule = ref(false);
-const scheduleModalShow = ref(false);
-const savingSchedule = ref(false);
-const scheduleForm = reactive({
-  name: "",
-  datasource_id: null as number | null,
-  sql_text: "",
-  format: "csv",
-  interval_minutes: 1440,
-  enabled: true,
-});
 
 const dsOptions = computed(() => connections.list.map((c) => ({ label: c.name, value: c.id })));
 
@@ -151,7 +93,6 @@ onMounted(async () => {
     loadOverview();
     loadSlow(1, true);
   }
-  if (canViewSchedule.value) loadSchedules();
 });
 
 async function loadOverview() {
@@ -185,79 +126,6 @@ async function runDiff() {
     });
   } finally {
     loadingDiff.value = false;
-  }
-}
-
-async function loadSchedules() {
-  loadingSchedule.value = true;
-  try {
-    scheduleItems.value = await scheduleApi.list();
-  } catch {
-    message.warning("加载定时任务失败（需要报表维护权限）");
-  } finally {
-    loadingSchedule.value = false;
-  }
-}
-
-function openScheduleModal() {
-  scheduleForm.name = "";
-  scheduleForm.datasource_id = null;
-  scheduleForm.sql_text = "";
-  scheduleForm.format = "csv";
-  scheduleForm.interval_minutes = 1440;
-  scheduleForm.enabled = true;
-  scheduleModalShow.value = true;
-}
-
-async function createSchedule() {
-  if (!scheduleForm.name.trim() || !scheduleForm.sql_text.trim() || !scheduleForm.datasource_id) {
-    message.warning("请填写名称、SQL 与数据源");
-    return;
-  }
-  savingSchedule.value = true;
-  try {
-    await scheduleApi.create({ ...scheduleForm });
-    message.success("已创建");
-    scheduleModalShow.value = false;
-    loadSchedules();
-  } catch {
-    message.error("创建失败");
-  } finally {
-    savingSchedule.value = false;
-  }
-}
-
-async function toggleSchedule(row: ScheduleTask) {
-  try {
-    await scheduleApi.update(row.id, { enabled: row.enabled });
-    message.success(row.enabled ? "已启用" : "已停用");
-  } catch {
-    row.enabled = !row.enabled;
-    message.error("操作失败");
-  }
-}
-
-async function runScheduleNow(row: ScheduleTask) {
-  try {
-    const res = await scheduleApi.run(row.id);
-    message.success(res.message || "执行完成");
-    loadSchedules();
-  } catch {
-    message.error("执行失败");
-  }
-}
-
-function downloadSchedule(row: ScheduleTask) {
-  scheduleApi.download(row.id, row.last_file || `schedule_${row.id}.csv`);
-}
-
-async function removeSchedule(row: ScheduleTask) {
-  try {
-    await scheduleApi.remove(row.id);
-    message.success("已删除");
-    loadSchedules();
-  } catch {
-    message.error("删除失败");
   }
 }
 
@@ -311,75 +179,21 @@ const diffColumns = [
     render: (row: SchemaTableDiff) => (row.removed_columns.length ? row.removed_columns.join(", ") : "—"),
   },
   {
-    title: "类型变化",
+    title: "类型/长度变化",
     key: "changed_columns",
     render: (row: SchemaTableDiff) =>
       row.changed_columns.length
-        ? row.changed_columns.map((c) => `${c.column}: ${c.source_type} → ${c.target_type}`).join("; ")
+        ? row.changed_columns
+            .map((c) => `${c.column}: ${formatType(c.source_type, c.source_length)} → ${formatType(c.target_type, c.target_length)}`)
+            .join("; ")
         : "—",
   },
 ];
 
-const scheduleColumns = [
-  { title: "名称", key: "name", width: 150 },
-  {
-    title: "数据源",
-    key: "datasource_id",
-    width: 140,
-    render: (row: ScheduleTask) => {
-      const ds = connections.list.find((c) => c.id === row.datasource_id);
-      return ds ? ds.name : row.datasource_id;
-    },
-  },
-  { title: "格式", key: "format", width: 80 },
-  {
-    title: "间隔",
-    key: "interval_minutes",
-    width: 110,
-    render: (row: ScheduleTask) =>
-      row.interval_minutes >= 1440 ? `${row.interval_minutes / 1440} 天` : `${row.interval_minutes} 分钟`,
-  },
-  {
-    title: "启用",
-    key: "enabled",
-    width: 80,
-    render: (row: ScheduleTask) =>
-      h(NSwitch, {
-        value: row.enabled,
-        size: "small",
-        "onUpdate:value": (v: boolean) => {
-          row.enabled = v;
-          toggleSchedule(row);
-        },
-      }),
-  },
-  {
-    title: "上次执行",
-    key: "last_run_at",
-    width: 160,
-    render: (row: ScheduleTask) => (row.last_run_at ? new Date(row.last_run_at).toLocaleString() : "—"),
-  },
-  { title: "状态", key: "last_status", width: 140, ellipsis: { tooltip: true } },
-  {
-    title: "下次执行",
-    key: "next_run_at",
-    width: 160,
-    render: (row: ScheduleTask) => (row.next_run_at ? new Date(row.next_run_at).toLocaleString() : "—"),
-  },
-  {
-    title: "操作",
-    key: "actions",
-    width: 210,
-    render: (row: ScheduleTask) =>
-      h("div", { style: "display: flex; gap: 6px" }, [
-        h(NButton, { size: "tiny", onClick: () => runScheduleNow(row) }, { default: () => "执行" }),
-        row.last_file
-          ? h(NButton, { size: "tiny", secondary: true, onClick: () => downloadSchedule(row) }, { default: () => "下载" })
-          : null,
-        h(NButton, { size: "tiny", type: "error", quaternary: true, onClick: () => removeSchedule(row) }, { default: () => "删除" }),
-      ]),
-  },
-];
+function formatType(type: string, length?: string) {
+  const base = type || "—";
+  return length ? `${base}(${length})` : base;
+}
 </script>
 
 <style scoped>
@@ -403,17 +217,5 @@ const scheduleColumns = [
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 6px;
-}
-.schedule-form .form-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.schedule-form .form-label {
-  width: 80px;
-  flex-shrink: 0;
-  font-size: 13px;
-  color: #888;
 }
 </style>

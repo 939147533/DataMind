@@ -1,0 +1,157 @@
+- generic [ref=e1]:
+  - generic [ref=e41]:
+    - complementary [ref=e42]:
+      - generic [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 🗄️
+        - generic [ref=e45]: 数据库 Agent
+      - menu [ref=e46]:
+        - menuitem "智能查询" [ref=e47]:
+          - img [ref=e48] [cursor=pointer]: 🤖
+          - text: 智能查询
+        - menuitem "SQL 工作台" [ref=e49]:
+          - img [ref=e50] [cursor=pointer]: 🖥️
+          - text: SQL 工作台
+        - menuitem "可视化报表" [ref=e51]:
+          - img [ref=e52] [cursor=pointer]: 📊
+          - text: 可视化报表
+        - menuitem "用户管理" [ref=e53]:
+          - img [ref=e54] [cursor=pointer]: 👥
+          - text: 用户管理
+        - menuitem "角色管理" [ref=e55]:
+          - img [ref=e56] [cursor=pointer]: 🛡️
+          - text: 角色管理
+        - menuitem "系统设置" [ref=e57]:
+          - img [ref=e58] [cursor=pointer]: ⚙️
+          - text: 系统设置
+        - menuitem "运维监控" [ref=e59]:
+          - img [ref=e60] [cursor=pointer]: 📈
+          - text: 运维监控
+      - img [ref=e63] [cursor=pointer]
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]: 系统设置
+        - generic [ref=e70]:
+          - button "☀️" [ref=e71] [cursor=pointer]:
+            - generic [ref=e72]: ☀️
+          - button "👤 管理员" [ref=e73] [cursor=pointer]:
+            - generic [ref=e75]: 👤
+            - generic [ref=e76]: 管理员
+      - generic [ref=e1797]:
+        - generic [ref=e1802]:
+          - generic [ref=e1805] [cursor=pointer]: 数据库连接配置
+          - generic [ref=e1809] [cursor=pointer]: 大模型连接配置
+          - generic [ref=e1813] [cursor=pointer]: 偏好设置
+        - generic [ref=e1816]:
+          - generic [ref=e1817]:
+            - generic [ref=e1820]:
+              - textbox "搜索名称 / 主机" [ref=e1821]
+              - generic:
+                - generic: 搜索名称 / 主机
+            - img "loading" [ref=e1827] [cursor=pointer]:
+              - img [ref=e1832]
+            - button "＋ 新建连接" [active] [ref=e1834] [cursor=pointer]:
+              - generic [ref=e1835]: ＋ 新建连接
+          - generic [ref=e1836]:
+            - table [ref=e1839]:
+              - rowgroup [ref=e1847]:
+                - row "名称 类型 主机 环境 状态 操作" [ref=e1848]:
+                  - columnheader "名称" [ref=e1849]:
+                    - generic [ref=e1851]: 名称
+                  - columnheader "类型" [ref=e1852]:
+                    - generic [ref=e1854]: 类型
+                  - columnheader "主机" [ref=e1855]:
+                    - generic [ref=e1857]: 主机
+                  - columnheader "环境" [ref=e1858]:
+                    - generic [ref=e1860]: 环境
+                  - columnheader "状态" [ref=e1861]:
+                    - generic [ref=e1863]: 状态
+                  - columnheader "操作" [ref=e1864]:
+                    - generic [ref=e1866]: 操作
+              - rowgroup [ref=e1867]:
+                - row "oracle-远程开发库 ORACLE 100.102.197.1:1521 开发 未知 打开 测试 编辑 克隆 删除" [ref=e2138]:
+                  - cell "oracle-远程开发库" [ref=e2139]
+                  - cell "ORACLE" [ref=e2140]
+                  - cell "100.102.197.1:1521" [ref=e2141]
+                  - cell "开发" [ref=e2142]:
+                    - generic [ref=e2144]: 开发
+                  - cell "未知" [ref=e2145]:
+                    - generic [ref=e2147]: 未知
+                  - cell "打开 测试 编辑 克隆 删除" [ref=e2148]:
+                    - generic [ref=e2149]:
+                      - button "打开" [ref=e2150] [cursor=pointer]:
+                        - generic [ref=e2151]: 打开
+                      - button "测试" [ref=e2152] [cursor=pointer]:
+                        - generic [ref=e2153]: 测试
+                      - button "编辑" [ref=e2154] [cursor=pointer]:
+                        - generic [ref=e2155]: 编辑
+                      - button "克隆" [ref=e2156] [cursor=pointer]:
+                        - generic [ref=e2157]: 克隆
+                      - button "删除" [ref=e2158] [cursor=pointer]:
+                        - generic [ref=e2159]: 删除
+                - row "oracle-free ORACLE 127.0.0.1:1521 开发 正常 打开 测试 编辑 克隆 删除" [ref=e1868]:
+                  - cell "oracle-free" [ref=e1869]
+                  - cell "ORACLE" [ref=e1870]
+                  - cell "127.0.0.1:1521" [ref=e1871]
+                  - cell "开发" [ref=e1872]:
+                    - generic [ref=e1874]: 开发
+                  - cell "正常" [ref=e1875]:
+                    - generic [ref=e1877]: 正常
+                  - cell "打开 测试 编辑 克隆 删除" [ref=e1878]:
+                    - generic [ref=e1879]:
+                      - button "打开" [ref=e1880] [cursor=pointer]:
+                        - generic [ref=e1881]: 打开
+                      - button "测试" [ref=e1882] [cursor=pointer]:
+                        - generic [ref=e1883]: 测试
+                      - button "编辑" [ref=e1884] [cursor=pointer]:
+                        - generic [ref=e1885]: 编辑
+                      - button "克隆" [ref=e1886] [cursor=pointer]:
+                        - generic [ref=e1887]: 克隆
+                      - button "删除" [ref=e1888] [cursor=pointer]:
+                        - generic [ref=e1889]: 删除
+                - row "mysql MYSQL localhost:3306 开发 正常 打开 测试 编辑 克隆 删除" [ref=e1890]:
+                  - cell "mysql" [ref=e1891]
+                  - cell "MYSQL" [ref=e1892]
+                  - cell "localhost:3306" [ref=e1893]
+                  - cell "开发" [ref=e1894]:
+                    - generic [ref=e1896]: 开发
+                  - cell "正常" [ref=e1897]:
+                    - generic [ref=e1899]: 正常
+                  - cell "打开 测试 编辑 克隆 删除" [ref=e1900]:
+                    - generic [ref=e1901]:
+                      - button "打开" [ref=e1902] [cursor=pointer]:
+                        - generic [ref=e1903]: 打开
+                      - button "测试" [ref=e1904] [cursor=pointer]:
+                        - generic [ref=e1905]: 测试
+                      - button "编辑" [ref=e1906] [cursor=pointer]:
+                        - generic [ref=e1907]: 编辑
+                      - button "克隆" [ref=e1908] [cursor=pointer]:
+                        - generic [ref=e1909]: 克隆
+                      - button "删除" [ref=e1910] [cursor=pointer]:
+                        - generic [ref=e1911]: 删除
+                - row "本地演示库 (SQLite) SQLITE demo.db 开发 正常 打开 测试 编辑 克隆 删除" [ref=e1912]:
+                  - cell "本地演示库 (SQLite)" [ref=e1913]
+                  - cell "SQLITE" [ref=e1914]
+                  - cell "demo.db" [ref=e1915]
+                  - cell "开发" [ref=e1916]:
+                    - generic [ref=e1918]: 开发
+                  - cell "正常" [ref=e1919]:
+                    - generic [ref=e1921]: 正常
+                  - cell "打开 测试 编辑 克隆 删除" [ref=e1922]:
+                    - generic [ref=e1923]:
+                      - button "打开" [ref=e1924] [cursor=pointer]:
+                        - generic [ref=e1925]: 打开
+                      - button "测试" [ref=e1926] [cursor=pointer]:
+                        - generic [ref=e1927]: 测试
+                      - button "编辑" [ref=e1928] [cursor=pointer]:
+                        - generic [ref=e1929]: 编辑
+                      - button "克隆" [ref=e1930] [cursor=pointer]:
+                        - generic [ref=e1931]: 克隆
+                      - button "删除" [ref=e1932] [cursor=pointer]:
+                        - generic [ref=e1933]: 删除
+            - generic [ref=e1935]:
+              - img [ref=e1938]
+              - generic [ref=e1940] [cursor=pointer]: "1"
+              - img [ref=e1943]
+  - generic [ref=e2161]:
+    - img [ref=e2164]
+    - generic [ref=e2168]: 创建成功

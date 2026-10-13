@@ -1,0 +1,69 @@
+- generic [ref=e1]:
+  - generic [ref=e41]:
+    - complementary [ref=e42]:
+      - generic [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 🗄️
+        - generic [ref=e45]: 数据库 Agent
+      - menu [ref=e46]:
+        - menuitem "智能查询" [ref=e47]:
+          - img [ref=e48] [cursor=pointer]: 🤖
+          - text: 智能查询
+        - menuitem "SQL 工作台" [ref=e49]:
+          - img [ref=e50] [cursor=pointer]: 🖥️
+          - text: SQL 工作台
+        - menuitem "可视化报表" [ref=e51]:
+          - img [ref=e52] [cursor=pointer]: 📊
+          - text: 可视化报表
+        - menuitem "用户管理" [ref=e53]:
+          - img [ref=e54] [cursor=pointer]: 👥
+          - text: 用户管理
+        - menuitem "角色管理" [ref=e55]:
+          - img [ref=e56] [cursor=pointer]: 🛡️
+          - text: 角色管理
+        - menuitem "系统设置" [ref=e57]:
+          - img [ref=e58] [cursor=pointer]: ⚙️
+          - text: 系统设置
+        - menuitem "运维监控" [ref=e59]:
+          - img [ref=e60] [cursor=pointer]: 📈
+          - text: 运维监控
+      - img [ref=e63] [cursor=pointer]
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]: 可视化报表
+        - generic [ref=e70]:
+          - button "☀️" [ref=e71] [cursor=pointer]:
+            - generic [ref=e72]: ☀️
+          - button "👤 管理员" [ref=e73] [cursor=pointer]:
+            - generic [ref=e75]: 👤
+            - generic [ref=e76]: 管理员
+      - generic [ref=e1339]:
+        - generic [ref=e1344]:
+          - generic [ref=e1347] [cursor=pointer]: 图表管理
+          - generic [ref=e1351] [cursor=pointer]: 仪表盘
+        - generic [ref=e1392]:
+          - button "＋ 新建仪表盘" [ref=e1394] [cursor=pointer]:
+            - generic [ref=e1395]: ＋ 新建仪表盘
+          - generic [ref=e1396]:
+            - img [ref=e1399]
+            - generic [ref=e1402]: 暂无仪表盘
+  - dialog [ref=e1404]:
+    - heading "新建仪表盘 close" [ref=e1405]:
+      - heading "新建仪表盘" [ref=e1406]
+      - button "close" [ref=e1407] [cursor=pointer]:
+        - img [ref=e1409]
+    - generic [ref=e1413]:
+      - generic [ref=e1414]:
+        - generic [ref=e1416]: 名称
+        - generic [ref=e1420]:
+          - textbox "仪表盘名称" [active] [ref=e1421]
+          - generic:
+            - generic: 仪表盘名称
+      - generic [ref=e1423]:
+        - generic [ref=e1425]: 图表
+        - generic [ref=e1428]:
+          - img "loading" [ref=e1430] [cursor=pointer]:
+            - img [ref=e1435]
+          - generic:
+            - generic: 选择要加入的图表
+    - button "创建" [ref=e1439] [cursor=pointer]:
+      - generic [ref=e1440]: 创建

@@ -1,0 +1,78 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e41]:
+    - complementary [ref=e42]:
+      - generic [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 🗄️
+        - generic [ref=e45]: 数据库 Agent
+      - menu [ref=e46]:
+        - menuitem "智能查询" [ref=e47]:
+          - img [ref=e48] [cursor=pointer]: 🤖
+          - text: 智能查询
+        - menuitem "SQL 工作台" [ref=e49]:
+          - img [ref=e50] [cursor=pointer]: 🖥️
+          - text: SQL 工作台
+        - menuitem "可视化报表" [ref=e51]:
+          - img [ref=e52] [cursor=pointer]: 📊
+          - text: 可视化报表
+        - menuitem "用户管理" [ref=e53]:
+          - img [ref=e54] [cursor=pointer]: 👥
+          - text: 用户管理
+        - menuitem "角色管理" [ref=e55]:
+          - img [ref=e56] [cursor=pointer]: 🛡️
+          - text: 角色管理
+        - menuitem "系统设置" [ref=e57]:
+          - img [ref=e58] [cursor=pointer]: ⚙️
+          - text: 系统设置
+        - menuitem "运维监控" [ref=e59]:
+          - img [ref=e60] [cursor=pointer]: 📈
+          - text: 运维监控
+      - img [ref=e63] [cursor=pointer]
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]: 智能查询
+        - generic [ref=e70]:
+          - button "☀️" [ref=e71] [cursor=pointer]:
+            - generic [ref=e72]: ☀️
+          - button "👤 管理员" [ref=e73] [cursor=pointer]:
+            - generic [ref=e75]: 👤
+            - generic [ref=e76]: 管理员
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e82] [cursor=pointer]:
+            - generic "本地演示库 (SQLite) (sqlite)" [ref=e83]:
+              - generic [ref=e84]: 本地演示库 (SQLite) (sqlite)
+            - img "loading" [ref=e85]:
+              - img [ref=e90]
+          - generic [ref=e94] [cursor=pointer]:
+            - generic "ollama · qwen3.6:35b-a3b-q4_K_M" [ref=e95]:
+              - generic [ref=e96]: ollama · qwen3.6:35b-a3b-q4_K_M
+            - img "loading" [ref=e97]:
+              - img [ref=e102]
+          - generic [ref=e106] [cursor=pointer]:
+            - generic:
+              - generic: 选择对话
+            - img "loading" [ref=e107]:
+              - img [ref=e112]
+          - button "新建对话" [ref=e114] [cursor=pointer]:
+            - generic [ref=e115]: 新建对话
+          - button "删除" [disabled] [ref=e116]:
+            - generic [ref=e117]: 删除
+          - generic [ref=e119]: 本地演示库 (SQLite) (sqlite)
+        - generic [ref=e121]:
+          - generic [ref=e122]: 👋 你好，我是数据库 Agent
+          - paragraph [ref=e123]: 用自然语言描述你的需求，AI 会自动生成查询并返回结果：
+          - generic [ref=e124]:
+            - generic [ref=e126] [cursor=pointer]: 统计各订单状态的数量
+            - generic [ref=e128] [cursor=pointer]: 销售额最高的 5 个商品
+            - generic [ref=e130] [cursor=pointer]: 各品类订单金额占比（生成图表）
+        - generic [ref=e131]:
+          - generic [ref=e133]:
+            - textbox "输入自然语言查询，Enter 发送，Shift+Enter 换行；例如：统计各订单状态的数量" [ref=e134]
+            - generic: 输入自然语言查询，Enter 发送，Shift+Enter 换行；例如：统计各订单状态的数量
+          - generic [ref=e135]:
+            - generic [ref=e136]: AI 将自动生成并执行只读查询，结果可导出
+            - button "发送" [disabled] [ref=e137]:
+              - generic [ref=e138]: 发送
+  - generic [ref=e140]:
+    - img [ref=e143]
+    - generic [ref=e147]: 登录成功

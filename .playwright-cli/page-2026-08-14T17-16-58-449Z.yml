@@ -1,0 +1,189 @@
+- generic [ref=e41]:
+  - complementary [ref=e42]:
+    - generic [ref=e43] [cursor=pointer]:
+      - generic [ref=e44]: 🗄️
+      - generic [ref=e45]: 数据库 Agent
+    - menu [ref=e46]:
+      - menuitem "智能查询" [ref=e47]:
+        - img [ref=e48] [cursor=pointer]: 🤖
+        - text: 智能查询
+      - menuitem "SQL 工作台" [ref=e49]:
+        - img [ref=e50] [cursor=pointer]: 🖥️
+        - text: SQL 工作台
+      - menuitem "可视化报表" [ref=e51]:
+        - img [ref=e52] [cursor=pointer]: 📊
+        - text: 可视化报表
+      - menuitem "用户管理" [ref=e53]:
+        - img [ref=e54] [cursor=pointer]: 👥
+        - text: 用户管理
+      - menuitem "角色管理" [ref=e55]:
+        - img [ref=e56] [cursor=pointer]: 🛡️
+        - text: 角色管理
+      - menuitem "系统设置" [ref=e57]:
+        - img [ref=e58] [cursor=pointer]: ⚙️
+        - text: 系统设置
+      - menuitem "运维监控" [ref=e59]:
+        - img [ref=e60] [cursor=pointer]: 📈
+        - text: 运维监控
+    - img [ref=e63] [cursor=pointer]
+  - generic [ref=e67]:
+    - generic [ref=e68]:
+      - generic [ref=e69]: 智能查询
+      - generic [ref=e70]:
+        - button "☀️" [ref=e71] [cursor=pointer]:
+          - generic [ref=e72]: ☀️
+        - button "👤 管理员" [ref=e73] [cursor=pointer]:
+          - generic [ref=e75]: 👤
+          - generic [ref=e76]: 管理员
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - generic [active] [ref=e82] [cursor=pointer]:
+          - generic "oracle-free (oracle)" [ref=e355]:
+            - generic [ref=e84]: oracle-free (oracle)
+          - img "loading" [ref=e85]:
+            - img [ref=e358]
+        - generic [ref=e94] [cursor=pointer]:
+          - generic "openai · deepseek-v4-flash" [ref=e187]:
+            - generic [ref=e96]: openai · deepseek-v4-flash
+          - img "loading" [ref=e97]:
+            - img [ref=e102]
+        - generic [ref=e106] [cursor=pointer]:
+          - generic "各机构客户数和账户数 TOP10" [ref=e190]:
+            - generic [ref=e189]: 各机构客户数和账户数 TOP10
+          - img "loading" [ref=e107]:
+            - img [ref=e112]
+        - button "新建对话" [ref=e114] [cursor=pointer]:
+          - generic [ref=e115]: 新建对话
+        - button "删除" [ref=e116] [cursor=pointer]:
+          - generic [ref=e117]: 删除
+        - generic [ref=e119]: oracle-free (oracle)
+      - generic [ref=e120]:
+        - generic [ref=e191]: 各机构客户数和账户数 TOP10
+        - generic [ref=e192]: 按客户数排序，各机构 TOP10 如下： - **第一名：中国银行深圳分行**，客户数 7，账户数 11。 - **第二名：招商银行总行营业部**，客户数 6，账户数 9。 - **第三名：中信银行北京分行**，客户数 6，账户数 8。 - 其余机构客户数在 4~5 之间，账户数在 8~10 之间。 总体来看，客户数最高的机构为中国银行深圳分行（7 户），TOP10 中客户数均在 4 户及以上，账户数均在 8 户及以上。
+        - generic [ref=e202]:
+          - generic [ref=e203]:
+            - generic [ref=e204]: 生成的查询
+            - button "复制" [ref=e205] [cursor=pointer]:
+              - generic [ref=e206]: 复制
+          - code [ref=e208]: SELECT i.inst_id, i.inst_name, COUNT(DISTINCT u.user_id) AS customer_count, COUNT(DISTINCT a.account_id) AS account_count FROM institutions i LEFT JOIN accounts a ON i.inst_id = a.inst_id LEFT JOIN users u ON a.user_id = u.user_id GROUP BY i.inst_id, i.inst_name ORDER BY customer_count DESC, account_count DESC LIMIT 10
+        - generic [ref=e209]:
+          - generic [ref=e212]:
+            - table [ref=e214]:
+              - rowgroup [ref=e220]:
+                - row "inst_id inst_name customer_count account_count" [ref=e221]:
+                  - columnheader "inst_id" [ref=e222]:
+                    - generic [ref=e225]: inst_id
+                  - columnheader "inst_name" [ref=e226]:
+                    - generic [ref=e229]: inst_name
+                  - columnheader "customer_count" [ref=e230]:
+                    - generic [ref=e233]: customer_count
+                  - columnheader "account_count" [ref=e234]:
+                    - generic [ref=e237]: account_count
+            - table [ref=e238]:
+              - rowgroup [ref=e244]:
+                - row "INST1034 中国银行深圳分行 7 11" [ref=e245]:
+                  - cell "INST1034" [ref=e246]:
+                    - generic [ref=e247]: INST1034
+                  - cell "中国银行深圳分行" [ref=e248]:
+                    - generic [ref=e249]: 中国银行深圳分行
+                  - cell "7" [ref=e250]:
+                    - generic [ref=e251]: "7"
+                  - cell "11" [ref=e252]:
+                    - generic [ref=e253]: "11"
+                - row "INST1041 招商银行总行营业部 6 9" [ref=e254]:
+                  - cell "INST1041" [ref=e255]:
+                    - generic [ref=e256]: INST1041
+                  - cell "招商银行总行营业部" [ref=e257]:
+                    - generic [ref=e258]: 招商银行总行营业部
+                  - cell "6" [ref=e259]:
+                    - generic [ref=e260]: "6"
+                  - cell "9" [ref=e261]:
+                    - generic [ref=e262]: "9"
+                - row "INST1062 中信银行北京分行 6 8" [ref=e263]:
+                  - cell "INST1062" [ref=e264]:
+                    - generic [ref=e265]: INST1062
+                  - cell "中信银行北京分行" [ref=e266]:
+                    - generic [ref=e267]: 中信银行北京分行
+                  - cell "6" [ref=e268]:
+                    - generic [ref=e269]: "6"
+                  - cell "8" [ref=e270]:
+                    - generic [ref=e271]: "8"
+                - row "INST1073 光大银行上海分行 5 10" [ref=e272]:
+                  - cell "INST1073" [ref=e273]:
+                    - generic [ref=e274]: INST1073
+                  - cell "光大银行上海分行" [ref=e275]:
+                    - generic [ref=e276]: 光大银行上海分行
+                  - cell "5" [ref=e277]:
+                    - generic [ref=e278]: "5"
+                  - cell "10" [ref=e279]:
+                    - generic [ref=e280]: "10"
+                - row "INST1029 中国农业银行南京分行 5 9" [ref=e281]:
+                  - cell "INST1029" [ref=e282]:
+                    - generic [ref=e283]: INST1029
+                  - cell "中国农业银行南京分行" [ref=e284]:
+                    - generic [ref=e285]: 中国农业银行南京分行
+                  - cell "5" [ref=e286]:
+                    - generic [ref=e287]: "5"
+                  - cell "9" [ref=e288]:
+                    - generic [ref=e289]: "9"
+                - row "INST1048 招商银行武汉分行 5 9" [ref=e290]:
+                  - cell "INST1048" [ref=e291]:
+                    - generic [ref=e292]: INST1048
+                  - cell "招商银行武汉分行" [ref=e293]:
+                    - generic [ref=e294]: 招商银行武汉分行
+                  - cell "5" [ref=e295]:
+                    - generic [ref=e296]: "5"
+                  - cell "9" [ref=e297]:
+                    - generic [ref=e298]: "9"
+                - row "INST1017 中国建设银行成都分行 5 8" [ref=e299]:
+                  - cell "INST1017" [ref=e300]:
+                    - generic [ref=e301]: INST1017
+                  - cell "中国建设银行成都分行" [ref=e302]:
+                    - generic [ref=e303]: 中国建设银行成都分行
+                  - cell "5" [ref=e304]:
+                    - generic [ref=e305]: "5"
+                  - cell "8" [ref=e306]:
+                    - generic [ref=e307]: "8"
+                - row "INST1043 招商银行上海分行 5 8" [ref=e308]:
+                  - cell "INST1043" [ref=e309]:
+                    - generic [ref=e310]: INST1043
+                  - cell "招商银行上海分行" [ref=e311]:
+                    - generic [ref=e312]: 招商银行上海分行
+                  - cell "5" [ref=e313]:
+                    - generic [ref=e314]: "5"
+                  - cell "8" [ref=e315]:
+                    - generic [ref=e316]: "8"
+                - row "INST1055 交通银行广州分行 5 8" [ref=e317]:
+                  - cell "INST1055" [ref=e318]:
+                    - generic [ref=e319]: INST1055
+                  - cell "交通银行广州分行" [ref=e320]:
+                    - generic [ref=e321]: 交通银行广州分行
+                  - cell "5" [ref=e322]:
+                    - generic [ref=e323]: "5"
+                  - cell "8" [ref=e324]:
+                    - generic [ref=e325]: "8"
+                - row "INST1075 光大银行广州分行 4 9" [ref=e326]:
+                  - cell "INST1075" [ref=e327]:
+                    - generic [ref=e328]: INST1075
+                  - cell "光大银行广州分行" [ref=e329]:
+                    - generic [ref=e330]: 光大银行广州分行
+                  - cell "4" [ref=e331]:
+                    - generic [ref=e332]: "4"
+                  - cell "9" [ref=e333]:
+                    - generic [ref=e334]: "9"
+          - generic [ref=e335]:
+            - generic [ref=e336]: 共 10 行 · 69 ms
+            - button "CSV" [ref=e337] [cursor=pointer]:
+              - generic [ref=e338]: CSV
+            - button "Excel" [ref=e339] [cursor=pointer]:
+              - generic [ref=e340]: Excel
+            - button "JSON" [ref=e341] [cursor=pointer]:
+              - generic [ref=e342]: JSON
+      - generic [ref=e131]:
+        - generic [ref=e133]:
+          - textbox "输入自然语言查询，Enter 发送，Shift+Enter 换行；例如：统计各订单状态的数量" [ref=e134]
+          - generic: 输入自然语言查询，Enter 发送，Shift+Enter 换行；例如：统计各订单状态的数量
+        - generic [ref=e135]:
+          - generic [ref=e136]: AI 将自动生成并执行只读查询，结果可导出
+          - button "发送" [disabled] [ref=e343]:
+            - generic [ref=e138]: 发送

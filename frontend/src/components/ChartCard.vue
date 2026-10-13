@@ -223,7 +223,7 @@ function buildOption(): any {
   const xAxis: any = {
     type: "category",
     data: names,
-    axisLabel: { color: labelColor, interval: 0, rotate: names.length > 8 ? 28 : 0 },
+    axisLabel: { color: labelColor, interval: names.length > 12 ? "auto" : 0, rotate: names.length > 8 ? 28 : 0 },
     axisLine: { lineStyle: { color: lineColor } },
   };
   const yAxis: any = {
@@ -231,23 +231,24 @@ function buildOption(): any {
     axisLabel: { color: labelColor, formatter: (v: number) => fmt(v) },
     splitLine: { lineStyle: { color: splitColor } },
   };
-  const grid: any = { left: 8, right: 16, top: 40, bottom: names.length > 12 ? 40 : 24, containLabel: true };
+  const grid: any = { left: 8, right: 16, top: 40, bottom: names.length > 12 ? 56 : 24, containLabel: true };
 
   if (type === "rank") {
-    const ordered = names
-      .map((n, i) => ({ n, v: seriesValues(seriesCols[0])[i] }))
-      .sort((a, b) => b.v - a.v)
+    const orderIdx = names
+      .map((_, i) => i)
+      .sort((a, b) => seriesValues(seriesCols[0])[b] - seriesValues(seriesCols[0])[a])
       .slice(0, 15);
+    const orderedNames = orderIdx.map((i) => names[i]);
     return {
       ...base,
       grid,
       xAxis: { type: "value", axisLabel: { color: labelColor, formatter: (v: number) => fmt(v) }, splitLine: { lineStyle: { color: splitColor } } },
-      yAxis: { type: "category", data: ordered.map((o) => o.n), axisLabel: { color: labelColor }, axisLine: { lineStyle: { color: lineColor } } },
+      yAxis: { type: "category", data: orderedNames, axisLabel: { color: labelColor }, axisLine: { lineStyle: { color: lineColor } } },
       series: seriesCols.map((col, i) => ({
         name: col,
         type: "bar" as const,
-        data: ordered.map((o) => o.v),
-        barWidth: "52%",
+        data: orderIdx.map((j) => seriesValues(col)[j]),
+        barMaxWidth: 22,
         itemStyle: { borderRadius: [0, 6, 6, 0], color: c[i % c.length] },
         label: { show: true, position: "right" as const, color: labelColor, formatter: (p: any) => prefix.value + fmt(Number(p.value)) + suffix.value },
       })),
@@ -292,7 +293,8 @@ function buildOption(): any {
     }
     if (type === "bar") {
       s.type = "bar";
-      s.barWidth = "52%";
+      s.barMaxWidth = 30;
+      if (seriesCols.length <= 1) s.barWidth = "52%";
       s.itemStyle = {
         borderRadius: [4, 4, 0, 0],
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [

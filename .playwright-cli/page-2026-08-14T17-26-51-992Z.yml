@@ -1,0 +1,86 @@
+- generic [ref=e1]:
+  - generic [ref=e41]:
+    - complementary [ref=e42]:
+      - generic [ref=e43] [cursor=pointer]:
+        - generic [ref=e44]: 🗄️
+        - generic [ref=e45]: 数据库 Agent
+      - menu [ref=e46]:
+        - menuitem "智能查询" [ref=e47]:
+          - img [ref=e48] [cursor=pointer]: 🤖
+          - text: 智能查询
+        - menuitem "SQL 工作台" [ref=e49]:
+          - img [ref=e50] [cursor=pointer]: 🖥️
+          - text: SQL 工作台
+        - menuitem "可视化报表" [ref=e51]:
+          - img [ref=e52] [cursor=pointer]: 📊
+          - text: 可视化报表
+        - menuitem "用户管理" [ref=e53]:
+          - img [ref=e54] [cursor=pointer]: 👥
+          - text: 用户管理
+        - menuitem "角色管理" [ref=e55]:
+          - img [ref=e56] [cursor=pointer]: 🛡️
+          - text: 角色管理
+        - menuitem "系统设置" [ref=e57]:
+          - img [ref=e58] [cursor=pointer]: ⚙️
+          - text: 系统设置
+        - menuitem "运维监控" [ref=e59]:
+          - img [ref=e60] [cursor=pointer]: 📈
+          - text: 运维监控
+      - img [ref=e63] [cursor=pointer]
+    - generic [ref=e67]:
+      - generic [ref=e68]:
+        - generic [ref=e69]: SQL 工作台
+        - generic [ref=e70]:
+          - button "☀️" [ref=e71] [cursor=pointer]:
+            - generic [ref=e72]: ☀️
+          - button "👤 管理员" [ref=e73] [cursor=pointer]:
+            - generic [ref=e75]: 👤
+            - generic [ref=e76]: 管理员
+      - generic [ref=e2428]:
+        - complementary [ref=e2429]:
+          - generic [ref=e2430]:
+            - generic [active] [ref=e2434] [cursor=pointer]:
+              - generic:
+                - generic: 选择数据源
+              - img "loading" [ref=e2435]:
+                - img [ref=e2440]
+            - generic [ref=e2442]:
+              - generic [ref=e2447]:
+                - generic [ref=e2450] [cursor=pointer]: 对象
+                - generic [ref=e2454] [cursor=pointer]: 历史
+                - generic [ref=e2458] [cursor=pointer]: 收藏
+              - generic [ref=e2462]: 请先选择一个数据源
+        - generic [ref=e2465]:
+          - generic [ref=e2466]:
+            - generic [ref=e2474] [cursor=pointer]:
+              - generic [ref=e2475]: 查询 1
+              - button "close" [ref=e2476]:
+                - img [ref=e2478]
+            - generic [ref=e2484]:
+              - button "＋ 新建" [ref=e2485] [cursor=pointer]:
+                - generic [ref=e2486]: ＋ 新建
+              - button "▶ 执行" [ref=e2487] [cursor=pointer]:
+                - generic [ref=e2488]: ▶ 执行
+              - button "格式化" [ref=e2489] [cursor=pointer]:
+                - generic [ref=e2490]: 格式化
+              - button "收藏" [ref=e2491] [cursor=pointer]:
+                - generic [ref=e2492]: 收藏
+              - button "导出库文档 ▾" [ref=e2493] [cursor=pointer]:
+                - generic [ref=e2494]: 导出库文档 ▾
+          - generic [ref=e2498]:
+            - generic [ref=e2500]:
+              - generic [ref=e2501]: "1"
+              - generic [ref=e2502]: "2"
+              - generic [ref=e2503]: "3"
+              - generic [ref=e2504]: "4"
+            - textbox [ref=e2505]:
+              - generic [ref=e2506]: "-- 在此输入 SQL，例如："
+              - generic [ref=e2507]: SELECT * FROM users LIMIT 50;
+              - generic [ref=e2509]: "-- 支持多条语句；写操作需要二次确认"
+        - complementary [ref=e2511]:
+          - generic "展开 Agent" [ref=e2512] [cursor=pointer]: 🤖
+  - generic [ref=e2517]:
+    - generic [ref=e2519] [cursor=pointer]: oracle-远程开发库
+    - generic [ref=e2521] [cursor=pointer]: oracle-free
+    - generic [ref=e2523] [cursor=pointer]: mysql
+    - generic [ref=e2525] [cursor=pointer]: 本地演示库 (SQLite)

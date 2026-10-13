@@ -1,0 +1,72 @@
+- generic [ref=e41]:
+  - complementary [ref=e42]:
+    - generic [ref=e43] [cursor=pointer]:
+      - generic [ref=e44]: 🗄️
+      - generic [ref=e45]: 数据库 Agent
+    - menu [ref=e46]:
+      - menuitem "智能查询" [ref=e47]:
+        - img [ref=e48] [cursor=pointer]: 🤖
+        - text: 智能查询
+      - menuitem "SQL 工作台" [ref=e49]:
+        - img [ref=e50] [cursor=pointer]: 🖥️
+        - text: SQL 工作台
+      - menuitem "可视化报表" [ref=e51]:
+        - img [ref=e52] [cursor=pointer]: 📊
+        - text: 可视化报表
+      - menuitem "用户管理" [ref=e53]:
+        - img [ref=e54] [cursor=pointer]: 👥
+        - text: 用户管理
+      - menuitem "角色管理" [ref=e55]:
+        - img [ref=e56] [cursor=pointer]: 🛡️
+        - text: 角色管理
+      - menuitem "系统设置" [ref=e57]:
+        - img [ref=e58] [cursor=pointer]: ⚙️
+        - text: 系统设置
+      - menuitem "运维监控" [ref=e59]:
+        - img [ref=e60] [cursor=pointer]: 📈
+        - text: 运维监控
+    - img [ref=e63] [cursor=pointer]
+  - generic [ref=e67]:
+    - generic [ref=e68]:
+      - generic [ref=e69]: 智能查询
+      - generic [ref=e70]:
+        - button "☀️" [ref=e71] [cursor=pointer]:
+          - generic [ref=e72]: ☀️
+        - button "👤 管理员" [ref=e73] [cursor=pointer]:
+          - generic [ref=e75]: 👤
+          - generic [ref=e76]: 管理员
+    - generic [ref=e78]:
+      - generic [ref=e79]:
+        - generic [ref=e82] [cursor=pointer]:
+          - generic "oracle-free (oracle)" [ref=e355]:
+            - generic [ref=e84]: oracle-free (oracle)
+          - img "loading" [ref=e85]:
+            - img [ref=e358]
+        - generic [ref=e94] [cursor=pointer]:
+          - generic "openai · deepseek-v4-flash" [ref=e187]:
+            - generic [ref=e96]: openai · deepseek-v4-flash
+          - img "loading" [ref=e97]:
+            - img [ref=e102]
+        - generic [ref=e106] [cursor=pointer]:
+          - generic "查询所有机构，列出机构号、机构名称、机构…" [ref=e372]:
+            - generic [ref=e189]: 查询所有机构，列出机构号、机构名称、机构…
+          - img "loading" [ref=e107]:
+            - img [ref=e112]
+        - button "新建对话" [ref=e114] [cursor=pointer]:
+          - generic [ref=e115]: 新建对话
+        - button "删除" [ref=e116] [cursor=pointer]:
+          - generic [ref=e117]: 删除
+        - generic [ref=e119]: oracle-free (oracle)
+      - generic [ref=e120]:
+        - generic [ref=e373]: 查询所有机构，列出机构号、机构名称、机构层级和所在地区，按机构号排序
+        - generic [ref=e374]: ▍
+      - generic [ref=e131]:
+        - generic [ref=e133]:
+          - textbox "输入自然语言查询，Enter 发送，Shift+Enter 换行；例如：统计各订单状态的数量" [disabled] [ref=e134]
+          - generic: 输入自然语言查询，Enter 发送，Shift+Enter 换行；例如：统计各订单状态的数量
+        - generic [ref=e135]:
+          - generic [ref=e136]: 正在生成…
+          - button "loading 发送" [disabled] [ref=e375]:
+            - img "loading" [ref=e377]:
+              - img [ref=e380]
+            - generic [ref=e138]: 发送

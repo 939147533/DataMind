@@ -1,0 +1,22 @@
+- generic [ref=e5101]:
+  - generic [ref=e5102]:
+    - generic [ref=e5103]: 🗄️
+    - heading "数据库 Agent Web 应用" [level=2] [ref=e5104]
+    - paragraph [ref=e5105]: 自然语言查询 · SQL 工作台 · 多数据库管理
+  - generic [ref=e5106]:
+    - generic [ref=e5107]:
+      - generic [ref=e5109]: 用户名
+      - generic [ref=e5113]:
+        - textbox "请输入用户名" [ref=e5114]
+        - generic:
+          - generic: 请输入用户名
+    - generic [ref=e5116]:
+      - generic [ref=e5118]: 密码
+      - generic [ref=e5121]:
+        - generic [ref=e5122]:
+          - textbox "请输入密码" [ref=e5123]
+          - generic:
+            - generic: 请输入密码
+        - img [ref=e5127] [cursor=pointer]
+    - button "登 录" [ref=e5134] [cursor=pointer]:
+      - generic [ref=e5135]: 登 录
