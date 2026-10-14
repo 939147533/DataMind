@@ -1,4 +1,5 @@
 """SQL 执行服务：拆分、分类、授权、执行、确认、历史、审计。"""
+import re
 import time
 import uuid
 from datetime import datetime, timedelta
@@ -15,12 +16,26 @@ from ..config import EXECUTION_CONFIRM_TIMEOUT, MAX_ROWS_PER_PAGE
 from ..models import AuditLog, DataSource, QueryHistory
 from ..permissions import check_sql_permission
 from ..security import decrypt_text
+from . import sql_examples
 from .ssh_tunnel import get_local_port
 
 READ_KEYWORDS = {"SELECT", "WITH", "SHOW", "DESC", "DESCRIBE", "EXPLAIN", "PRAGMA", "VALUES"}
 SESSION_KEYWORDS = {"SET", "USE", "BEGIN", "COMMIT", "START"}
 DML_KEYWORDS = {"INSERT", "UPDATE", "DELETE", "MERGE", "REPLACE", "UPSERT", "CALL"}
 DDL_KEYWORDS = {"CREATE", "ALTER", "DROP", "TRUNCATE", "RENAME", "GRANT", "REVOKE"}
+VERB_KEYWORDS = READ_KEYWORDS | SESSION_KEYWORDS | DML_KEYWORDS | DDL_KEYWORDS
+
+# 首个关键字是只读、但语句本身会写数据/写文件/加锁的写法；命中后提升风险等级
+READ_ESCALATIONS = (
+    (re.compile(r"\binto\b", re.I), "DDL"),
+    (re.compile(r"\bfor\s+(?:update|share)\b", re.I), "DML"),
+    (re.compile(r"\block\s+in\s+share\s+mode\b", re.I), "DML"),
+)
+READ_ESCALATION_KEYWORDS = {"SELECT", "WITH", "VALUES"}
+
+_WORD_RE = re.compile(r"[A-Za-z_][A-Za-z0-9_$]*")
+_EXPLAIN_RE = re.compile(r"^\s*explain\s*(?:\(([^)]*)\))?\s*", re.I)
+_EXPLAIN_ANALYZE_RE = re.compile(r"analyze\b", re.I)
 
 SQL_EXECUTIONS = PromCounter("sql_executions_total", "SQL 执行总数", ["operation_type", "status"])
 
@@ -118,15 +133,123 @@ def _first_keyword(sql: str) -> str:
         elif text.startswith("/*"):
             idx = text.find("*/")
             text = text[idx + 2 :].lstrip() if idx >= 0 else ""
+        elif text.startswith("("):
+            text = text[1:].lstrip()
         else:
             break
     match = text.split(None, 1)
     return match[0].upper() if match else ""
 
 
+def _mask_literals(sql: str) -> str:
+    """把字符串字面量与注释替换为空格，避免其中的关键字参与语句分类。"""
+    chars = list(sql)
+    quote = ""
+    in_line = in_block = False
+    i, n = 0, len(sql)
+    while i < n:
+        ch = sql[i]
+        nxt = sql[i + 1] if i + 1 < n else ""
+        if in_line:
+            if ch == "\n":
+                in_line = False
+            else:
+                chars[i] = " "
+        elif in_block:
+            if ch == "*" and nxt == "/":
+                chars[i] = chars[i + 1] = " "
+                in_block = False
+                i += 1
+            elif ch != "\n":
+                chars[i] = " "
+        elif quote:
+            if ch == "\\" and quote != "`" and nxt:
+                chars[i] = chars[i + 1] = " "
+                i += 1
+            elif ch == quote:
+                chars[i] = " "
+                if nxt == quote:  # 连续两个引号是转义
+                    chars[i + 1] = " "
+                    i += 1
+                else:
+                    quote = ""
+            elif ch != "\n":
+                chars[i] = " "
+        elif ch in "'\"`":
+            quote = ch
+            chars[i] = " "
+        elif ch == "-" and nxt == "-":
+            chars[i] = chars[i + 1] = " "
+            in_line = True
+            i += 1
+        elif ch == "/" and nxt == "*":
+            chars[i] = chars[i + 1] = " "
+            in_block = True
+            i += 1
+        i += 1
+    return "".join(chars)
+
+
+def _top_level_words(masked: str) -> list[str]:
+    """返回括号深度为 0 的单词（大写），用于跳过 CTE 定义后定位主动词。"""
+    words: list[str] = []
+    depth = 0
+    pos = 0
+    for match in _WORD_RE.finditer(masked):
+        for ch in masked[pos : match.start()]:
+            if ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth = max(0, depth - 1)
+        pos = match.end()
+        if depth == 0:
+            words.append(match.group(0).upper())
+    return words
+
+
+def _main_verb_after_with(masked: str) -> str:
+    """WITH 语句的主动词：CTE 定义在括号内，取深度 0 的首个动词。"""
+    for word in _top_level_words(masked)[1:]:
+        if word in VERB_KEYWORDS:
+            return word
+    return ""
+
+
+def _split_explain(masked: str) -> tuple[bool, str]:
+    """拆出 EXPLAIN 的选项与其解释的语句，返回 (是否 ANALYZE, 内层语句)。"""
+    match = _EXPLAIN_RE.match(masked)
+    if match is None:
+        return False, ""
+    rest = masked[match.end() :]
+    if _EXPLAIN_ANALYZE_RE.search(match.group(1) or ""):
+        return True, rest
+    analyze = _EXPLAIN_ANALYZE_RE.match(rest)
+    if analyze:
+        return True, rest[analyze.end() :]
+    return False, rest
+
+
 def classify_statement(sql: str) -> str:
-    first = _first_keyword(sql)
+    """判定语句风险等级：READ（只读）/ DML（改数据）/ DDL（改结构）。
+
+    以首个关键字为准，并加固以下会被首个关键字误判为只读的写法：
+    - ``WITH`` 开头：主语句可能是 INSERT/UPDATE/DELETE，需跳过 CTE 定义取主动词；
+    - ``EXPLAIN ANALYZE``：会真正执行被解释的语句，按内层语句定级（普通 EXPLAIN/EXPLAIN PLAN 仍是只读）；
+    - ``SELECT ... INTO``（建表/写文件/赋值）、``FOR UPDATE`` / ``LOCK IN SHARE MODE``（加锁读）：提升等级。
+    识别不确定时一律按 DML 处理（安全侧）。
+    """
+    masked = _mask_literals(sql)
+    first = _first_keyword(masked)
+    if first == "EXPLAIN":
+        analyze, inner = _split_explain(masked)
+        return classify_statement(inner) if analyze else "READ"
+    if first == "WITH":
+        first = _main_verb_after_with(masked)
     if first in READ_KEYWORDS or first in SESSION_KEYWORDS:
+        if first in READ_ESCALATION_KEYWORDS:
+            for pattern, level in READ_ESCALATIONS:
+                if pattern.search(masked):
+                    return level
         return "READ"
     if first in DML_KEYWORDS:
         return "DML"
@@ -293,6 +416,9 @@ async def _record_history(db: AsyncSession, ds_id: int, sql: str, status: str, r
         )
     )
     await db.commit()
+    # 成功执行后增量并入 few-shot 候选缓存，失败记录不进候选池、也无需清缓存
+    if status == "success":
+        sql_examples.record(ds_id, sql)
 
 
 async def _record_audit(db: AsyncSession, user_id: int | None, action_type: str, sql: str, op_type: str, ds_id: int | None, status: str, client_ip: str = "") -> None:
@@ -334,7 +460,13 @@ async def execute_sql(db: AsyncSession, ds: DataSource, sql: str, user_id: int |
         raise HTTPException(status_code=400, detail="SQL 为空")
     classes = [classify_statement(s) for s in statements]
     op_type = "DDL" if "DDL" in classes else ("DML" if "DML" in classes else "READ")
-    await check_sql_permission(db, user_id, op_type)
+    try:
+        await check_sql_permission(db, user_id, op_type)
+    except HTTPException:
+        # 鉴权失败也要留痕（与 confirm_execution 的 denied 记录保持一致）
+        await _record_audit(db, user_id, "execute_sql", sql, op_type, ds.id, "denied", client_ip)
+        SQL_EXECUTIONS.labels(operation_type=op_type, status="denied").inc()
+        raise
     adapter = build_adapter(ds)
     start = time.time()
 

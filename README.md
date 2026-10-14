@@ -10,7 +10,7 @@
 
 - **连接管理**：SQLite / MySQL / PostgreSQL / Oracle / MongoDB / OceanBase / GoldenDB；连接测试、克隆、编辑、多环境标签、SSH 隧道；密码 Fernet 加密存储。入口位于「系统设置 → 数据库连接配置」
 - **SQL 工作台**：多 Tab CodeMirror 6 编辑器、对象树（表/视图/索引/触发器/函数/存储过程/序列）、结果集分页/排序/列宽/导出、**结果集直接编辑**（双击单元格改值、新增/删除行）、大结果集虚拟滚动、SQL 收藏与模板、执行历史
-- **SQL 安全执行**：SELECT 类自动执行；DML 生成 `execution_id` 待确认（5 分钟有效）；DDL 高危二次确认；全部操作记录审计日志
+- **SQL 安全执行**：执行前把语句分为 READ / DML / DDL 三档并据此鉴权放行——READ 免确认直达执行，DML 生成 `execution_id` 待确认（5 分钟有效），DDL 高危二次确认；分类已加固 CTE 写操作（`WITH … DELETE`）、`EXPLAIN ANALYZE`、`SELECT … INTO`、`FOR UPDATE` 等易绕过写法，识别不确定时按 DML 兜底；全部操作（含鉴权被拒）记录审计日志
 - **AI Agent**：自然语言→SQL，SSE 流式返回思考过程/SQL/结果；**工具调用**（查表结构/采样数据/EXPLAIN）避免模型编造表名列名；查询失败自动修正重试；历史成功 SQL 作为 few-shot 示例；写操作授权弹窗；SQL 解释与优化
 - **元数据管理**：Schema/表/列/索引/DDL/视图/函数/存储过程/触发器/序列；表收藏；两库**表结构对比（schema diff）**
 - **可视化报表**：柱状/折线/饼图 + 仪表盘（gridstack 拖拽）、分享链接、大屏展示模式
@@ -41,6 +41,7 @@
 - **LLM Provider 抽象**：OpenAICompatProvider（OpenAI 官方 + 兼容网关 + Ollama /v1）与 ClaudeProvider 统一 `chat/stream/ping`；未配置 Key 时快速失败提示
 - **统一响应**：所有接口返回 `{code, message, data}`，HTTP/校验异常统一处理
 - **SSE 事件流**：Agent 对话 `text/event-stream`，事件类型 `session_title / thought / tool / retry / sql / result / text / chart / authorization_required / done / error`
+- **语句风险分类**：`services/sql_service.classify_statement` 按首个关键字判定 READ / DML / DDL，并加固会被首个关键字绕过的写法——`WITH … DELETE/UPDATE/INSERT`（跳过 CTE 定义取主动词）、`EXPLAIN ANALYZE`（真会执行，按内层语句定级）、`SELECT … INTO`（Postgres 建表 / MySQL 写文件，升为 DDL）、`FOR UPDATE` / `LOCK IN SHARE MODE`（加锁读，升为 DML）；判定前遮蔽字符串字面量与注释，无法识别时按 DML 兜底。等级决定所需权限（`workspace` / `sql_write` / `sql_ddl`）与是否二次确认
 - **写操作确认**：待确认执行存内存字典，`execution_id` 5 分钟过期，确认后二次鉴权并审计
 - **定时调度**：FastAPI lifespan 启动调度循环，每分钟扫描到期任务，线程池执行导出
 - **监控指标**：`/metrics` 暴露 Prometheus 指标（REQUEST_COUNT / REQUEST_LATENCY / SQL_EXECUTIONS）
@@ -85,7 +86,14 @@ Dockerfile / docker-compose.yml   多阶段构建 + 一键启动（数据卷 dba
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\start_dev.ps1
 ```
 
-打开 http://127.0.0.1:5174 使用（如端口被占用：`-File scripts\start_dev.ps1 -Port 5175`）。
+macOS / Linux（同样适用于 Windows Git Bash）：
+
+```bash
+./scripts/start_dev.sh     # 后台启动后端 8000 + 前端 5174，日志见 scripts/.run/
+./scripts/stop_dev.sh      # 停止服务；--status 查看状态
+```
+
+打开 http://127.0.0.1:5174 使用（如端口被占用：PowerShell 加 `-Port 5175`，shell 脚本加 `--port 5175`）。
 
 ### 手动启动
 
@@ -174,4 +182,3 @@ npm.cmd run build   # 内置 vue-tsc 校验
 - **控制台中文乱码**：Windows PowerShell 5.1 显示乱码是控制台代码页问题，文件均为 UTF-8，不影响功能
 - **AI 调用失败**：检查 Key 是否填写、网络是否可达；Ollama 需先 `ollama serve` 并已拉取模型
 - **Docker 构建慢**：首次构建需拉取 Node/Python 基础镜像与依赖；数据卷 `dbagent-data` 保留运行数据
-

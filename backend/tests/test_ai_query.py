@@ -203,3 +203,31 @@ async def test_ai_query_user_can_export_result(auth_client, demo_ds_id):
         json={"datasource_id": demo_ds_id, "sql": "DELETE FROM users WHERE id = 99999"},
     )
     assert resp.status_code == 400
+
+# ---------- 鉴权失败不做 SQL 修正重试 ----------
+async def test_agent_denied_read_does_not_retry(auth_client, demo_ds_id, monkeypatch):
+    # 仅有 agent 权限（无 workspace / ai_query）：READ 查询会被鉴权拒绝
+    await _create_role(auth_client, "agent_only", ["agent"])
+    await _create_user(auth_client, "agent_only_user", "agent_only")
+    client = await _new_client()
+    await client.post("/api/auth/login", json={"username": "agent_only_user", "password": "test1234"})
+    sess = await client.post("/api/agent/sessions", json={"datasource_id": demo_ds_id})
+    session_id = sess.json()["data"]["id"]
+
+    class CountingProvider(FakeProvider):
+        def __init__(self):
+            super().__init__(None)
+            self.calls = 0
+
+        async def chat(self, messages, json_mode=False):
+            self.calls += 1
+            return await super().chat(messages, json_mode)
+
+    provider = CountingProvider()
+    monkeypatch.setattr("app.services.agent_service.get_llm_provider", lambda cfg: provider)
+
+    events = await _chat(client, session_id, "统计各状态订单数量")
+    types = [e["type"] for e in events]
+    assert "retry" not in types, types  # 403 不应触发“AI 正在修正重试”
+    assert "error" in types and "done" in types
+    assert provider.calls == 1  # 只调用一次模型，不做无意义的修正

@@ -10,8 +10,9 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..adapters import AdapterError
-from ..models import AIConfig, AgentMessage, AgentSession, AuditLog, DataSource, QueryHistory
+from ..models import AIConfig, AgentMessage, AgentSession, AuditLog, DataSource
 from .llm_providers import LLMError, build_messages, get_llm_provider
+from .sql_examples import build_few_shot_block
 from .sql_service import (
     MAX_ROWS_PER_PAGE,
     build_adapter,
@@ -256,31 +257,9 @@ MAX_TOOL_ROUNDS = 3
 TOOL_NAMES = ("list_tables", "get_columns", "sample_data", "explain")
 
 
-async def _load_few_shots(db: AsyncSession, ds_id: int | None, limit: int = 3) -> str:
-    """从执行历史中挑选近期成功的只读 SQL，作为模型 few-shot 风格示例。"""
-    if not ds_id:
-        return ""
-    rows = (
-        await db.execute(
-            select(QueryHistory)
-            .where(QueryHistory.datasource_id == ds_id, QueryHistory.status == "success")
-            .order_by(QueryHistory.id.desc())
-            .limit(60)
-        )
-    ).scalars().all()
-    seen: set[str] = set()
-    examples: list[str] = []
-    for r in rows:
-        sql = (r.sql_text or "").strip()
-        if not sql or sql in seen or len(sql) > 400:
-            continue
-        seen.add(sql)
-        examples.append(sql)
-        if len(examples) >= limit:
-            break
-    if not examples:
-        return ""
-    return "历史成功执行的 SQL 示例（仅供风格参考）：\n" + "\n".join(examples)
+async def _load_few_shots(db: AsyncSession, ds_id: int | None, question: str = "", limit: int = 3) -> str:
+    """挑选与当前问题最相关的历史成功 SQL，作为模型 few-shot 风格示例。"""
+    return await build_few_shot_block(db, ds_id, question, limit)
 
 
 def _run_tool(ds: DataSource, tool_name: str, params: dict) -> str:
@@ -372,7 +351,7 @@ async def agent_chat(
         db_type=schema_info["db_type"],
         dialect_hint=schema_info["dialect_hint"],
         schema=schema_info["schema"],
-        few_shots=await _load_few_shots(db, ds.id if ds else None),
+        few_shots=await _load_few_shots(db, ds.id if ds else None, question=message),
     )
     messages = build_messages(system, history, message)
 
@@ -444,6 +423,9 @@ async def agent_chat(
                 break
             except HTTPException as exc:
                 error_detail = str(exc.detail)
+                # 只有 SQL 自身的问题（400）才值得让模型修正；鉴权失败等重试没有意义
+                if exc.status_code != 400:
+                    break
                 if attempt >= 2:
                     break
                 yield {"type": "retry", "content": f"SQL 执行失败（{error_detail}），AI 正在修正重试…"}

@@ -33,6 +33,33 @@ def test_classify():
     assert classify_statement("TRUNCATE TABLE t") == "DDL"
 
 
+def test_classify_hardening():
+    """首关键字会被写操作绕过的写法必须提升等级，字符串/注释里的关键字不能误判。"""
+    # WITH 的主动词可能是写操作
+    assert classify_statement("WITH x AS (SELECT 1) DELETE FROM t") == "DML"
+    assert classify_statement("WITH x AS (SELECT 1), y AS (SELECT 2) UPDATE t SET a = 1") == "DML"
+    assert classify_statement("WITH x AS (SELECT 1) CREATE TABLE y AS SELECT 1") == "DDL"
+    assert classify_statement("WITH RECURSIVE x AS (SELECT 1) SELECT * FROM x") == "READ"
+    # EXPLAIN ANALYZE 会真正执行被解释的语句
+    assert classify_statement("EXPLAIN ANALYZE DELETE FROM t") == "DML"
+    assert classify_statement("EXPLAIN (ANALYZE, BUFFERS) DELETE FROM t") == "DML"
+    assert classify_statement("EXPLAIN ANALYZE SELECT 1") == "READ"
+    assert classify_statement("EXPLAIN PLAN FOR DELETE FROM t") == "READ"
+    # 只读语句里隐含加锁 / 建表 / 写文件
+    assert classify_statement("SELECT * FROM t FOR UPDATE") == "DML"
+    assert classify_statement("SELECT * FROM t LOCK IN SHARE MODE") == "DML"
+    assert classify_statement("SELECT * FROM t INTO OUTFILE '/tmp/x'") == "DDL"
+    assert classify_statement("SELECT * FROM t INTO new_table") == "DDL"
+    # 字面量与注释中的关键字不参与分类
+    assert classify_statement("SELECT * FROM t WHERE note = 'for update'") == "READ"
+    assert classify_statement("SELECT * FROM t WHERE note = 'into'") == "READ"
+    assert classify_statement("SELECT /* for update */ 1") == "READ"
+    assert classify_statement("SELECT 'a''b' FROM t") == "READ"
+    # 括号开头 / 无法识别的语句
+    assert classify_statement("(SELECT 1) UNION (SELECT 2)") == "READ"
+    assert classify_statement("FOO BAR") == "DML"
+
+
 def test_format_sql():
     formatted = format_sql("select id,name from users where age>18 order by id")
     assert "SELECT" in formatted.upper()

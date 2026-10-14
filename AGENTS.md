@@ -34,7 +34,7 @@ backend/
     seed.py             启动种子：默认管理员、演示 SQLite 库、演示连接、默认 AI 配置、默认设置
     adapters/           数据库适配层（SQLite/MySQL/PostgreSQL/Oracle/MongoDB）
     routers/            API 路由（auth/connections/sql/metadata/agent/export/charts/system/audit/users/roles/monitor/saved/schedule）
-    services/           业务服务层（sql/agent/connection/metadata/export/llm/ssh_tunnel/audit_service/schedule_service）
+    services/           业务服务层（sql/agent/connection/metadata/export/llm/ssh_tunnel/audit_service/schedule_service/sql_examples）
   tests/                pytest 测试（每个模块对应测试文件）
   data/                 运行数据（app.db、demo.db、drivers/、exports/、secret.key），已被 .gitignore 忽略
 frontend/
@@ -57,7 +57,7 @@ Dockerfile / docker-compose.yml   多阶段构建 + 一键启动（数据卷 dba
 | 认证 | routers/auth.py | LoginView、stores/auth.ts | Cookie 会话（httponly `session_token`，24h TTL） |
 | 连接管理 | routers/connections.py + services/connection_service.py | SettingsView「数据库连接配置」页签（内嵌 ConnectionsView）、stores/connections.ts | 数据源 CRUD、测试、克隆、SSH 隧道、多环境标签；密码 Fernet 加密；侧边栏入口名为「连接管理」（原系统设置页），并内含「数据库连接配置」页签 |
 | SQL 工作台 | routers/sql.py + services/sql_service.py | WorkspaceView、SqlEditor、ResultTable、ObjectTree | 多 Tab CodeMirror 编辑器、对象树、执行历史、结果分页/排序/导出、结果集直接编辑（双击单元格/新增/删除行）、虚拟滚动 |
-| SQL 安全执行 | services/sql_service.py | ConfirmExecModal | READ 自动执行；DML/DDL 生成 execution_id 待确认（5 分钟有效）；全部审计 |
+| SQL 安全执行 | services/sql_service.py | ConfirmExecModal | READ 自动执行；DML/DDL 生成 execution_id 待确认（5 分钟有效）；全部审计（含鉴权被拒的 denied 记录） |
 | 元数据管理 | routers/metadata.py + services/metadata_service.py | ObjectTree | Schema/表/列/索引/DDL/视图/函数/存储过程/触发器/序列、收藏、表结构对比（schema diff，比较类型与长度/精度） |
 | AI Agent | routers/agent.py + services/agent_service.py + llm_providers.py | SmartQueryView、stores/agent.ts | NL→SQL（SSE）、SQL 解释/优化、多轮会话、写操作授权、生成图表、工具调用（查表结构/采样数据/EXPLAIN）、SQL 失败自动修正重试、历史 SQL few-shot |
 | 文档导出 | routers/export.py + services/export_service.py | WorkspaceView/ReportsView | 结果导出（csv/json/excel）；库文档异步导出（word/markdown/html） |
@@ -78,7 +78,8 @@ Dockerfile / docker-compose.yml   多阶段构建 + 一键启动（数据卷 dba
 - **统一响应**：所有接口返回 `{code, message, data}`，用 `ok()`/`page_data()` 构造；HTTP 异常与校验异常统一处理。
 - **权限模型**：用户 → role → permissions（JSON）。`admin` 角色为 `[*]`；SQL 操作按 READ/DML/DDL 分别要求 `workspace` / `sql_write` / `sql_ddl`；运维监控路由允许 `monitor` 或 `audit` 任一权限进入，页内各 Tab 按权限显示（概览/慢查询/表结构对比需 `monitor`，审计日志需 `audit`；定时任务 Tab 已隐藏）；前端路由用 `meta.permission`/`meta.permissionAny` + 守卫控制（`settings` 路由即侧边栏「连接管理」，允许 `settings` 或 `connections` 任一权限进入）。
 - **SSE 事件流**（Agent）：`/api/agent/chat` 返回 `text/event-stream`，事件类型：`session_title / thought / tool / retry / sql / result / text / chart / authorization_required / done / error`。写操作由前端弹确认框，调 `/api/agent/confirm` 执行。
-- **Agent 工具调用**：`agent_service` 提供 `list_tables / get_columns / sample_data / explain` 四个工具（`TOOL_NAMES`），LLM 按需调用（`MAX_TOOL_ROUNDS=3`）；READ 查询失败自动让 LLM 修正重试（最多 3 次）；每次会话注入历史成功 SQL 作为 few-shot 示例（`_load_few_shots`）。
+- **Agent 工具调用**：`agent_service` 提供 `list_tables / get_columns / sample_data / explain` 四个工具（`TOOL_NAMES`），LLM 按需调用（`MAX_TOOL_ROUNDS=3`）；READ 查询失败自动让 LLM 修正重试（最多 3 次，仅限 SQL 自身报错即 HTTP 400，鉴权失败等不重试）；每轮对话注入历史成功 SQL 作为 few-shot 示例（`_load_few_shots` → `services/sql_examples.py`），候选池按 datasource 缓存（写入侧 `record()` 增量合并、TTL 300s 兜底），并按提问相似度、表名重合度、执行频次加权排序后取前 3 条。
+- **SQL 语句风险分类**（`sql_service.classify_statement`）：执行前按首个关键字把语句判为 READ（只读）/ DML（改数据）/ DDL（改结构）三档，并加固会被首个关键字绕过的写法——`WITH` 语句跳过括号内的 CTE 定义取主动词（`WITH ... DELETE/UPDATE/INSERT` 判为 DML/DDL）、`EXPLAIN ANALYZE` 会真正执行被解释语句故按内层语句定级（普通 `EXPLAIN` / Oracle `EXPLAIN PLAN` 仍是 READ）、`SELECT ... INTO`（Postgres 建表 / MySQL `INTO OUTFILE`、`INTO @var`）升为 DDL、`FOR UPDATE` / `FOR SHARE` / `LOCK IN SHARE MODE` 加锁读升为 DML；判定前先遮蔽字符串字面量与注释，其中的关键字不参与分类；多语句取最高等级，无法识别时一律按 DML 兜底。分级结果决定所需权限（`workspace` / `sql_write` / `sql_ddl`）与是否二次确认（仅 READ 免确认直达），并全程留审计。
 - **写操作确认机制**：`sql_service._executions`（进程内存字典）暂存待确认执行，`execution_id` 为 key，5 分钟过期；确认后再次鉴权并执行、记录审计。
 - **定时调度**：`schedule_service.scheduler_loop` 在 FastAPI lifespan 启动，每分钟扫描到期的 `scheduled_exports`，`run_in_executor` 同步调用 `export_result_file` 导出并记录 last_status/last_file。
 - **监控指标**：`/metrics` 暴露 Prometheus 指标（REQUEST_COUNT/REQUEST_LATENCY、SQL_EXECUTIONS）；审计日志按 `audit_retention_days` 设置（默认 180）在启动时清理过期记录。
@@ -95,14 +96,21 @@ Dockerfile / docker-compose.yml   多阶段构建 + 一键启动（数据卷 dba
 - 鉴权依赖优先使用 `permissions.require_permission(...)` / `require_any_permission(...)`；新增接口需同步前端 `PERMISSION_GROUPS` 与内置角色权限（`permissions.py`）。
 - 结果集编辑（更新/插入/删除行）复用 `sql_service.execute_sql`，自动完成 SQL 分类/鉴权/审计；写操作返回 `need_confirm + execution_id`，前端 `ResultTable` 通过 `edit-confirm` 事件复用 ConfirmExecModal 确认。
 - 用户 SQL 必须走 `sql_service.execute_sql`（拆分/分类/鉴权/审计），不要绕过服务层直接调用 adapter 执行。
+- SQL 风险等级统一由 `sql_service.classify_statement` 判定（READ/DML/DDL，细则见「架构」章节）；新增数据库方言或新的写语法时，需同步加固分类，避免被首个关键字绕过。
 - 新增数据库类型：在 `adapters/` 实现 `BaseDBAdapter` 子类并注册到 `registry.ADAPTERS`，同时更新 `config.DEFAULT_DB_TYPES/DEFAULT_PORTS` 与前端 db_type 选项。
 - 种子数据在 `seed.py`；手动重建演示数据：`python scripts/init_demo.py`。
 - 根目录 `_patch_charts.py`、`_patch_dualaxis.py` 是一次性历史补丁脚本，可忽略；`scripts/bank_oracle_*.sql`、`seed_oracle_bank.py` 为 Oracle 演示数据脚本（大文件，勿直接打开）。
 
 ## 开发与测试
 
+```bash
+# macOS / Linux 一键启动与停止（后台运行，日志在 scripts/.run/；自动建 venv/装依赖）
+./scripts/start_dev.sh     # 可用 --port 5175 / --backend-only / --frontend-only / --reload / --no-install
+./scripts/stop_dev.sh      # 停止服务；--status 查看状态，--backend / --frontend 只操作其一
+```
+
 ```powershell
-# 一键启动开发模式（自动建 venv/装依赖，前端 5174）
+# Windows：一键启动开发模式（自动建 venv/装依赖，前端 5174）
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\start_dev.ps1
 
 # 手动后端（backend 目录）

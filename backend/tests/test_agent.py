@@ -204,3 +204,44 @@ def test_schema_summary_enum_hint():
     assert "orders(" in summary
     assert "[枚举:" in summary
     assert any(k in summary for k in ("pending", "paid", "done", "shipped"))
+
+
+class ScriptedProvider:
+    """按调用次序返回不同 SQL，用于验证失败修正重试。"""
+
+    def __init__(self, config, scripts):
+        self.config = config
+        self.scripts = list(scripts)
+        self.calls = 0
+
+    async def chat(self, messages, json_mode=False):
+        sql = self.scripts[min(self.calls, len(self.scripts) - 1)]
+        self.calls += 1
+        return json.dumps({"thought": "分析中", "sql": sql, "answer": ""})
+
+    async def stream(self, messages):
+        yield "查询完成。"
+
+
+async def test_read_sql_failure_triggers_fix_retry(auth_client, demo_ds_id, monkeypatch):
+    """READ 查询本身报错（400）时，应把错误回传给模型修正并重试。"""
+    provider = ScriptedProvider(
+        None,
+        ["SELECT * FROM no_such_table_xyz LIMIT 1", "SELECT COUNT(*) AS c FROM users"],
+    )
+    monkeypatch.setattr("app.services.agent_service.get_llm_provider", lambda cfg: provider)
+    sess = await auth_client.post("/api/agent/sessions", json={"datasource_id": demo_ds_id})
+    session_id = sess.json()["data"]["id"]
+
+    resp = await auth_client.post(
+        "/api/agent/chat",
+        json={"session_id": session_id, "message": "统计用户数量"},
+    )
+    assert resp.status_code == 200
+    events = _events(resp.text)
+    types = [e["type"] for e in events]
+    assert "retry" in types, types
+    assert "result" in types, types
+    assert provider.calls == 2  # 首次生成 + 一次修正
+    sqls = [e["content"] for e in events if e["type"] == "sql"]
+    assert sqls[-1] == "SELECT COUNT(*) AS c FROM users"
