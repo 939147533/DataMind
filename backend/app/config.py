@@ -11,10 +11,24 @@ APP_DB_PATH = DATA_DIR / "app.db"
 DEMO_DB_PATH = DATA_DIR / "demo.db"
 SECRET_KEY_PATH = DATA_DIR / "secret.key"
 
+
+def _agent_limit(name: str, default: int) -> int:
+    """读取 Agent 循环上限：非法值或超出 1~10 时回退默认值（防止误配置导致单次请求内长时间循环）。"""
+    try:
+        value = int(os.environ.get(name, default))
+    except (TypeError, ValueError):
+        return default
+    return value if 1 <= value <= 10 else default
+
+
 SESSION_TTL_SECONDS = 24 * 60 * 60
 EXECUTION_CONFIRM_TIMEOUT = 5 * 60
 SQL_EXECUTE_TIMEOUT = 30
 MAX_ROWS_PER_PAGE = 1000
+
+# Agent 循环上限：工具调用轮数；READ 查询最大执行次数（含首次，故修正次数为该值 -1）
+AGENT_MAX_TOOL_ROUNDS = _agent_limit("DBAGENT_AGENT_MAX_TOOL_ROUNDS", 3)
+AGENT_SQL_MAX_ATTEMPTS = _agent_limit("DBAGENT_AGENT_SQL_MAX_ATTEMPTS", 3)
 
 DEFAULT_USERNAME = "admin"
 DEFAULT_PASSWORD = "admin123"

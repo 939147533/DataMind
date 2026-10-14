@@ -245,3 +245,23 @@ async def test_read_sql_failure_triggers_fix_retry(auth_client, demo_ds_id, monk
     assert provider.calls == 2  # 首次生成 + 一次修正
     sqls = [e["content"] for e in events if e["type"] == "sql"]
     assert sqls[-1] == "SELECT COUNT(*) AS c FROM users"
+
+
+async def test_sql_retry_limit_is_configurable(auth_client, demo_ds_id, monkeypatch):
+    """修正次数上限取自 config：1 表示失败即终止，2 表示只给一次修正机会。"""
+    for limit, expected_calls, expect_retry in ((1, 1, False), (2, 2, True)):
+        provider = ScriptedProvider(None, ["SELECT * FROM no_such_table_xyz LIMIT 1"])
+        monkeypatch.setattr("app.services.agent_service.get_llm_provider", lambda cfg, p=provider: p)
+        monkeypatch.setattr("app.services.agent_service.AGENT_SQL_MAX_ATTEMPTS", limit)
+
+        sess = await auth_client.post("/api/agent/sessions", json={"datasource_id": demo_ds_id})
+        session_id = sess.json()["data"]["id"]
+        resp = await auth_client.post(
+            "/api/agent/chat",
+            json={"session_id": session_id, "message": "统计用户数量"},
+        )
+        assert resp.status_code == 200
+        types = [e["type"] for e in _events(resp.text)]
+        assert provider.calls == expected_calls, (limit, types)
+        assert ("retry" in types) is expect_retry, (limit, types)
+        assert "error" in types and "done" in types

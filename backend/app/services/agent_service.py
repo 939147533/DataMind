@@ -10,6 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..adapters import AdapterError
+from ..config import AGENT_MAX_TOOL_ROUNDS, AGENT_SQL_MAX_ATTEMPTS
 from ..models import AIConfig, AgentMessage, AgentSession, AuditLog, DataSource
 from .llm_providers import LLMError, build_messages, get_llm_provider
 from .sql_examples import build_few_shot_block
@@ -253,7 +254,6 @@ def _make_title(message: str, max_len: int = 20) -> str:
     return text
 
 
-MAX_TOOL_ROUNDS = 3
 TOOL_NAMES = ("list_tables", "get_columns", "sample_data", "explain")
 
 
@@ -364,7 +364,7 @@ async def agent_chat(
         return
 
     # 工具调用循环：模型可先请求元数据工具，工具结果追加后继续
-    for _round in range(MAX_TOOL_ROUNDS):
+    for _round in range(AGENT_MAX_TOOL_ROUNDS):
         tool_name = str(parsed.get("tool") or "").strip()
         if tool_name not in TOOL_NAMES:
             break
@@ -417,7 +417,7 @@ async def agent_chat(
     if op_type == "READ":
         result = None
         error_detail = ""
-        for attempt in range(3):
+        for attempt in range(AGENT_SQL_MAX_ATTEMPTS):
             try:
                 result = await execute_sql(db, ds, sql, user_id, client_ip, session_id=session.id)
                 break
@@ -426,7 +426,7 @@ async def agent_chat(
                 # 只有 SQL 自身的问题（400）才值得让模型修正；鉴权失败等重试没有意义
                 if exc.status_code != 400:
                     break
-                if attempt >= 2:
+                if attempt >= AGENT_SQL_MAX_ATTEMPTS - 1:
                     break
                 yield {"type": "retry", "content": f"SQL 执行失败（{error_detail}），AI 正在修正重试…"}
                 messages.append(

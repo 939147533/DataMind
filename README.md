@@ -54,7 +54,7 @@
 backend/
   app/
     main.py             FastAPI 入口（CORS、异常处理、路由注册、SPA 托管、种子数据）
-    config.py           路径/常量配置（DBAGENT_DATA_DIR 可覆盖数据目录）
+    config.py           路径/常量配置；DBAGENT_DATA_DIR / DBAGENT_AGENT_MAX_TOOL_ROUNDS / DBAGENT_AGENT_SQL_MAX_ATTEMPTS 等环境变量可覆盖
     models.py           SQLAlchemy 模型（16 张表）
     security.py         Fernet 加密、pbkdf2 哈希、token 生成
     permissions.py      权限码、5 个内置角色、鉴权依赖

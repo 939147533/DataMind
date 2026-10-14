@@ -23,7 +23,7 @@
 backend/
   app/
     main.py             FastAPI 入口：CORS、异常处理、路由注册、SPA 托管、lifespan 种子数据
-    config.py           路径/常量配置（数据目录、超时、端口、默认账号）；DBAGENT_DATA_DIR 可覆盖数据目录
+    config.py           路径/常量配置（数据目录、超时、端口、默认账号、Agent 循环上限）；DBAGENT_DATA_DIR / DBAGENT_AGENT_MAX_TOOL_ROUNDS / DBAGENT_AGENT_SQL_MAX_ATTEMPTS 等环境变量可覆盖
     database.py         SQLAlchemy 异步引擎与会话
     models.py           SQLAlchemy 模型（16 张表）
     schemas.py          Pydantic 请求/响应模型
@@ -78,7 +78,7 @@ Dockerfile / docker-compose.yml   多阶段构建 + 一键启动（数据卷 dba
 - **统一响应**：所有接口返回 `{code, message, data}`，用 `ok()`/`page_data()` 构造；HTTP 异常与校验异常统一处理。
 - **权限模型**：用户 → role → permissions（JSON）。`admin` 角色为 `[*]`；SQL 操作按 READ/DML/DDL 分别要求 `workspace` / `sql_write` / `sql_ddl`；运维监控路由允许 `monitor` 或 `audit` 任一权限进入，页内各 Tab 按权限显示（概览/慢查询/表结构对比需 `monitor`，审计日志需 `audit`；定时任务 Tab 已隐藏）；前端路由用 `meta.permission`/`meta.permissionAny` + 守卫控制（`settings` 路由即侧边栏「连接管理」，允许 `settings` 或 `connections` 任一权限进入）。
 - **SSE 事件流**（Agent）：`/api/agent/chat` 返回 `text/event-stream`，事件类型：`session_title / thought / tool / retry / sql / result / text / chart / authorization_required / done / error`。写操作由前端弹确认框，调 `/api/agent/confirm` 执行。
-- **Agent 工具调用**：`agent_service` 提供 `list_tables / get_columns / sample_data / explain` 四个工具（`TOOL_NAMES`），LLM 按需调用（`MAX_TOOL_ROUNDS=3`）；READ 查询失败自动让 LLM 修正重试（最多 3 次，仅限 SQL 自身报错即 HTTP 400，鉴权失败等不重试）；每轮对话注入历史成功 SQL 作为 few-shot 示例（`_load_few_shots` → `services/sql_examples.py`），候选池按 datasource 缓存（写入侧 `record()` 增量合并、TTL 300s 兜底），并按提问相似度、表名重合度、执行频次加权排序后取前 3 条。
+- **Agent 工具调用**：`agent_service` 提供 `list_tables / get_columns / sample_data / explain` 四个工具（`TOOL_NAMES`），LLM 按需调用（轮数上限 `config.AGENT_MAX_TOOL_ROUNDS`，默认 3）；READ 查询失败自动让 LLM 修正重试（最大执行次数 `config.AGENT_SQL_MAX_ATTEMPTS`，默认 3，即最多 2 次修正；仅限 SQL 自身报错即 HTTP 400，鉴权失败等不重试）；每轮对话注入历史成功 SQL 作为 few-shot 示例（`_load_few_shots` → `services/sql_examples.py`），候选池按 datasource 缓存（写入侧 `record()` 增量合并、TTL 300s 兜底），并按提问相似度、表名重合度、执行频次加权排序后取前 3 条。
 - **SQL 语句风险分类**（`sql_service.classify_statement`）：执行前按首个关键字把语句判为 READ（只读）/ DML（改数据）/ DDL（改结构）三档，并加固会被首个关键字绕过的写法——`WITH` 语句跳过括号内的 CTE 定义取主动词（`WITH ... DELETE/UPDATE/INSERT` 判为 DML/DDL）、`EXPLAIN ANALYZE` 会真正执行被解释语句故按内层语句定级（普通 `EXPLAIN` / Oracle `EXPLAIN PLAN` 仍是 READ）、`SELECT ... INTO`（Postgres 建表 / MySQL `INTO OUTFILE`、`INTO @var`）升为 DDL、`FOR UPDATE` / `FOR SHARE` / `LOCK IN SHARE MODE` 加锁读升为 DML；判定前先遮蔽字符串字面量与注释，其中的关键字不参与分类；多语句取最高等级，无法识别时一律按 DML 兜底。分级结果决定所需权限（`workspace` / `sql_write` / `sql_ddl`）与是否二次确认（仅 READ 免确认直达），并全程留审计。
 - **写操作确认机制**：`sql_service._executions`（进程内存字典）暂存待确认执行，`execution_id` 为 key，5 分钟过期；确认后再次鉴权并执行、记录审计。
 - **定时调度**：`schedule_service.scheduler_loop` 在 FastAPI lifespan 启动，每分钟扫描到期的 `scheduled_exports`，`run_in_executor` 同步调用 `export_result_file` 导出并记录 last_status/last_file。
