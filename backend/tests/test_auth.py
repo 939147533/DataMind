@@ -1,5 +1,4 @@
 """认证测试。"""
-import pytest
 
 
 async def test_login_success(auth_client):

@@ -1,8 +1,6 @@
 """AI Agent 测试（使用假 LLM Provider，不依赖真实 API）。"""
 import json
-import re
 
-import pytest
 
 
 class FakeProvider:

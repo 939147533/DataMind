@@ -1,6 +1,5 @@
 """系统管理测试。"""
 import io
-import pytest
 
 
 async def test_ai_config_crud(auth_client):

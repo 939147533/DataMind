@@ -2,17 +2,18 @@
 from datetime import datetime
 
 from fastapi import HTTPException
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from pathlib import Path
 
 from ..adapters import test_connection
+from ..adapters.pool import DB_POOL
 from ..config import DRIVERS_DIR, normalize_database_name, resolve_data_path, to_data_relative
 from ..models import DataSource, JdbcDriver
 from ..schemas import ConnectionCreate, ConnectionUpdate, TestConnectionRequest
-from ..security import decrypt_text, encrypt_text
-from .sql_service import build_connection_info
+from ..security import encrypt_text
+from .sql_service import adapter_pool_key, build_connection_info
 
 
 def to_out(ds: DataSource) -> dict:
@@ -72,7 +73,7 @@ async def list_connections(db: AsyncSession, search: str = "", environment: str 
         query = query.where(or_(DataSource.name.contains(search), DataSource.host.contains(search)))
     if environment:
         query = query.where(DataSource.environment == environment)
-    total = len((await db.execute(query)).scalars().all())
+    total = (await db.execute(select(func.count()).select_from(query.order_by(None).subquery()))).scalar_one()
     rows = (await db.execute(query.order_by(DataSource.id.desc()).offset((page - 1) * page_size).limit(page_size))).scalars().all()
     return {
         "list": [to_out(ds) for ds in rows],
@@ -91,6 +92,7 @@ async def get_connection(db: AsyncSession, connection_id: int) -> DataSource:
 
 async def update_connection(db: AsyncSession, connection_id: int, data: ConnectionUpdate) -> DataSource:
     ds = await get_connection(db, connection_id)
+    stale_pool_key = adapter_pool_key(ds)  # 连接参数变更后旧连接必须作废
     for field in ("name", "db_type", "host", "port", "username", "database_name", "ssh_enabled", "ssh_host", "ssh_port", "ssh_user", "ssh_auth_type", "environment", "description"):
         setattr(ds, field, getattr(data, field))
     ds.database_name = normalize_database_name(ds.db_type, ds.database_name)
@@ -101,13 +103,17 @@ async def update_connection(db: AsyncSession, connection_id: int, data: Connecti
     ds.updated_at = datetime.now()
     await db.commit()
     await db.refresh(ds)
+    DB_POOL.drop(stale_pool_key)
+    DB_POOL.drop(adapter_pool_key(ds))
     return ds
 
 
 async def delete_connection(db: AsyncSession, connection_id: int) -> None:
     ds = await get_connection(db, connection_id)
+    stale_pool_key = adapter_pool_key(ds)
     await db.delete(ds)
     await db.commit()
+    DB_POOL.drop(stale_pool_key)
 
 
 async def repair_stored_paths(db: AsyncSession) -> int:

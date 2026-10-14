@@ -10,6 +10,31 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..models import AuditLog
 
 
+async def record_audit(
+    db: AsyncSession,
+    user_id: int | None,
+    action_type: str,
+    sql_text: str,
+    operation_type: str,
+    datasource_id: int | None,
+    status: str,
+    client_ip: str = "",
+) -> None:
+    """写入一条审计日志（SQL 执行、Agent 动作、导出等所有敏感操作的统一入口）。"""
+    db.add(
+        AuditLog(
+            user_id=user_id,
+            action_type=action_type,
+            sql_text=(sql_text or "")[:4000],
+            operation_type=operation_type,
+            datasource_id=datasource_id,
+            status=status,
+            client_ip=client_ip,
+        )
+    )
+    await db.commit()
+
+
 def _serialize(value):
     if value is None:
         return ""

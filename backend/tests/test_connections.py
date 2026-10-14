@@ -1,5 +1,4 @@
 """连接管理测试。"""
-import pytest
 
 
 async def test_list_connections(auth_client):

@@ -1,6 +1,6 @@
 """SQL 工作台路由。"""
 from fastapi import APIRouter, Depends, Query, Request
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_db
@@ -43,7 +43,7 @@ async def history(
     query = select(QueryHistory).order_by(QueryHistory.id.desc())
     if datasource_id:
         query = query.where(QueryHistory.datasource_id == datasource_id)
-    total = len((await db.execute(query)).scalars().all())
+    total = (await db.execute(select(func.count()).select_from(query.order_by(None).subquery()))).scalar_one()
     rows = (await db.execute(query.offset((page - 1) * page_size).limit(page_size))).scalars().all()
     items = [
         {

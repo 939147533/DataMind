@@ -1,0 +1,12 @@
+# 后端工具配置（ruff 静态检查：只开能发现真实缺陷的规则，格式化未强制）
+[tool.ruff]
+line-length = 140
+target-version = "py312"
+extend-exclude = ["migrations/versions"]
+
+[tool.ruff.lint]
+# E4/E7/E9：导入与语法类错误；F：pyflakes（未使用导入/未定义名字等）；B：bugbear；C4：推导式
+select = ["E4", "E7", "E9", "F", "B", "C4"]
+ignore = [
+    "B008", # FastAPI 的 Depends(...)/Query(...) 本来就是在默认值里调用函数
+]

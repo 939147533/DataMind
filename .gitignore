@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.coverage
+*.log
+
+# 前端
+node_modules/
+dist/
+
+# 运行期产物（应用库/密钥/导出文件不入库；密钥入库等于把加密钥匙一起泄露）
+backend/data/secret.key
+backend/data/exports/*
+
+# 编辑器与工具
+.DS_Store
+.idea/
+.run/
+.e2e/
+.presentation_tmp/

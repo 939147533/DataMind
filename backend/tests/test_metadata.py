@@ -1,5 +1,4 @@
 """元数据与收藏测试。"""
-import pytest
 
 
 async def test_schemas_tables(auth_client, demo_ds_id):

@@ -35,6 +35,9 @@ class MongoDBAdapter(BaseDBAdapter):
         except Exception as exc:  # noqa: BLE001
             raise AdapterError(f"MongoDB 连接失败: {exc}") from exc
 
+    def _reset_conn(self, conn) -> None:
+        """MongoClient 内置连接池与自动重连，无需回滚。"""
+
     def test_connection(self):
         try:
             client = self.connect()
@@ -44,53 +47,66 @@ class MongoDBAdapter(BaseDBAdapter):
             return False, str(exc)
 
     def get_schemas(self) -> list[str]:
-        client = self.connect()
+        client = self._acquire_conn()
+        ok = False
         try:
-            return client.list_database_names()
+            names = client.list_database_names()
+            ok = True
+            return names
         finally:
-            self._close(client)
+            self._release_conn(client, broken=not ok)
 
     def _db(self):
-        pymongo = _import_pymongo()
-        client = self.connect()
+        client = self._acquire_conn()
         name = self.conn.database_name or "admin"
         return client, client[name]
 
     def get_tables(self, schema: str = "") -> list[str]:
         client, db = self._db()
+        ok = False
         try:
-            return db.list_collection_names()
+            names = db.list_collection_names()
+            ok = True
+            return names
         finally:
-            self._close(client)
+            self._release_conn(client, broken=not ok)
 
     def get_table_columns(self, table: str, schema: str = "") -> list[dict]:
         client, db = self._db()
+        ok = False
         try:
             doc = db[table].find_one()
             if not doc:
+                ok = True
                 return []
             keys = list(doc.keys())
+            ok = True
             return [{"name": k, "data_type": type(doc[k]).__name__, "nullable": True, "default": None, "primary_key": k == "_id", "auto_increment": False, "comment": ""} for k in keys]
         finally:
-            self._close(client)
+            self._release_conn(client, broken=not ok)
 
     def get_table_data(self, table: str, schema: str = "", page: int = 1, size: int = 100) -> dict:
         client, db = self._db()
+        ok = False
         try:
             total = db[table].count_documents({})
             docs = list(db[table].find().skip((page - 1) * size).limit(size))
             columns = list(docs[0].keys()) if docs else []
             rows = [[_clean(d.get(c)) for c in columns] for d in docs]
+            ok = True
             return {"columns": columns, "rows": rows, "total": total, "page": page, "page_size": size}
         finally:
-            self._close(client)
+            self._release_conn(client, broken=not ok)
 
     def get_views(self, schema: str = "") -> list[str]:
         client, db = self._db()
+        ok = False
         try:
-            return [c["name"] for c in db.list_collections() if c.get("type") == "view"]
+            names = [c["name"] for c in db.list_collections() if c.get("type") == "view"]
+            ok = True
+            return names
         finally:
-            self._close(client)
+            self._release_conn(client, broken=not ok)
 
     def execute(self, sql: str) -> dict:
         raise AdapterError("MongoDB 不支持 SQL 执行，请在 SQL 工作台选择其他数据源")

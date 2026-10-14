@@ -9,7 +9,8 @@ EXPORTS_DIR = DATA_DIR / "exports"
 
 APP_DB_PATH = DATA_DIR / "app.db"
 DEMO_DB_PATH = DATA_DIR / "demo.db"
-SECRET_KEY_PATH = DATA_DIR / "secret.key"
+# 加密密钥：默认放在数据目录，生产建议改用 DBAGENT_SECRET_KEY 环境变量，或用 DBAGENT_SECRET_KEY_FILE 指到独立挂载的密钥文件
+SECRET_KEY_PATH = Path(os.environ.get("DBAGENT_SECRET_KEY_FILE") or (DATA_DIR / "secret.key"))
 
 
 def _agent_limit(name: str, default: int) -> int:
@@ -21,6 +22,24 @@ def _agent_limit(name: str, default: int) -> int:
     return value if 1 <= value <= 10 else default
 
 
+def _env_int(name: str, default: int, low: int, high: int) -> int:
+    """读取整型环境变量：非法或越界时回退默认值。"""
+    try:
+        value = int(os.environ.get(name, default))
+    except (TypeError, ValueError):
+        return default
+    return value if low <= value <= high else default
+
+
+def _env_float(name: str, default: float) -> float:
+    """读取非负浮点环境变量，非法时回退默认值。"""
+    try:
+        value = float(os.environ.get(name, default))
+    except (TypeError, ValueError):
+        return default
+    return value if value >= 0 else default
+
+
 SESSION_TTL_SECONDS = 24 * 60 * 60
 EXECUTION_CONFIRM_TIMEOUT = 5 * 60
 SQL_EXECUTE_TIMEOUT = 30
@@ -30,8 +49,16 @@ MAX_ROWS_PER_PAGE = 1000
 AGENT_MAX_TOOL_ROUNDS = _agent_limit("DBAGENT_AGENT_MAX_TOOL_ROUNDS", 3)
 AGENT_SQL_MAX_ATTEMPTS = _agent_limit("DBAGENT_AGENT_SQL_MAX_ATTEMPTS", 3)
 
+# 目标库连接池：元数据查询复用连接，避免每次调用都重新握手
+DB_POOL_SIZE = _env_int("DBAGENT_DB_POOL_SIZE", 8, 1, 32)  # 单个数据源空闲连接上限
+DB_POOL_IDLE_TTL = _env_float("DBAGENT_DB_POOL_IDLE_TTL", 300.0)  # 空闲连接超过该秒数后丢弃
+
+# /metrics 监控接口令牌：配了就要求 Authorization: Bearer <token>；未配置时仅允许本机/内网访问
+METRICS_TOKEN = os.environ.get("DBAGENT_METRICS_TOKEN", "").strip()
+
 DEFAULT_USERNAME = "admin"
-DEFAULT_PASSWORD = "admin123"
+DEFAULT_PASSWORD = "admin123"  # 初始口令（仅用于推断“是否仍然是默认口令”）
+ADMIN_INITIAL_PASSWORD = os.environ.get("DBAGENT_ADMIN_PASSWORD", "").strip() or DEFAULT_PASSWORD
 
 DEFAULT_DB_TYPES = [
     "oracle", "oceanbase", "goldendb", "mysql",

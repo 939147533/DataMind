@@ -2,7 +2,6 @@
 """智能查询（ai_query）权限、Agent 图表事件与保存图表测试。"""
 import json
 
-import pytest
 from httpx import ASGITransport, AsyncClient
 
 from app.main import app

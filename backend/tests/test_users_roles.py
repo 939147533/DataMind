@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """用户管理、角色管理、功能权限测试。"""
-import pytest
 from httpx import ASGITransport, AsyncClient
 
 from app.main import app
@@ -195,7 +194,7 @@ async def test_assign_invalid_user(auth_client):
 
 # ---------- 权限隔离 ----------
 async def test_no_permission_403(auth_client):
-    uid = await _create_user(auth_client, "limited_user", role="biz_query")
+    await _create_user(auth_client, "limited_user", role="biz_query")
     client = await _new_client()
     try:
         await _login(client, "limited_user", "test1234")
@@ -215,7 +214,7 @@ async def test_no_permission_403(auth_client):
 
 
 async def test_connections_manage_forbidden(auth_client):
-    uid = await _create_user(auth_client, "conn_limited", role="tech_query")
+    await _create_user(auth_client, "conn_limited", role="tech_query")
     client = await _new_client()
     try:
         await _login(client, "conn_limited", "test1234")
@@ -226,7 +225,7 @@ async def test_connections_manage_forbidden(auth_client):
 
 
 async def test_sql_write_permission(auth_client, demo_ds_id):
-    uid = await _create_user(auth_client, "read_only_user", role="biz_query")
+    await _create_user(auth_client, "read_only_user", role="biz_query")
     client = await _new_client()
     try:
         await _login(client, "read_only_user", "test1234")
@@ -245,7 +244,7 @@ async def test_sql_write_permission(auth_client, demo_ds_id):
 
 
 async def test_sql_ddl_permission(auth_client, demo_ds_id):
-    uid = await _create_user(auth_client, "no_ddl_user", role="tech_query")
+    await _create_user(auth_client, "no_ddl_user", role="tech_query")
     client = await _new_client()
     try:
         await _login(client, "no_ddl_user", "test1234")
@@ -258,7 +257,7 @@ async def test_sql_ddl_permission(auth_client, demo_ds_id):
 
 
 async def test_confirm_permission_denied(auth_client, demo_ds_id):
-    uid = await _create_user(auth_client, "confirm_limited", role="biz_query")
+    await _create_user(auth_client, "confirm_limited", role="biz_query")
     client = await _new_client()
     try:
         await _login(client, "confirm_limited", "test1234")
@@ -275,7 +274,7 @@ async def test_agent_permission(auth_client):
     await auth_client.post(
         "/api/roles", json={"code": "no_agent_role", "name": "无Agent", "description": "t", "permissions": ["workspace"]}
     )
-    uid = await _create_user(auth_client, "no_agent_user", role="no_agent_role")
+    await _create_user(auth_client, "no_agent_user", role="no_agent_role")
     client = await _new_client()
     try:
         await _login(client, "no_agent_user", "test1234")
@@ -286,7 +285,7 @@ async def test_agent_permission(auth_client):
 
 
 async def test_reports_manage_forbidden(auth_client):
-    uid = await _create_user(auth_client, "reports_limited", role="biz_query")
+    await _create_user(auth_client, "reports_limited", role="biz_query")
     client = await _new_client()
     try:
         await _login(client, "reports_limited", "test1234")

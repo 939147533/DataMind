@@ -1,5 +1,4 @@
 """SQL 执行授权协议测试。"""
-import pytest
 
 
 async def test_read_auto_execute(auth_client, demo_ds_id):
@@ -105,3 +104,38 @@ async def test_history(auth_client, demo_ds_id):
     resp = await auth_client.get(f"/api/sql/history?datasource_id={demo_ds_id}")
     assert resp.status_code == 200
     assert resp.json()["data"]["total"] >= 1
+
+
+async def test_pending_write_execution_is_persisted(auth_client, demo_ds_id):
+    """待确认写操作落库：进程重启/多副本下确认都不会丢。"""
+    from sqlalchemy import select
+
+    from app.database import SessionLocal
+    from app.models import PendingExecution
+
+    resp = await auth_client.post(
+        "/api/sql/execute",
+        json={"datasource_id": demo_ds_id, "sql": "UPDATE orders SET status='paid' WHERE id=1"},
+    )
+    execution_id = resp.json()["data"]["execution_id"]
+
+    async with SessionLocal() as db:
+        row = (
+            await db.execute(select(PendingExecution).where(PendingExecution.execution_id == execution_id))
+        ).scalar_one_or_none()
+    assert row is not None, "待确认记录应写入 pending_executions"
+    assert row.operation_type == "DML"
+    assert row.datasource_id == demo_ds_id
+    assert "UPDATE" in row.sql_text
+
+    confirm = await auth_client.post(
+        "/api/sql/execute/confirm",
+        json={"execution_id": execution_id, "confirmed": False},
+    )
+    assert confirm.json()["data"]["status"] == "cancelled"
+
+    async with SessionLocal() as db:
+        gone = (
+            await db.execute(select(PendingExecution).where(PendingExecution.execution_id == execution_id))
+        ).scalar_one_or_none()
+    assert gone is None, "确认/取消后记录应被消费掉（一次性使用）"

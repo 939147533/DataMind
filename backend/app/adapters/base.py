@@ -1,7 +1,9 @@
 """数据库适配器抽象基类。"""
 import re
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+
+from .pool import DB_POOL
 
 
 class AdapterError(Exception):
@@ -99,6 +101,39 @@ class BaseDBAdapter(ABC):
             conn.close()
         except Exception:
             pass
+
+    # ---------- 连接池 ----------
+    def _conn_key(self) -> tuple:
+        """按连接参数分桶：同一数据源跨请求共享一个连接池。"""
+        c = self.conn
+        return (self.db_type, c.host, c.port, c.database_name, c.username, c.password)
+
+    def _is_conn_alive(self, conn) -> bool:
+        """借出前的生存探测：默认认为活，驱动可覆写。"""
+        return True
+
+    def _reset_conn(self, conn) -> None:
+        """归还前回滚隐式事务，避免借出后手上残留快照。"""
+        conn.rollback()
+
+    def _acquire_conn(self):
+        """从池中借出连接（无可用则新建）。"""
+        return DB_POOL.acquire(
+            self._conn_key(),
+            self.connect,
+            is_alive=self._is_conn_alive,
+            close=self._close,
+        )
+
+    def _release_conn(self, conn, *, broken: bool = False) -> None:
+        """归还连接：broken 或 reset 失败时丢弃而不污染池。"""
+        DB_POOL.release(
+            self._conn_key(),
+            conn,
+            broken=broken,
+            reset=self._reset_conn,
+            close=self._close,
+        )
 
     # ---------- 元数据 ----------
     @abstractmethod

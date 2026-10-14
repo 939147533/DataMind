@@ -1,4 +1,5 @@
 """SQLAlchemy 异步引擎与会话管理。"""
+from sqlalchemy import inspect
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase
 
@@ -28,3 +29,16 @@ async def init_db() -> None:
 
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        await conn.run_sync(_create_missing_indexes)
+
+
+def _create_missing_indexes(conn) -> None:
+    """给已存在的表补建新声明的索引（create_all 只建缺失的表，不会改动已有表）。"""
+    inspector = inspect(conn)
+    for table in Base.metadata.sorted_tables:
+        if not inspector.has_table(table.name):
+            continue
+        existing = {ix["name"] for ix in inspector.get_indexes(table.name)}
+        for index in table.indexes:
+            if index.name not in existing:
+                index.create(bind=conn, checkfirst=True)

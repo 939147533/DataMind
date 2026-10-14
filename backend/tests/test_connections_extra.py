@@ -1,5 +1,4 @@
 """连接管理补充测试。"""
-import pytest
 
 
 async def test_search_and_environment_filter(auth_client, demo_ds_id):

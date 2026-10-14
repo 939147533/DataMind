@@ -31,18 +31,26 @@ class PostgreSQLAdapter(BaseDBAdapter):
         except Exception as exc:  # noqa: BLE001
             raise AdapterError(f"PostgreSQL 连接失败: {exc}") from exc
 
+    def _is_conn_alive(self, conn) -> bool:
+        """conn.closed 是本地标志，探测零往返。"""
+        return not conn.closed
+
     def _query(self, sql: str, params: tuple | None = None) -> list[dict]:
-        conn = self.connect()
+        conn = self._acquire_conn()
+        ok = False
         try:
             with conn.cursor() as cur:
                 cur.execute(sql, params)
                 if cur.description is None:
+                    ok = True
                     return []
-                return [dict(r) for r in cur.fetchall()]
+                rows = [dict(r) for r in cur.fetchall()]
+                ok = True
+                return rows
         except Exception as exc:  # noqa: BLE001
             raise AdapterError(f"SQL 执行错误: {exc}") from exc
         finally:
-            self._close(conn)
+            self._release_conn(conn, broken=not ok)
 
     def _db(self) -> str:
         return self.conn.database_name or "public"

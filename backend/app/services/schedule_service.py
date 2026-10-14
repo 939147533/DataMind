@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta
 
 from fastapi import HTTPException
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import EXPORTS_DIR
@@ -84,6 +84,49 @@ async def delete_schedule(db: AsyncSession, schedule_id: int) -> None:
     await db.commit()
 
 
+async def claim_schedule(db: AsyncSession, schedule_id: int, now: datetime | None = None) -> bool:
+    """原子认领一条到期任务：只有把 next_run_at 成功推到未来（rowcount=1）才算抢到。
+
+    多副本部署时两个进程可能同时读到同一批到期任务，条件 UPDATE 保证只有一个进程
+    认领成功；认领即顺延一个周期，所以某个副本中途挂掉也不会把任务卡死（失败原因记在 last_status）。
+    """
+    now = now or datetime.now()
+    task = (await db.execute(select(ScheduledExport).where(ScheduledExport.id == schedule_id))).scalar_one_or_none()
+    if task is None:
+        return False
+    result = await db.execute(
+        update(ScheduledExport)
+        .where(
+            ScheduledExport.id == schedule_id,
+            ScheduledExport.enabled.is_(True),
+            ScheduledExport.next_run_at.isnot(None),
+            ScheduledExport.next_run_at <= now,
+        )
+        .values(next_run_at=_next_run(task))
+    )
+    await db.commit()
+    return bool(result.rowcount)
+
+
+async def claim_due_schedules(db: AsyncSession) -> list[int]:
+    """扫描并认领所有到期任务，返回本进程抢到的任务 id。"""
+    now = datetime.now()
+    candidates = (
+        await db.execute(
+            select(ScheduledExport.id).where(
+                ScheduledExport.enabled.is_(True),
+                ScheduledExport.next_run_at.isnot(None),
+                ScheduledExport.next_run_at <= now,
+            )
+        )
+    ).scalars().all()
+    claimed: list[int] = []
+    for schedule_id in candidates:
+        if await claim_schedule(db, schedule_id, now):
+            claimed.append(schedule_id)
+    return claimed
+
+
 async def run_schedule(db: AsyncSession, schedule_id: int) -> dict:
     task = await get_schedule(db, schedule_id)
     ds = await get_datasource(db, task.datasource_id)
@@ -123,18 +166,8 @@ async def scheduler_loop() -> None:
     while True:
         try:
             async with SessionLocal() as db:
-                now = datetime.now()
-                rows = (
-                    await db.execute(
-                        select(ScheduledExport).where(
-                            ScheduledExport.enabled.is_(True),
-                            ScheduledExport.next_run_at.isnot(None),
-                            ScheduledExport.next_run_at <= now,
-                        )
-                    )
-                ).scalars().all()
-                for task in rows:
-                    await run_schedule_safe(db, task.id)
+                for schedule_id in await claim_due_schedules(db):
+                    await run_schedule_safe(db, schedule_id)
         except Exception:  # noqa: BLE001
             pass
         await asyncio.sleep(60)

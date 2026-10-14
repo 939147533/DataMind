@@ -1,7 +1,7 @@
 """审计日志路由。"""
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import Response
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_db
@@ -27,7 +27,7 @@ async def audit_logs(
         query = query.where(AuditLog.action_type == action_type)
     if status:
         query = query.where(AuditLog.status == status)
-    total = len((await db.execute(query)).scalars().all())
+    total = (await db.execute(select(func.count()).select_from(query.order_by(None).subquery()))).scalar_one()
     rows = (await db.execute(query.offset((page - 1) * page_size).limit(page_size))).scalars().all()
     items = [
         {

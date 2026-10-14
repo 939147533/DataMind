@@ -1,10 +1,9 @@
 """导出测试。"""
-import pytest
 
 
 async def test_export_result_csv(auth_client, demo_ds_id):
     resp = await auth_client.post(
-        f"/api/export/result?format=csv",
+        "/api/export/result?format=csv",
         json={"datasource_id": demo_ds_id, "sql": "SELECT username, age FROM users LIMIT 3"},
     )
     assert resp.status_code == 200
@@ -14,7 +13,7 @@ async def test_export_result_csv(auth_client, demo_ds_id):
 
 async def test_export_result_excel(auth_client, demo_ds_id):
     resp = await auth_client.post(
-        f"/api/export/result?format=excel",
+        "/api/export/result?format=excel",
         json={"datasource_id": demo_ds_id, "sql": "SELECT username FROM users LIMIT 2"},
     )
     assert resp.status_code == 200
@@ -23,7 +22,7 @@ async def test_export_result_excel(auth_client, demo_ds_id):
 
 async def test_export_database_markdown(auth_client, demo_ds_id):
     resp = await auth_client.post(
-        f"/api/export/database?format=markdown",
+        "/api/export/database?format=markdown",
         json={"datasource_id": demo_ds_id, "tables": ["users", "orders"]},
     )
     assert resp.status_code == 200

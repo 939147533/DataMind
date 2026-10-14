@@ -1,6 +1,6 @@
 """用户管理路由：用户增删改查、重置密码。"""
 from fastapi import APIRouter, Depends, HTTPException, Query, Request
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_db
@@ -78,7 +78,7 @@ async def list_users(
         query = query.where(or_(User.username.like(kw), User.display_name.like(kw)))
     if role:
         query = query.where(User.role == role)
-    total = len((await db.execute(query)).scalars().all())
+    total = (await db.execute(select(func.count()).select_from(query.order_by(None).subquery()))).scalar_one()
     rows = (
         await db.execute(query.order_by(User.id.asc()).offset((page - 1) * page_size).limit(page_size))
     ).scalars().all()

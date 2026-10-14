@@ -15,9 +15,9 @@
 - **元数据管理**：Schema/表/列/索引/DDL/视图/函数/存储过程/触发器/序列；表收藏；两库**表结构对比（schema diff）**
 - **可视化报表**：柱状/折线/饼图 + 仪表盘（gridstack 拖拽）、分享链接、大屏展示模式
 - **用户与角色**：RBAC 权限体系，5 个内置角色 + 自定义角色，14 个细粒度权限码，前端路由守卫 + 后端鉴权双重控制
-- **审计日志**：登录/SQL 执行/Agent 动作全量审计，CSV/Excel 导出，按保留期自动清理（默认 180 天）。入口位于「运维监控 → 审计日志」
-- **运维监控**：连接概览、慢查询统计、表结构对比、审计日志、定时任务；`/metrics` 暴露 Prometheus 指标
-- **定时导出**：定时任务按周期导出报表/订阅推送，后台调度循环自动执行，复用导出服务
+- **审计日志**：登录/SQL 执行/Agent 动作/结果与库文档导出全量审计（成功与失败都记录），CSV/Excel 导出，按保留期自动清理（默认 180 天）。入口位于「运维监控 → 审计日志」
+- **运维监控**：连接概览、慢查询统计、表结构对比、审计日志、定时任务；`/metrics` 暴露 Prometheus 指标（配 `DBAGENT_METRICS_TOKEN` 后需 Bearer 令牌，未配置仅限本机/内网）
+- **定时导出**：定时任务按周期导出报表/订阅推送，后台调度循环用条件 UPDATE 认领到期任务（多副本不重复执行），复用导出服务
 
 ---
 
@@ -26,10 +26,10 @@
 | 层 | 技术 |
 |---|---|
 | 前端 | Vue 3 + TypeScript + Vite + Pinia + Naive UI + CodeMirror 6 + ECharts + gridstack |
-| 后端 | Python 3.12 + FastAPI + SQLAlchemy 2.0（async）+ aiosqlite + sqlglot |
+| 后端 | Python 3.12 + FastAPI + SQLAlchemy 2.0（async）+ aiosqlite + Alembic + sqlglot |
 | AI | openai / anthropic SDK（OpenAI 兼容网关、Claude、Ollama 统一抽象） |
-| 数据库 | pymysql / psycopg2 / oracledb / pymongo / aiosqlite；sshtunnel + paramiko（SSH 隧道） |
-| 测试/部署 | pytest（117 项）、Playwright E2E；Docker 多阶段构建、docker-compose |
+| 数据库 | pymysql / psycopg2 / oracledb / pymongo / aiosqlite（只读查询走进程级连接池）；sshtunnel + paramiko（SSH 隧道） |
+| 测试/部署 | pytest（167 项）、ruff 静态检查、Playwright E2E；Docker 多阶段构建、docker-compose |
 
 ---
 
@@ -38,13 +38,16 @@
 分层设计：`routers → services → adapters → 目标数据库`，应用自身状态存 SQLite（`data/app.db`）。
 
 - **适配器模式**：`BaseDBAdapter` 统一接口（connect/test/metadata/execute/explain/schema_summary），`registry` 按 `db_type` 分发；OceanBase / GoldenDB 协议兼容复用 MySQL 适配器
+- **连接池与事件循环**：目标库驱动都是同步实现，所有调用统一经 `build_adapter_async / call_adapter / asyncio.to_thread` 进入线程池，慢查询不会卡住事件循环；网络型驱动（MySQL/PostgreSQL/Oracle/MongoDB）的只读元数据查询复用 `adapters/pool.py` 的进程级连接池（借出前存活探测、归还前回滚、池容量与空闲 TTL 可配），SQLite 与写操作保持独占连接
+- **数据层与迁移**：热点列（`query_history.datasource_id`、`audit_logs.created_at`、`agent_messages.session_id`、`dashboards.share_token` 等）已建索引，启动时自动给老库补建缺失索引；分页总数用 `COUNT(*)` 子查询；表结构变更用 Alembic 迁移（`backend/migrations`，基线 0001）
 - **LLM Provider 抽象**：OpenAICompatProvider（OpenAI 官方 + 兼容网关 + Ollama /v1）与 ClaudeProvider 统一 `chat/stream/ping`；未配置 Key 时快速失败提示
 - **统一响应**：所有接口返回 `{code, message, data}`，HTTP/校验异常统一处理
 - **SSE 事件流**：Agent 对话 `text/event-stream`，事件类型 `session_title / thought / tool / retry / sql / result / text / chart / authorization_required / done / error`
 - **语句风险分类**：`services/sql_service.classify_statement` 按首个关键字判定 READ / DML / DDL，并加固会被首个关键字绕过的写法——`WITH … DELETE/UPDATE/INSERT`（跳过 CTE 定义取主动词）、`EXPLAIN ANALYZE`（真会执行，按内层语句定级）、`SELECT … INTO`（Postgres 建表 / MySQL 写文件，升为 DDL）、`FOR UPDATE` / `LOCK IN SHARE MODE`（加锁读，升为 DML）；判定前遮蔽字符串字面量与注释，无法识别时按 DML 兜底。等级决定所需权限（`workspace` / `sql_write` / `sql_ddl`）与是否二次确认
-- **写操作确认**：待确认执行存内存字典，`execution_id` 5 分钟过期，确认后二次鉴权并审计
-- **定时调度**：FastAPI lifespan 启动调度循环，每分钟扫描到期任务，线程池执行导出
-- **监控指标**：`/metrics` 暴露 Prometheus 指标（REQUEST_COUNT / REQUEST_LATENCY / SQL_EXECUTIONS）
+- **写操作确认**：待确认执行落库 `pending_executions`（`execution_id` 主键，5 分钟过期，重启/多副本不丢），确认后二次鉴权、执行并审计
+- **定时调度**：FastAPI lifespan 启动调度循环，每分钟扫描到期任务并用条件 UPDATE 认领（多副本只有一个进程执行），线程池执行导出
+- **监控指标**：`/metrics` 暴露 Prometheus 指标（REQUEST_COUNT / REQUEST_LATENCY / SQL_EXECUTIONS），路径标签用路由模板避免标签爆炸，支持令牌鉴权与内网限制
+- **安全基线**：加密密钥支持环境变量/独立挂载（`DBAGENT_SECRET_KEY`、`DBAGENT_SECRET_KEY_FILE`），默认密钥文件 600 权限且不入库；初始管理员口令可用 `DBAGENT_ADMIN_PASSWORD` 指定，未改默认口令时启动告警
 
 ---
 
@@ -54,15 +57,16 @@
 backend/
   app/
     main.py             FastAPI 入口（CORS、异常处理、路由注册、SPA 托管、种子数据）
-    config.py           路径/常量配置；DBAGENT_DATA_DIR / DBAGENT_AGENT_MAX_TOOL_ROUNDS / DBAGENT_AGENT_SQL_MAX_ATTEMPTS 等环境变量可覆盖
+    config.py           路径/常量配置；DBAGENT_DATA_DIR / DBAGENT_AGENT_MAX_TOOL_ROUNDS / DBAGENT_AGENT_SQL_MAX_ATTEMPTS / DBAGENT_DB_POOL_SIZE / DBAGENT_DB_POOL_IDLE_TTL 等环境变量可覆盖
     models.py           SQLAlchemy 模型（16 张表）
     security.py         Fernet 加密、pbkdf2 哈希、token 生成
     permissions.py      权限码、5 个内置角色、鉴权依赖
-    adapters/           数据库适配层（SQLite/MySQL/PostgreSQL/Oracle/MongoDB）
+    adapters/           数据库适配层（SQLite/MySQL/PostgreSQL/Oracle/MongoDB）+ pool.py 只读连接池
     routers/            14 个 API 路由模块（auth/connections/sql/metadata/agent/...）
     services/           业务服务层（sql/agent/connection/export/llm/ssh/audit/schedule）
-  tests/                pytest 测试（117 项）
+  tests/                pytest 测试（154 项）
   data/                 运行数据（app.db、demo.db、drivers/、exports/）
+  alembic.ini / migrations/   Alembic 迁移配置与脚本（0001 为当前模型基线）
 frontend/
   src/
     api/                fetch 封装 + 类型化 API

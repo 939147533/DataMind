@@ -31,16 +31,27 @@ class MySQLAdapter(BaseDBAdapter):
         except Exception as exc:  # noqa: BLE001
             raise AdapterError(f"MySQL 连接失败: {exc}") from exc
 
+    def _is_conn_alive(self, conn) -> bool:
+        """借出前 ping 一次（一次往返），比重新握手便宜得多。"""
+        try:
+            conn.ping(reconnect=False)
+            return True
+        except Exception:  # noqa: BLE001
+            return False
+
     def _query(self, sql: str, params: tuple | None = None) -> list[dict]:
-        conn = self.connect()
+        conn = self._acquire_conn()
+        ok = False
         try:
             with conn.cursor() as cur:
                 cur.execute(sql, params)
-                return list(cur.fetchall())
+                rows = list(cur.fetchall())
+                ok = True
+                return rows
         except Exception as exc:  # noqa: BLE001
             raise AdapterError(f"SQL 执行错误: {exc}") from exc
         finally:
-            self._close(conn)
+            self._release_conn(conn, broken=not ok)
 
     def _db(self) -> str:
         return self.conn.database_name or ""

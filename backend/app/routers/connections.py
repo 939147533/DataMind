@@ -1,4 +1,6 @@
 """连接管理路由。"""
+import asyncio
+
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -16,7 +18,8 @@ router = APIRouter(prefix="/api/connections", tags=["连接管理"])
 @router.post("/test")
 async def test_connection(data: TestConnectionRequest, user: User = Depends(require_any_permission("connections", "workspace"))):
     try:
-        ok_flag, message = service.test_connection_params(data)
+        # 连接测试涉及 SSH 隧道与驱动握手，放线程池执行避免阻塞事件循环
+        ok_flag, message = await asyncio.to_thread(service.test_connection_params, data)
     except AdapterError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     return ok({"success": ok_flag, "message": message}, message)

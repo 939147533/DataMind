@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """AI 配置模型连通性测试端点测试。"""
-import pytest
 from httpx import ASGITransport, AsyncClient
 
 from app.main import app

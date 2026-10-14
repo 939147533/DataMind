@@ -1,7 +1,7 @@
 """启动种子：默认账户、内置角色、演示 SQLite 库、演示连接、默认 AI 配置、系统设置。"""
 import json
+import os
 import sqlite3
-from datetime import datetime, timedelta
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,7 +9,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .config import DEFAULT_PASSWORD, DEFAULT_USERNAME, DEMO_DB_PATH
 from .models import AIConfig, DataSource, Role, Setting, User
 from .permissions import BUILTIN_ROLES
-from .security import encrypt_text, hash_password
+from .security import encrypt_text, hash_password, verify_password
+
+
+def admin_initial_password() -> str:
+    """首次建管理员账号用的口令：可用 DBAGENT_ADMIN_PASSWORD 覆盖，避免上线仍是默认口令。"""
+    return os.environ.get("DBAGENT_ADMIN_PASSWORD", "").strip() or DEFAULT_PASSWORD
+
+
+async def admin_uses_default_password(db: AsyncSession) -> bool:
+    """默认管理员是否仍在使用内置初始口令（启动时据此告警）。"""
+    user = (await db.execute(select(User).where(User.username == DEFAULT_USERNAME))).scalar_one_or_none()
+    return bool(user and verify_password(DEFAULT_PASSWORD, user.password_hash))
 
 
 def _ensure_demo_db() -> str:
@@ -67,7 +78,6 @@ def _ensure_demo_db() -> str:
         END;
         """
     )
-    now = datetime.now()
     categories = [
         ("电子产品", "数码与配件"),
         ("图书", "书籍与杂志"),
@@ -151,7 +161,7 @@ async def seed_all(db: AsyncSession) -> None:
         db.add(
             User(
                 username=DEFAULT_USERNAME,
-                password_hash=hash_password(DEFAULT_PASSWORD),
+                password_hash=hash_password(admin_initial_password()),
                 display_name="管理员",
                 role="admin",
             )

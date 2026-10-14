@@ -1,5 +1,4 @@
 """报表测试。"""
-import pytest
 
 
 async def test_chart_crud(auth_client, demo_ds_id):

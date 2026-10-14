@@ -29,8 +29,16 @@ class OracleAdapter(BaseDBAdapter):
         except Exception as exc:  # noqa: BLE001
             raise AdapterError(f"Oracle 连接失败: {exc}") from exc
 
+    def _is_conn_alive(self, conn) -> bool:
+        """借出前用驱动自带的 is_healthy 轻量探测。"""
+        try:
+            return bool(conn.is_healthy())
+        except Exception:  # noqa: BLE001
+            return False
+
     def _query(self, sql: str, params: dict | None = None) -> list[dict]:
-        conn = self.connect()
+        conn = self._acquire_conn()
+        ok = False
         try:
             cur = conn.cursor()
             cur.execute(sql, params or {})
@@ -39,11 +47,12 @@ class OracleAdapter(BaseDBAdapter):
             for r in cur.fetchall():
                 rows.append({cols[i].lower(): v for i, v in enumerate(r)})
             cur.close()
+            ok = True
             return rows
         except Exception as exc:  # noqa: BLE001
             raise AdapterError(f"SQL 执行错误: {exc}") from exc
         finally:
-            self._close(conn)
+            self._release_conn(conn, broken=not ok)
 
     def get_schemas(self) -> list[str]:
         rows = self._query(

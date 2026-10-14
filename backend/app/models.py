@@ -75,30 +75,30 @@ class JdbcDriver(Base):
 class QueryHistory(Base):
     __tablename__ = "query_history"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    datasource_id = Column(Integer, ForeignKey("datasources.id"), nullable=True)
+    datasource_id = Column(Integer, ForeignKey("datasources.id"), nullable=True, index=True)
     sql_text = Column(Text, default="")
     status = Column(String(20), default="success")
     row_count = Column(Integer, default=0)
     duration_ms = Column(Integer, default=0)
     error_message = Column(Text, default="")
-    created_at = Column(DateTime, default=now)
+    created_at = Column(DateTime, default=now, index=True)
 
 
 class AgentSession(Base):
     __tablename__ = "agent_sessions"
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(200), default="新对话")
-    datasource_id = Column(Integer, ForeignKey("datasources.id"), nullable=True)
+    datasource_id = Column(Integer, ForeignKey("datasources.id"), nullable=True, index=True)
     model_config_id = Column(Integer, ForeignKey("ai_configs.id"), nullable=True)
     message_count = Column(Integer, default=0)
     created_at = Column(DateTime, default=now)
-    updated_at = Column(DateTime, default=now, onupdate=now)
+    updated_at = Column(DateTime, default=now, onupdate=now, index=True)
 
 
 class AgentMessage(Base):
     __tablename__ = "agent_messages"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    session_id = Column(Integer, ForeignKey("agent_sessions.id"), nullable=False)
+    session_id = Column(Integer, ForeignKey("agent_sessions.id"), nullable=False, index=True)
     role = Column(String(20), default="user")
     content = Column(Text, default="")
     message_type = Column(String(20), default="text")
@@ -108,20 +108,34 @@ class AgentMessage(Base):
 class AuditLog(Base):
     __tablename__ = "audit_logs"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
-    action_type = Column(String(30), default="")
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
+    action_type = Column(String(30), default="", index=True)
     sql_text = Column(Text, default="")
     operation_type = Column(String(20), default="")
-    datasource_id = Column(Integer, nullable=True)
+    datasource_id = Column(Integer, nullable=True, index=True)
     status = Column(String(20), default="")
     client_ip = Column(String(45), default="")
-    created_at = Column(DateTime, default=now)
+    created_at = Column(DateTime, default=now, index=True)
+
+
+class PendingExecution(Base):
+    """待确认的写操作：落库而不是放进程内存，重启/多副本下确认都不丢。"""
+
+    __tablename__ = "pending_executions"
+    execution_id = Column(String(64), primary_key=True)
+    datasource_id = Column(Integer, ForeignKey("datasources.id"), nullable=False, index=True)
+    sql_text = Column(Text, default="")
+    statements = Column(Text, default="[]")
+    operation_type = Column(String(20), default="")
+    user_id = Column(Integer, nullable=True)
+    session_id = Column(Integer, nullable=True)
+    created_at = Column(DateTime, default=now, index=True)
 
 
 class FavoritedTable(Base):
     __tablename__ = "favorited_tables"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    datasource_id = Column(Integer, ForeignKey("datasources.id"), nullable=False)
+    datasource_id = Column(Integer, ForeignKey("datasources.id"), nullable=False, index=True)
     schema_name = Column(String(100), default="")
     table_name = Column(String(100), nullable=False)
     created_at = Column(DateTime, default=now)
@@ -149,7 +163,7 @@ class Dashboard(Base):
     chart_ids = Column(Text, default="[]")
     layout = Column(Text, default="{}")
     is_public = Column(Boolean, default=False)
-    share_token = Column(String(64), default="")
+    share_token = Column(String(64), default="", index=True)
     created_at = Column(DateTime, default=now)
     updated_at = Column(DateTime, default=now, onupdate=now)
 
@@ -159,7 +173,7 @@ class Session(Base):
     token = Column(String(64), primary_key=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime, default=now)
-    expires_at = Column(DateTime, nullable=False)
+    expires_at = Column(DateTime, nullable=False, index=True)
 
 
 class Setting(Base):
@@ -203,6 +217,6 @@ class ScheduledExport(Base):
     last_run_at = Column(DateTime, nullable=True)
     last_status = Column(String(20), default="")
     last_file = Column(String(500), default="")
-    next_run_at = Column(DateTime, nullable=True)
+    next_run_at = Column(DateTime, nullable=True, index=True)
     created_at = Column(DateTime, default=now)
     updated_at = Column(DateTime, default=now, onupdate=now)

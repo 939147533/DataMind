@@ -46,6 +46,17 @@ def get_local_port(conn: ConnectionInfo) -> int | None:
             raise AdapterError(f"SSH 隧道建立失败: {exc}") from exc
 
 
+def existing_local_port(conn: ConnectionInfo) -> int | None:
+    """只读查询：隧道已建立时返回其本地端口，未建立时返回 None（不会新建隧道）。"""
+    if not conn.ssh_enabled:
+        return None
+    with _lock:
+        tunnel = _tunnels.get(_key(conn))
+        if tunnel is not None and tunnel.is_active:
+            return tunnel.local_bind_port
+    return None
+
+
 def close_all() -> None:
     with _lock:
         for tunnel in _tunnels.values():

@@ -1,4 +1,6 @@
 """SQL 执行服务：拆分、分类、授权、执行、确认、历史、审计。"""
+import asyncio
+import json
 import re
 import time
 import uuid
@@ -6,18 +8,19 @@ from datetime import datetime, timedelta
 
 from fastapi import HTTPException
 from prometheus_client import Counter as PromCounter
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlglot import transpile
 
 from ..adapters import AdapterError, get_adapter
 from ..adapters.base import ConnectionInfo
 from ..config import EXECUTION_CONFIRM_TIMEOUT, MAX_ROWS_PER_PAGE
-from ..models import AuditLog, DataSource, QueryHistory
+from ..models import DataSource, PendingExecution, QueryHistory
 from ..permissions import check_sql_permission
 from ..security import decrypt_text
 from . import sql_examples
-from .ssh_tunnel import get_local_port
+from .audit_service import record_audit
+from .ssh_tunnel import existing_local_port, get_local_port
 
 READ_KEYWORDS = {"SELECT", "WITH", "SHOW", "DESC", "DESCRIBE", "EXPLAIN", "PRAGMA", "VALUES"}
 SESSION_KEYWORDS = {"SET", "USE", "BEGIN", "COMMIT", "START"}
@@ -38,8 +41,6 @@ _EXPLAIN_RE = re.compile(r"^\s*explain\s*(?:\(([^)]*)\))?\s*", re.I)
 _EXPLAIN_ANALYZE_RE = re.compile(r"analyze\b", re.I)
 
 SQL_EXECUTIONS = PromCounter("sql_executions_total", "SQL 执行总数", ["operation_type", "status"])
-
-_executions: dict[str, dict] = {}
 
 
 def split_statements(sql: str) -> list[str]:
@@ -311,6 +312,32 @@ def build_adapter(ds: DataSource):
     return get_adapter(conn)
 
 
+def adapter_pool_key(ds: DataSource) -> tuple:
+    """数据源在连接池中的桶 key：连接参数变更后按旧 key 清掉存量连接。
+
+    与 build_adapter 的差别是不主动建立 SSH 隧道（隧道已存在时取它的本地端口）。
+    隧道换端口等漏清的情况由连接池空闲 TTL / 后台 sweep 兜底。
+    """
+    conn = build_connection_info(ds)
+    if conn.ssh_enabled and ds.db_type != "sqlite":
+        local_port = existing_local_port(conn)
+        if local_port:
+            conn.host = "127.0.0.1"
+            conn.port = local_port
+    return get_adapter(conn)._conn_key()
+
+
+async def build_adapter_async(ds: DataSource):
+    """在线程池里构建适配器（SSH 隧道建立是阻塞操作，不能占用事件循环）。"""
+    return await asyncio.to_thread(build_adapter, ds)
+
+
+async def call_adapter(ds: DataSource, method: str, *args, **kwargs):
+    """在线程池里连接目标库并调用适配器方法（目标库驱动均为同步实现）。"""
+    adapter = await asyncio.to_thread(build_adapter, ds)
+    return await asyncio.to_thread(getattr(adapter, method), *args, **kwargs)
+
+
 async def get_datasource(db: AsyncSession, datasource_id: int) -> DataSource:
     ds = (await db.execute(select(DataSource).where(DataSource.id == datasource_id))).scalar_one_or_none()
     if ds is None:
@@ -318,27 +345,65 @@ async def get_datasource(db: AsyncSession, datasource_id: int) -> DataSource:
     return ds
 
 
-def _create_execution(sql: str, ds_id: int, statements: list[str], op_type: str, user_id: int | None, session_id: int | None = None) -> str:
+async def _create_execution(
+    db: AsyncSession,
+    sql: str,
+    ds_id: int,
+    statements: list[str],
+    op_type: str,
+    user_id: int | None,
+    session_id: int | None = None,
+) -> str:
+    """落库暂存待确认的写操作：重启或多副本部署下确认都不会丢。"""
     execution_id = uuid.uuid4().hex
-    _executions[execution_id] = {
-        "sql": sql,
-        "datasource_id": ds_id,
-        "statements": statements,
-        "operation_type": op_type,
-        "user_id": user_id,
-        "session_id": session_id,
-        "created_at": time.time(),
-    }
+    db.add(
+        PendingExecution(
+            execution_id=execution_id,
+            datasource_id=ds_id,
+            sql_text=sql,
+            statements=json.dumps(statements, ensure_ascii=False),
+            operation_type=op_type,
+            user_id=user_id,
+            session_id=session_id,
+        )
+    )
+    await db.commit()
     return execution_id
 
 
-def _pop_execution(execution_id: str) -> dict:
-    entry = _executions.pop(execution_id, None)
-    if entry is None:
+async def _pop_execution(db: AsyncSession, execution_id: str) -> dict:
+    """取出并作废待确认记录（一次性使用），超时或不存在时报错。"""
+    row = (
+        await db.execute(select(PendingExecution).where(PendingExecution.execution_id == execution_id))
+    ).scalar_one_or_none()
+    if row is None:
         raise HTTPException(status_code=400, detail="execution_id 无效或已使用")
-    if time.time() - entry["created_at"] > EXECUTION_CONFIRM_TIMEOUT:
+    expired = (datetime.now() - row.created_at).total_seconds() > EXECUTION_CONFIRM_TIMEOUT
+    await db.delete(row)
+    await db.commit()
+    if expired:
         raise HTTPException(status_code=408, detail="确认超时，请重新执行")
-    return entry
+    try:
+        statements = json.loads(row.statements or "[]")
+    except ValueError:
+        statements = []
+    return {
+        "sql": row.sql_text,
+        "datasource_id": row.datasource_id,
+        "statements": statements,
+        "operation_type": row.operation_type,
+        "user_id": row.user_id,
+        "session_id": row.session_id,
+        "created_at": row.created_at.timestamp() if row.created_at else time.time(),
+    }
+
+
+async def cleanup_expired_executions(db: AsyncSession) -> int:
+    """启动时清掉超时未确认的写操作记录，返回删除条数。"""
+    cutoff = datetime.now() - timedelta(seconds=EXECUTION_CONFIRM_TIMEOUT)
+    result = await db.execute(delete(PendingExecution).where(PendingExecution.created_at < cutoff))
+    await db.commit()
+    return result.rowcount or 0
 
 
 def _serialize(value):
@@ -422,18 +487,7 @@ async def _record_history(db: AsyncSession, ds_id: int, sql: str, status: str, r
 
 
 async def _record_audit(db: AsyncSession, user_id: int | None, action_type: str, sql: str, op_type: str, ds_id: int | None, status: str, client_ip: str = "") -> None:
-    db.add(
-        AuditLog(
-            user_id=user_id,
-            action_type=action_type,
-            sql_text=sql[:4000],
-            operation_type=op_type,
-            datasource_id=ds_id,
-            status=status,
-            client_ip=client_ip,
-        )
-    )
-    await db.commit()
+    await record_audit(db, user_id, action_type, sql, op_type, ds_id, status, client_ip)
 
 
 def _preview_text(adapter, statements: list[str], op_type: str) -> str:
@@ -467,12 +521,12 @@ async def execute_sql(db: AsyncSession, ds: DataSource, sql: str, user_id: int |
         await _record_audit(db, user_id, "execute_sql", sql, op_type, ds.id, "denied", client_ip)
         SQL_EXECUTIONS.labels(operation_type=op_type, status="denied").inc()
         raise
-    adapter = build_adapter(ds)
+    adapter = await build_adapter_async(ds)
     start = time.time()
 
     if op_type == "READ":
         try:
-            result = _run_statements(adapter, statements, MAX_ROWS_PER_PAGE)
+            result = await asyncio.to_thread(_run_statements, adapter, statements, MAX_ROWS_PER_PAGE)
             duration_ms = int((time.time() - start) * 1000)
             result["duration_ms"] = duration_ms
             await _record_history(db, ds.id, sql, "success", result.get("total_rows", 0), duration_ms)
@@ -484,12 +538,12 @@ async def execute_sql(db: AsyncSession, ds: DataSource, sql: str, user_id: int |
             await _record_history(db, ds.id, sql, "failed", 0, duration_ms, str(exc))
             await _record_audit(db, user_id, "execute_sql", sql, "READ", ds.id, "failed", client_ip)
             SQL_EXECUTIONS.labels(operation_type="READ", status="failed").inc()
-            raise HTTPException(status_code=400, detail=str(exc))
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
 
     risk_level = "danger" if op_type == "DDL" else "warning"
-    execution_id = _create_execution(sql, ds.id, statements, op_type, user_id, session_id)
+    execution_id = await _create_execution(db, sql, ds.id, statements, op_type, user_id, session_id)
     try:
-        preview = _preview_text(adapter, statements, op_type)
+        preview = await asyncio.to_thread(_preview_text, adapter, statements, op_type)
     except Exception:  # noqa: BLE001
         preview = "将执行写操作"
     await _record_audit(db, user_id, "execute_sql", sql, op_type, ds.id, "pending", client_ip)
@@ -506,7 +560,7 @@ async def execute_sql(db: AsyncSession, ds: DataSource, sql: str, user_id: int |
 
 
 async def confirm_execution(db: AsyncSession, execution_id: str, confirmed: bool, client_ip: str = "") -> dict:
-    entry = _pop_execution(execution_id)
+    entry = await _pop_execution(db, execution_id)
     if not confirmed:
         await _record_audit(db, entry.get("user_id"), "execute_sql", entry["sql"], entry["operation_type"], entry.get("datasource_id"), "rejected", client_ip)
         SQL_EXECUTIONS.labels(operation_type=entry["operation_type"], status="rejected").inc()
@@ -518,10 +572,10 @@ async def confirm_execution(db: AsyncSession, execution_id: str, confirmed: bool
         SQL_EXECUTIONS.labels(operation_type=entry["operation_type"], status="denied").inc()
         raise
     ds = await get_datasource(db, entry["datasource_id"])
-    adapter = build_adapter(ds)
+    adapter = await build_adapter_async(ds)
     start = time.time()
     try:
-        result = _run_statements(adapter, entry["statements"], MAX_ROWS_PER_PAGE)
+        result = await asyncio.to_thread(_run_statements, adapter, entry["statements"], MAX_ROWS_PER_PAGE)
         duration_ms = int((time.time() - start) * 1000)
         result["duration_ms"] = duration_ms
         affected = result.get("affected_rows", 0)
@@ -536,4 +590,4 @@ async def confirm_execution(db: AsyncSession, execution_id: str, confirmed: bool
         await _record_history(db, ds.id, entry["sql"], "failed", 0, duration_ms, str(exc))
         await _record_audit(db, entry.get("user_id"), "execute_sql", entry["sql"], entry["operation_type"], ds.id, "failed", client_ip)
         SQL_EXECUTIONS.labels(operation_type=entry["operation_type"], status="failed").inc()
-        raise HTTPException(status_code=400, detail=str(exc))
+        raise HTTPException(status_code=400, detail=str(exc)) from exc

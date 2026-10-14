@@ -1,22 +1,20 @@
 """AI Agent 服务：会话管理、NL→SQL、SSE 事件流。"""
+import asyncio
 import json
-import time
-import uuid
-from datetime import datetime
 from typing import AsyncIterator
 
 from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..adapters import AdapterError
 from ..config import AGENT_MAX_TOOL_ROUNDS, AGENT_SQL_MAX_ATTEMPTS
 from ..models import AIConfig, AgentMessage, AgentSession, AuditLog, DataSource
 from .llm_providers import LLMError, build_messages, get_llm_provider
 from .sql_examples import build_few_shot_block
 from .sql_service import (
-    MAX_ROWS_PER_PAGE,
     build_adapter,
+    build_adapter_async,
+    call_adapter,
     classify_statement,
     execute_sql,
     split_statements,
@@ -145,14 +143,16 @@ async def _load_history(db: AsyncSession, session_id: int, limit: int = 10) -> l
     return history
 
 
-def _schema_info(db_session: AsyncSession, ds: DataSource | None) -> dict:
+async def _schema_info(ds: DataSource | None) -> dict:
+    """取 Schema 摘要（阻塞的目标库调用放线程池，避免卡住事件循环）。"""
     if ds is None:
         return {"schema": "（未选择数据源）", "db_type": "", "dialect_hint": ""}
     db_type = getattr(ds, "db_type", "") or ""
     try:
-        adapter = build_adapter(ds)
+        adapter = await build_adapter_async(ds)
+        summary = await asyncio.to_thread(adapter.schema_summary)
         return {
-            "schema": adapter.schema_summary()[:8000],
+            "schema": summary[:8000],
             "db_type": getattr(adapter, "db_type", db_type),
             "dialect_hint": getattr(adapter, "dialect_hint", "") or "",
         }
@@ -345,7 +345,7 @@ async def agent_chat(
             yield {"type": "error", "content": f"AI 调用失败: {exc}"}
             yield {"type": "done"}
             return
-    schema_info = _schema_info(db, ds)
+    schema_info = await _schema_info(ds)
     history = await _load_history(db, session.id)
     system = SYSTEM_TEMPLATE.format(
         db_type=schema_info["db_type"],
@@ -372,7 +372,7 @@ async def agent_chat(
             yield {"type": "error", "content": "未选择数据源，无法调用工具"}
             break
         tool_params = parsed.get("tool_params") or {}
-        tool_result = _run_tool(ds, tool_name, tool_params)
+        tool_result = await asyncio.to_thread(_run_tool, ds, tool_name, tool_params)
         yield {"type": "tool", "tool": tool_name, "content": tool_result}
         messages.append(
             {
@@ -547,7 +547,7 @@ async def explain_sql(db: AsyncSession, datasource_id: int | None, sql: str, use
     ds = None
     if datasource_id:
         ds = (await db.execute(select(DataSource).where(DataSource.id == datasource_id))).scalar_one_or_none()
-    schema_info = _schema_info(db, ds)
+    schema_info = await _schema_info(ds)
     prompt = f"当前数据库类型：{schema_info['db_type']}\n{schema_info['dialect_hint']}\n当前数据库 Schema：\n{schema_info['schema']}\n\n请用中文解释以下 SQL 的含义、执行逻辑与潜在风险：\n{sql}"
     provider = get_llm_provider(config)
     try:
@@ -568,7 +568,7 @@ async def optimize_sql(db: AsyncSession, datasource_id: int | None, sql: str, us
         ds = (await db.execute(select(DataSource).where(DataSource.id == datasource_id))).scalar_one_or_none()
         if ds:
             try:
-                plan = str(build_adapter(ds).explain(sql)[:20])
+                plan = str((await call_adapter(ds, "explain", sql))[:20])
             except Exception:  # noqa: BLE001
                 plan = ""
     prompt = f"SQL：\n{sql}\n\n执行计划：\n{plan}\n\n请给出优化建议（索引、查询重写、性能风险），用中文简洁列出。"

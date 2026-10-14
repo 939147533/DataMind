@@ -6,13 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..adapters import AdapterError
 from ..adapters.base import base_data_type, column_length
 from ..models import DataSource, FavoritedTable
-from .sql_service import build_adapter, execute_sql, get_datasource
+from .sql_service import call_adapter, execute_sql, get_datasource
 
 
 async def get_schemas(db: AsyncSession, ds_id: int) -> list[str]:
     ds = await get_datasource(db, ds_id)
     try:
-        return build_adapter(ds).get_schemas()
+        return await call_adapter(ds, "get_schemas")
     except AdapterError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -20,7 +20,7 @@ async def get_schemas(db: AsyncSession, ds_id: int) -> list[str]:
 async def get_tables(db: AsyncSession, ds_id: int, schema: str = "") -> list[str]:
     ds = await get_datasource(db, ds_id)
     try:
-        return build_adapter(ds).get_tables(schema)
+        return await call_adapter(ds, "get_tables", schema)
     except AdapterError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -28,7 +28,7 @@ async def get_tables(db: AsyncSession, ds_id: int, schema: str = "") -> list[str
 async def get_table_columns(db: AsyncSession, ds_id: int, table: str, schema: str = "") -> list[dict]:
     ds = await get_datasource(db, ds_id)
     try:
-        return build_adapter(ds).get_table_columns(table, schema)
+        return await call_adapter(ds, "get_table_columns", table, schema)
     except AdapterError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -36,7 +36,7 @@ async def get_table_columns(db: AsyncSession, ds_id: int, table: str, schema: st
 async def get_table_indexes(db: AsyncSession, ds_id: int, table: str, schema: str = "") -> list[dict]:
     ds = await get_datasource(db, ds_id)
     try:
-        return build_adapter(ds).get_table_indexes(table, schema)
+        return await call_adapter(ds, "get_table_indexes", table, schema)
     except AdapterError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -44,7 +44,7 @@ async def get_table_indexes(db: AsyncSession, ds_id: int, table: str, schema: st
 async def get_table_ddl(db: AsyncSession, ds_id: int, table: str, schema: str = "") -> str:
     ds = await get_datasource(db, ds_id)
     try:
-        return build_adapter(ds).get_table_ddl(table, schema)
+        return await call_adapter(ds, "get_table_ddl", table, schema)
     except AdapterError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
@@ -52,25 +52,24 @@ async def get_table_ddl(db: AsyncSession, ds_id: int, table: str, schema: str = 
 async def get_table_data(db: AsyncSession, ds_id: int, table: str, schema: str = "", page: int = 1, size: int = 100) -> dict:
     ds = await get_datasource(db, ds_id)
     try:
-        return build_adapter(ds).get_table_data(table, schema, page, size)
+        return await call_adapter(ds, "get_table_data", table, schema, page, size)
     except AdapterError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 async def get_object_list(db: AsyncSession, ds_id: int, kind: str, schema: str = "") -> list:
     ds = await get_datasource(db, ds_id)
-    adapter = build_adapter(ds)
     try:
         if kind == "views":
-            return adapter.get_views(schema)
+            return await call_adapter(ds, "get_views", schema)
         if kind == "functions":
-            return adapter.get_functions(schema)
+            return await call_adapter(ds, "get_functions", schema)
         if kind == "procedures":
-            return adapter.get_procedures(schema)
+            return await call_adapter(ds, "get_procedures", schema)
         if kind == "triggers":
-            return adapter.get_triggers(schema)
+            return await call_adapter(ds, "get_triggers", schema)
         if kind == "sequences":
-            return adapter.get_sequences(schema)
+            return await call_adapter(ds, "get_sequences", schema)
         raise HTTPException(status_code=400, detail=f"未知对象类型: {kind}")
     except AdapterError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -78,16 +77,15 @@ async def get_object_list(db: AsyncSession, ds_id: int, kind: str, schema: str =
 
 async def get_object_ddl(db: AsyncSession, ds_id: int, kind: str, name: str, schema: str = "") -> str:
     ds = await get_datasource(db, ds_id)
-    adapter = build_adapter(ds)
     try:
         if kind == "views":
-            return adapter.get_view_ddl(name, schema)
+            return await call_adapter(ds, "get_view_ddl", name, schema)
         if kind == "triggers":
-            return adapter.get_trigger_ddl(name, schema)
+            return await call_adapter(ds, "get_trigger_ddl", name, schema)
         if kind == "functions":
-            return adapter.get_function_ddl(name, schema)
+            return await call_adapter(ds, "get_function_ddl", name, schema)
         if kind == "procedures":
-            return adapter.get_procedure_ddl(name, schema)
+            return await call_adapter(ds, "get_procedure_ddl", name, schema)
         raise HTTPException(status_code=400, detail=f"暂不支持该对象类型: {kind}")
     except AdapterError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -225,17 +223,12 @@ async def compare_schemas(db: AsyncSession, source_ds_id: int, target_ds_id: int
     src = await get_datasource(db, source_ds_id)
     tgt = await get_datasource(db, target_ds_id)
     try:
-        src_adapter = build_adapter(src)
-        tgt_adapter = build_adapter(tgt)
-    except AdapterError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    try:
-        src_tables = set(src_adapter.get_tables(schema) or [])
-        tgt_tables = set(tgt_adapter.get_tables(schema) or [])
+        src_tables = set(await call_adapter(src, "get_tables", schema) or [])
+        tgt_tables = set(await call_adapter(tgt, "get_tables", schema) or [])
         table_diffs = []
         for table in sorted(src_tables & tgt_tables):
-            src_columns = src_adapter.get_table_columns(table, schema) or []
-            tgt_columns = tgt_adapter.get_table_columns(table, schema) or []
+            src_columns = await call_adapter(src, "get_table_columns", table, schema) or []
+            tgt_columns = await call_adapter(tgt, "get_table_columns", table, schema) or []
             src_names = {c["name"] for c in src_columns}
             tgt_names = {c["name"] for c in tgt_columns}
             added = sorted(tgt_names - src_names)
