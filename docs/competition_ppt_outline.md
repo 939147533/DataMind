@@ -300,7 +300,7 @@ flowchart TB
 - 运维监控：连接概览、慢查询统计、表结构对比（schema diff）。
 - 定时导出：每分钟扫描到期任务，复用 `export_service` 导出并记录 `last_status/last_file`。
 - 可观测性：`/metrics` 暴露 Prometheus 指标（REQUEST_COUNT / REQUEST_LATENCY / SQL_EXECUTIONS）。
-- 测试：21 个后端测试文件，约 115 个 pytest 用例；前端 Vue TS 构建校验；Playwright E2E 脚本。
+- 测试：28 个后端测试文件，167 个 pytest 用例；前端 Vue TS 构建校验；Playwright E2E 脚本。
 - 部署：Dockerfile 多阶段构建 + docker-compose，数据卷 `dbagent-data` 持久化。
 
 **建议视觉**：
@@ -380,12 +380,12 @@ flowchart TB
 - 功能模块：14 个功能模块，15 个后端路由文件，约 95 个 API 端点。
 - 技术栈：前后端分离，Python 3.12 + FastAPI + Vue 3 + TypeScript。
 - 数据支持：SQLite / MySQL / PostgreSQL / Oracle / OceanBase / GoldenDB / MongoDB。
-- 测试：约 115 个后端测试用例 + 前端构建校验 + Playwright E2E。
+- 测试：167 个后端测试用例 + 前端构建校验 + Playwright E2E。
 - 部署：Docker 单端口一键启动，数据持久化。
 
 **建议视觉**：
 
-- 大数字卡片：`7` 数据库类型、`95+` API、`115+` 测试、`1` 命令部署。
+- 大数字卡片：`7` 数据库类型、`95+` API、`167` 测试、`1` 命令部署。
 - 底部一行简短总结。
 
 **演讲备注**：

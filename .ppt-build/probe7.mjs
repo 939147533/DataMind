@@ -1,0 +1,7 @@
+import { PresentationFile, FileBlob } from "@oai/artifact-tool";
+const p = await PresentationFile.importPptx(await FileBlob.load("/Users/ly/Code/DataMind/.ppt-build/draft-v11.pptx"));
+for (const i of [15,16,17]) {
+  const r = await p.inspect({ select: `$.slides[?(@.index==${i})].elements[*]`, include: ["id","kind","text","position","style"] });
+  console.log("=== page", i+1);
+  for (const e of (r.records||[])) { const q=e.position||{}; console.log("  ", e.kind, e.id, `@(${Math.round(q.left)},${Math.round(q.top)} ${Math.round(q.width)}x${Math.round(q.height)})`, (e.style?JSON.stringify(e.style):"").slice(0,50), JSON.stringify((e.text||"").slice(0,60))); }
+}

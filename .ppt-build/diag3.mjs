@@ -1,0 +1,10 @@
+import { PresentationFile, FileBlob } from "@oai/artifact-tool";
+const p = await PresentationFile.importPptx(await FileBlob.load("/Users/ly/Code/DataMind/.ppt-build/draft.pptx"));
+const slide = p.slides.getItem(5);
+const j = JSON.parse(await (await slide.export({ format: "layout" })).text());
+console.log("keys", Object.keys(j));
+const s = j.slide || j;
+console.log("slideKeys", Object.keys(s));
+const els = s.elements || s.body?.elements;
+console.log("elsType", Array.isArray(els), els && els.length);
+console.log(JSON.stringify(s).slice(0, 1200));

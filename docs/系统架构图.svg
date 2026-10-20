@@ -1,0 +1,110 @@
+<svg viewBox="0 0 680 716" width="100%" role="img" xmlns="http://www.w3.org/2000/svg" font-family="'PingFang SC','Microsoft YaHei',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+<title>DataMind 系统架构图</title>
+<desc>六层架构：客户端层、接入层、安全与权限层、服务层、适配层、数据层，箭头表示调用方向。</desc>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<text x="40" y="28" font-size="15" font-weight="500" fill="#0C447C">DataMind 系统架构</text>
+<text x="40" y="47" font-size="12" fill="#5F5E5A">分层：routers → services → adapters → 目标数据库 · 箭头为调用方向</text>
+
+<rect x="40" y="64" width="600" height="86" rx="12" fill="#E6F1FB" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="56" y="84" font-size="13" font-weight="500" fill="#0C447C">客户端层</text>
+<text x="624" y="84" font-size="11" fill="#185FA5" text-anchor="end">Vue 3 · Pinia · Naive UI</text>
+<rect x="56" y="94" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="124" y="111" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">智能查询 Agent</text>
+<text x="124" y="126" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">NL→SQL · 多轮会话</text>
+<rect x="200" y="94" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="268" y="111" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">SQL 工作台</text>
+<text x="268" y="126" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">编辑器 · 结果编辑</text>
+<rect x="344" y="94" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="412" y="111" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">可视化报表</text>
+<text x="412" y="126" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">图表 · 大屏</text>
+<rect x="488" y="94" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="556" y="111" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">系统管理</text>
+<text x="556" y="126" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">用户 · 角色 · 审计</text>
+
+<line x1="340" y1="152" x2="340" y2="164" stroke="#378ADD" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="40" y="168" width="600" height="76" rx="12" fill="#E6F1FB" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="56" y="188" font-size="13" font-weight="500" fill="#0C447C">接入层</text>
+<text x="624" y="188" font-size="11" fill="#185FA5" text-anchor="end">FastAPI · 统一响应 {code, message, data}</text>
+<rect x="56" y="198" width="136" height="38" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="124" y="217" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">14 个路由模块</text>
+<rect x="200" y="198" width="136" height="38" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="268" y="217" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">CORS · 指标中间件</text>
+<rect x="344" y="198" width="136" height="38" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="412" y="217" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">Cookie 会话依赖</text>
+<rect x="488" y="198" width="136" height="38" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="556" y="217" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">SPA 静态托管</text>
+
+<line x1="340" y1="244" x2="340" y2="256" stroke="#378ADD" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="40" y="262" width="600" height="84" rx="12" fill="#F1EFE8" stroke="#B4B2A9" stroke-width="0.5" stroke-dasharray="4 3"/>
+<text x="56" y="282" font-size="13" font-weight="500" fill="#444441">安全与权限层</text>
+<text x="624" y="282" font-size="11" fill="#5F5E5A" text-anchor="end">横切 · 每次请求实时校验</text>
+<rect x="56" y="292" width="181" height="44" rx="8" fill="#FFFFFF" stroke="#D3D1C7" stroke-width="0.5"/>
+<text x="147" y="309" font-size="12" font-weight="500" fill="#444441" text-anchor="middle" dominant-baseline="central">登录态校验</text>
+<text x="147" y="324" font-size="11" fill="#5F5E5A" text-anchor="middle" dominant-baseline="central">Cookie 会话 · 24h TTL</text>
+<rect x="249" y="292" width="181" height="44" rx="8" fill="#FFFFFF" stroke="#D3D1C7" stroke-width="0.5"/>
+<text x="340" y="309" font-size="12" font-weight="500" fill="#444441" text-anchor="middle" dominant-baseline="central">RBAC 权限码</text>
+<text x="340" y="324" font-size="11" fill="#5F5E5A" text-anchor="middle" dominant-baseline="central">14 码 · 5 内置角色</text>
+<rect x="442" y="292" width="181" height="44" rx="8" fill="#FFFFFF" stroke="#D3D1C7" stroke-width="0.5"/>
+<text x="533" y="309" font-size="12" font-weight="500" fill="#444441" text-anchor="middle" dominant-baseline="central">Fernet 加密</text>
+<text x="533" y="324" font-size="11" fill="#5F5E5A" text-anchor="middle" dominant-baseline="central">密码 · 私钥 · Key</text>
+
+<line x1="340" y1="346" x2="340" y2="358" stroke="#378ADD" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="40" y="364" width="600" height="104" rx="12" fill="#E6F1FB" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="56" y="384" font-size="13" font-weight="500" fill="#0C447C">服务层</text>
+<text x="624" y="384" font-size="11" fill="#185FA5" text-anchor="end">业务编排 · 唯一 SQL 执行入口</text>
+<rect x="56" y="394" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="124" y="411" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">SQL 服务</text>
+<text x="124" y="426" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">分类 · 鉴权 · 审计</text>
+<rect x="200" y="394" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="268" y="411" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">Agent 服务</text>
+<text x="268" y="426" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">NL→SQL · 工具调用</text>
+<rect x="344" y="394" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="412" y="411" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">LLM Provider</text>
+<text x="412" y="426" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">OpenAI · Claude</text>
+<rect x="488" y="394" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="556" y="411" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">元数据服务</text>
+<text x="556" y="426" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">Schema · DDL</text>
+<text x="56" y="456" font-size="11" fill="#5F5E5A">导出 · 连接 · 定时调度 · 审计服务 · few-shot 示例</text>
+
+<line x1="340" y1="468" x2="340" y2="480" stroke="#378ADD" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="40" y="486" width="600" height="104" rx="12" fill="#E6F1FB" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="56" y="506" font-size="13" font-weight="500" fill="#0C447C">适配层</text>
+<text x="624" y="506" font-size="11" fill="#185FA5" text-anchor="end">统一接口 + 按 db_type 分发</text>
+<rect x="56" y="516" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="124" y="533" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">BaseDBAdapter</text>
+<text x="124" y="548" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">统一抽象接口</text>
+<rect x="200" y="516" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="268" y="533" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">registry 分发</text>
+<text x="268" y="548" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">7 类 → 5 实现</text>
+<rect x="344" y="516" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="412" y="533" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">只读连接池</text>
+<text x="412" y="548" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">分桶复用 · 探测</text>
+<rect x="488" y="516" width="136" height="44" rx="8" fill="#FFFFFF" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="556" y="533" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle" dominant-baseline="central">SSH 隧道</text>
+<text x="556" y="548" font-size="11" fill="#185FA5" text-anchor="middle" dominant-baseline="central">端口转发 · 加密</text>
+<text x="56" y="578" font-size="11" fill="#5F5E5A">OceanBase / GoldenDB 复用 MySQLAdapter · 同步驱动统一走 to_thread</text>
+
+<line x1="340" y1="590" x2="340" y2="602" stroke="#378ADD" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+<rect x="40" y="608" width="600" height="88" rx="12" fill="#E1F5EE" stroke="#9FE1CB" stroke-width="0.5"/>
+<text x="56" y="628" font-size="13" font-weight="500" fill="#085041">数据层</text>
+<text x="624" y="628" font-size="11" fill="#0F6E56" text-anchor="end">MySQL · PostgreSQL · Oracle · SQLite · MongoDB · OceanBase · GoldenDB</text>
+<rect x="56" y="638" width="181" height="44" rx="8" fill="#FFFFFF" stroke="#9FE1CB" stroke-width="0.5"/>
+<text x="147" y="655" font-size="12" font-weight="500" fill="#085041" text-anchor="middle" dominant-baseline="central">目标数据库</text>
+<text x="147" y="670" font-size="11" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">7 类 · 5 套适配器</text>
+<rect x="249" y="638" width="181" height="44" rx="8" fill="#FFFFFF" stroke="#9FE1CB" stroke-width="0.5"/>
+<text x="340" y="655" font-size="12" font-weight="500" fill="#085041" text-anchor="middle" dominant-baseline="central">应用自身存储</text>
+<text x="340" y="670" font-size="11" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">SQLite app.db · 17 表</text>
+<rect x="442" y="638" width="181" height="44" rx="8" fill="#FFFFFF" stroke="#9FE1CB" stroke-width="0.5"/>
+<text x="533" y="655" font-size="12" font-weight="500" fill="#085041" text-anchor="middle" dominant-baseline="central">外部服务</text>
+<text x="533" y="670" font-size="11" fill="#0F6E56" text-anchor="middle" dominant-baseline="central">LLM · Prometheus 指标</text>
+</svg>

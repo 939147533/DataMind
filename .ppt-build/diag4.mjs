@@ -1,0 +1,12 @@
+import { PresentationFile, FileBlob } from "@oai/artifact-tool";
+const p = await PresentationFile.importPptx(await FileBlob.load("/Users/ly/Code/DataMind/.ppt-build/draft.pptx"));
+const info = await p.inspect({ select: "$.slides[*]", include: ["id","index","elements.id","elements.text"] });
+const target = info.records.find(r => (r.elements||[]).some(e => (e.text||"").startsWith("Docker 多阶段")));
+console.log("slide", target.id, "index", target.index);
+const slide = p.resolve(target.id);
+const j = JSON.parse(await (await slide.export({ format: "layout" })).text());
+const els = j.elements;
+console.log("elements type", typeof els, Array.isArray(els));
+const arr = Array.isArray(els) ? els : Object.values(els);
+const el = arr.find(e => typeof e === "object" && (e.text||"").startsWith("Docker 多阶段"));
+console.log(JSON.stringify(el, null, 1));

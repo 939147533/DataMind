@@ -13,7 +13,7 @@ DataMind 是一个前后端分离的 **AI Agent 驱动的数据库查询与运�
 | 支持数据源 | SQLite / MySQL / PostgreSQL / Oracle / MongoDB / OceanBase / GoldenDB（7 类） |
 | 后端规模 | 14 个路由模块、10 个业务服务、7 个数据库适配器、16 张数据表 |
 | 前端规模 | 12 个页面、9 个核心组件（编辑器、对象树、结果表格、Agent 面板等） |
-| 工程质量 | 后端 pytest 117 项测试、前端 vue-tsc + 构建校验、Playwright E2E、Docker 一键部署 |
+| 工程质量 | 后端 pytest 167 项测试、前端 vue-tsc + 构建校验、Playwright E2E、Docker 一键部署 |
 | 交付形态 | Docker 单端口部署（8000）/ 本地前后端分离开发（8000 + 5174） |
 
 ---
@@ -79,7 +79,7 @@ DataMind 针对以上痛点，给出了「AI 工具调用 + 安全执行协议 +
 
 - Fernet 加密全部密钥（数据库密码、SSH 私钥、AI Key），对外只暴露 `has_*` 布尔值；pbkdf2 密码哈希；Cookie Session（24h TTL）。
 - 统一响应 `{code, message, data}`、统一异常处理；路径规范化（数据文件相对 `data/` 存储，项目迁移无需改配置）。
-- 117 项后端测试 + 前端类型校验 + Playwright E2E 脚本 + AGENTS.md 工程说明。
+- 167 项后端测试 + 前端类型校验 + Playwright E2E 脚本 + AGENTS.md 工程说明。
 
 ---
 

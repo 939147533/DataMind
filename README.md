@@ -64,7 +64,7 @@ backend/
     adapters/           数据库适配层（SQLite/MySQL/PostgreSQL/Oracle/MongoDB）+ pool.py 只读连接池
     routers/            14 个 API 路由模块（auth/connections/sql/metadata/agent/...）
     services/           业务服务层（sql/agent/connection/export/llm/ssh/audit/schedule）
-  tests/                pytest 测试（154 项）
+  tests/                pytest 测试（167 项）
   data/                 运行数据（app.db、demo.db、drivers/、exports/）
   alembic.ini / migrations/   Alembic 迁移配置与脚本（0001 为当前模型基线）
 frontend/
@@ -163,7 +163,7 @@ docker compose up -d --build
 ## 测试
 
 ```powershell
-# 后端单元测试（117 项）
+# 后端单元测试（167 项）
 cd backend
 .\.venv\Scripts\python.exe -m pytest -q
 
