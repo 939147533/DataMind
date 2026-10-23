@@ -57,6 +57,7 @@
         <div v-else-if="item.role === 'assistant'" class="msg assistant">
           <span v-if="item.streaming" class="cursor">▍</span>
           {{ item.content }}
+          <span v-if="item.stopped" class="stopped-tag">已停止</span>
         </div>
       </template>
     </div>
@@ -71,8 +72,9 @@
         @keydown="onKeydown"
       />
       <div class="input-actions">
-        <span class="input-hint">{{ agent.streaming ? "正在生成…" : "AI 将自动生成并执行只读查询，结果可导出" }}</span>
-        <n-button type="primary" :loading="agent.streaming" :disabled="!input.trim() || !dsId" @click="send">发送</n-button>
+        <span class="input-hint">{{ agent.streaming ? "正在生成…（可点右侧停止）" : "AI 将自动生成并执行只读查询，结果可导出" }}</span>
+        <n-button v-if="agent.streaming" type="warning" secondary @click="stopGenerate">停止生成</n-button>
+        <n-button v-else type="primary" :disabled="!input.trim() || !dsId" @click="send">发送</n-button>
       </div>
     </div>
   </div>
@@ -192,11 +194,16 @@ function chartRows(item: ChatItem): number {
 }
 
 async function send() {
+  if (agent.streaming) return;
   const text = input.value.trim();
   if (!text) return;
   input.value = "";
   await agent.sendMessage(text, dsId.value, modelConfigId.value);
   scrollToBottom();
+}
+
+function stopGenerate() {
+  agent.stop();
 }
 
 function useExample(ex: string) {
@@ -375,6 +382,17 @@ watch(modelConfigId, (v) => {
 }
 .cursor {
   color: #18a058;
+}
+.stopped-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 5px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #888;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-radius: 4px;
+  vertical-align: 1px;
 }
 .sql-block {
   min-width: 320px;

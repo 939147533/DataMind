@@ -20,3 +20,6 @@ backend/data/exports/*
 .run/
 .e2e/
 .presentation_tmp/
+
+# AI 工作区本地记忆
+.workbuddy-ai/

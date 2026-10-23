@@ -1,6 +1,7 @@
 """AI Agent 路由：会话、SSE 对话、解释、优化。"""
 import asyncio
 import json
+import logging
 
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import StreamingResponse
@@ -14,7 +15,13 @@ from ..response import ok
 from ..schemas import AgentChatRequest, AgentChartCreate, AgentConfirmRequest, AgentSessionCreate, AgentSessionUpdate, ExplainRequest
 from ..services import agent_service
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter(prefix="/api/agent", tags=["AI Agent"])
+
+# 关闭中间层缓冲：否则「停止生成」断开的连接可能被代理缓冲住，
+# 服务端要等缓冲写满才知道客户端已经走了，模型会继续生成。
+SSE_HEADERS = {"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}
 
 
 def sse(gen):
@@ -23,9 +30,12 @@ def sse(gen):
             async for event in gen:
                 yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
         except asyncio.CancelledError:
+            # 客户端点「停止生成」后连接断开，Starlette 会取消本任务；
+            # 正在 await 的 LLM 调用随之取消，不会继续消耗 token。
+            logger.info("SSE 客户端断开，已终止本次生成")
             raise
 
-    return StreamingResponse(event_stream(), media_type="text/event-stream")
+    return StreamingResponse(event_stream(), media_type="text/event-stream", headers=SSE_HEADERS)
 
 
 @router.post("/sessions")

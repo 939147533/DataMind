@@ -18,7 +18,12 @@ export interface ChatItem {
   };
   chart?: SmartChartConfig | null;
   streaming?: boolean;
+  /** 用户主动停止生成：保留已产出的内容，并打上「已停止」标记 */
+  stopped?: boolean;
 }
+
+// 流式请求的中断句柄：放在 store 之外，避免把不可序列化的 AbortController 塞进响应式 state
+let activeAbort: AbortController | null = null;
 
 export const useAgentStore = defineStore("agent", {
   state: () => ({
@@ -47,6 +52,8 @@ export const useAgentStore = defineStore("agent", {
       return sess;
     },
     async selectSession(id: number) {
+      // 切换会话前终止在途生成，否则流式事件会继续写进已被替换的消息列表
+      this.stop();
       this.activeSessionId = id;
       const msgs = await agentApi.messages(id);
       this.items = msgs.map((m) => {
@@ -71,6 +78,7 @@ export const useAgentStore = defineStore("agent", {
       });
     },
     async deleteSession(id: number) {
+      this.stop();
       await agentApi.deleteSession(id);
       if (this.activeSessionId === id) {
         this.activeSessionId = null;
@@ -79,6 +87,8 @@ export const useAgentStore = defineStore("agent", {
       await this.loadSessions();
     },
     async sendMessage(message: string, datasourceId: number | null, modelConfigId: number | null) {
+      // 一次只允许一条在途请求，避免连点造成两个流同时写同一份消息列表
+      if (this.streaming) return null;
       if (!this.activeSessionId) {
         const sess = await this.createSession(datasourceId, modelConfigId);
         this.activeSessionId = sess.id;
@@ -89,32 +99,32 @@ export const useAgentStore = defineStore("agent", {
       this.streaming = true;
       this.inputEnabled = false;
 
+      const controller = new AbortController();
+      activeAbort = controller;
       let lastAuthz: ChatItem["authz"] | null = null;
-      let pendingSql = "";
 
-      const resp = await fetch("/api/agent/chat", {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          session_id: this.activeSessionId,
-          datasource_id: datasourceId,
-          model_config_id: modelConfigId,
-          message,
-        }),
-      });
-      if (!resp.ok || !resp.body) {
-        const body = await resp.json().catch(() => null);
-        assistant.content = (body && body.message) || `请求失败 (${resp.status})`;
-        assistant.streaming = false;
-        this.streaming = false;
-        this.inputEnabled = true;
-        return;
-      }
-      const reader = resp.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
       try {
+        const resp = await fetch("/api/agent/chat", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            session_id: this.activeSessionId,
+            datasource_id: datasourceId,
+            model_config_id: modelConfigId,
+            message,
+          }),
+          // 用户点「停止生成」时中断连接：后端收到断开后取消在途的 LLM 调用
+          signal: controller.signal,
+        });
+        if (!resp.ok || !resp.body) {
+          const body = await resp.json().catch(() => null);
+          assistant.content = (body && body.message) || `请求失败 (${resp.status})`;
+          return null;
+        }
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
@@ -132,16 +142,28 @@ export const useAgentStore = defineStore("agent", {
             this.handleEvent(event, assistant);
             if (event.type === "authorization_required") {
               lastAuthz = event as unknown as ChatItem["authz"];
-              pendingSql = (event as { sql_text?: string }).sql_text || "";
             }
           }
+        }
+      } catch (e) {
+        if (controller.signal.aborted) {
+          // 用户主动停止：保留已产出的内容（思考过程 / 已出的表格），只打标记，不报错
+          assistant.stopped = true;
+          if (!assistant.content.trim()) assistant.content = "已停止生成";
+        } else {
+          assistant.content = `❌ 请求失败：${(e as Error).message || e}`;
         }
       } finally {
         assistant.streaming = false;
         this.streaming = false;
         this.inputEnabled = true;
+        if (activeAbort === controller) activeAbort = null;
       }
       return lastAuthz;
+    },
+    /** 主动终止当前生成（前端断流 → 后端取消 LLM 调用） */
+    stop() {
+      activeAbort?.abort();
     },
     handleEvent(event: Record<string, unknown>, assistant: ChatItem) {
       switch (event.type) {
