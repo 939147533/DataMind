@@ -51,6 +51,9 @@
         <div v-else-if="item.type === 'authz'" class="msg assistant">
           <n-alert type="warning" title="需要人工确认">该操作涉及数据变更，请在 SQL 工作台中由技术管理员确认执行。</n-alert>
         </div>
+        <div v-else-if="item.type === 'warning'" class="msg assistant warning-msg">
+          <n-alert type="warning" :bordered="false">{{ item.content }}</n-alert>
+        </div>
         <div v-else-if="item.role === 'assistant'" class="msg assistant">
           <span v-if="item.streaming" class="cursor">▍</span>
           {{ item.content }}
@@ -101,7 +104,11 @@ const modelOptions = computed(() =>
 const activeSessionId = computed({
   get: () => agent.activeSessionId,
   set: (v) => {
-    if (v) agent.selectSession(v);
+    if (!v) return;
+    const sess = agent.sessions.find((s) => s.id === v);
+    agent.selectSession(v);
+    // 切回历史会话时，数据源跟回该会话记录的值，避免「记录里是 Oracle、实际在查 MySQL」
+    if (sess?.datasource_id) dsId.value = sess.datasource_id;
   },
 });
 const sessionOptions = computed(() => agent.sessions.map((s) => ({ label: s.title || `对话 ${s.id}`, value: s.id })));
@@ -272,10 +279,19 @@ function scrollToBottom() {
 
 watch(() => agent.items.length, scrollToBottom);
 
-watch(dsId, (v) => {
+watch(dsId, async (v) => {
   agent.datasourceId = v;
   if (v) localStorage.setItem("agent.datasourceId", String(v));
   else localStorage.removeItem("agent.datasourceId");
+  // 同步会话记录：否则「会话里记的数据源」与「实际在用的数据源」不一致，
+  // 后端也会退回会话上的过期值（后端同时会落一条上下文边界标记）
+  if (agent.activeSessionId) {
+    try {
+      await agentApi.updateSession(agent.activeSessionId, v);
+    } catch {
+      /* 同步失败不阻断交互，下次提问时后端仍会按实际传入的数据源纠正 */
+    }
+  }
 });
 watch(modelConfigId, (v) => {
   agent.modelConfigId = v;
@@ -349,6 +365,13 @@ watch(modelConfigId, (v) => {
   align-self: flex-start;
   background: rgba(128, 128, 128, 0.08);
   border: 1px solid rgba(128, 128, 128, 0.15);
+}
+.msg.warning-msg {
+  padding: 0;
+  background: transparent;
+  border: none;
+  width: 100%;
+  max-width: 100%;
 }
 .cursor {
   color: #18a058;

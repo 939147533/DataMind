@@ -24,6 +24,11 @@ def _clean(value):
 
 class MongoDBAdapter(BaseDBAdapter):
     db_type = "mongodb"
+    # MongoDB 不走 SQL：给出明确提示，避免模型按关系型方言臆造 SELECT/INSERT
+    dialect_hint = (
+        "当前数据源为 MongoDB（文档数据库），不支持 SQL 语法：不要生成 SELECT/INSERT/UPDATE 等关系型语句。"
+        "涉及结构或取数时，请调用 list_tables / get_columns / sample_data 工具，并在 answer 字段用中文说明结论。"
+    )
 
     def connect(self):
         pymongo = _import_pymongo()
@@ -55,6 +60,10 @@ class MongoDBAdapter(BaseDBAdapter):
             return names
         finally:
             self._release_conn(client, broken=not ok)
+
+    def summary_schemas(self) -> list[str]:
+        """get_tables 忽略 schema 参数、始终用当前库，因此摘要只遍历一次，避免同一份内容重复 5 遍。"""
+        return [self.conn.database_name or "admin"]
 
     def _db(self):
         client = self._acquire_conn()

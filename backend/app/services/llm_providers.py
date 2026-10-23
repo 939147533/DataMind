@@ -10,6 +10,10 @@ class LLMError(Exception):
     pass
 
 
+# 支持的 provider 取值；未知取值以前会静默落到 OpenAI 兼容分支，容易被误认为「配置生效了」
+PROVIDERS = ("openai", "claude", "ollama")
+
+
 class BaseLLMProvider(ABC):
     def __init__(self, config: AIConfig):
         self.config = config
@@ -19,10 +23,12 @@ class BaseLLMProvider(ABC):
         return self.config.model_name or "gpt-4o-mini"
 
     def _api_key(self) -> str:
-        return decrypt_text(self.config.api_key)
+        return decrypt_text(self.config.api_key, purpose="大模型 API Key")
 
     def validate(self) -> None:
         """校验配置是否满足调用前提，缺失时快速失败而非等待 SDK 超时。"""
+        if self.config.provider not in PROVIDERS:
+            raise LLMError(f"不支持的模型类型：{self.config.provider}（可选：{'、'.join(PROVIDERS)}）")
         if self.config.provider in ("openai", "claude") and not self._api_key():
             raise LLMError("未配置 API Key，请到 连接管理 → 大模型连接配置 中填写")
         if self.config.provider == "ollama" and not self.config.api_base:
@@ -98,7 +104,8 @@ class ClaudeProvider(BaseLLMProvider):
     async def _client(self, timeout: float | None = None):
         from anthropic import AsyncAnthropic
 
-        return AsyncAnthropic(api_key=self._api_key(), timeout=timeout)
+        # base_url 与 OpenAICompatProvider 对齐：不填则用官方端点，填了则走代理/中转网关
+        return AsyncAnthropic(api_key=self._api_key(), base_url=self.config.api_base or None, timeout=timeout)
 
     def _split(self, messages: list[dict]) -> tuple[str, list[dict]]:
         system = "\n".join(m["content"] for m in messages if m["role"] == "system")

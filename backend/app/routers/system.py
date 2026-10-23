@@ -12,17 +12,28 @@ from ..models import AIConfig, JdbcDriver, Setting, User
 from ..permissions import require_permission
 from ..response import ok
 from ..schemas import AIConfigCreate, AIConfigTestRequest, AIConfigUpdate, SettingsUpdate
-from ..security import decrypt_text, encrypt_text
+from ..security import SecretDecryptError, decrypt_text, encrypt_text
 from ..services.llm_providers import LLMError, get_llm_provider
 
 router = APIRouter(prefix="/api/config", tags=["系统管理"])
 
 
+def _key_readable(token: str) -> bool:
+    """已保存的密文能否解密：密钥被更换后界面不该继续显示「已配置」。"""
+    try:
+        decrypt_text(token, purpose="大模型 API Key", strict=True)
+        return True
+    except Exception:  # noqa: BLE001
+        return False
+
+
 def _ai_out(c: AIConfig) -> dict:
+    has_key = bool(c.api_key)
     return {
         "id": c.id,
         "provider": c.provider,
-        "has_key": bool(c.api_key),
+        "has_key": has_key,
+        "key_readable": _key_readable(c.api_key) if has_key else False,
         "api_base": c.api_base,
         "model_name": c.model_name,
         "max_tokens": c.max_tokens,
@@ -52,7 +63,11 @@ async def test_ai_connectivity(data: AIConfigTestRequest, db: AsyncSession = Dep
     if data.api_key:
         api_key_plain = data.api_key
     elif stored:
-        api_key_plain = decrypt_text(stored.api_key)
+        try:
+            # strict：密钥问题要报「密钥问题」，不能被伪装成「API Key 无效」
+            api_key_plain = decrypt_text(stored.api_key, purpose="大模型 API Key", strict=True)
+        except SecretDecryptError as exc:
+            return ok({"success": False, "message": str(exc), "latency_ms": 0}, message="测试失败")
     test_cfg = AIConfig(
         provider=_field("provider", "openai") or "openai",
         api_key=encrypt_text(api_key_plain),

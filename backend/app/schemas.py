@@ -116,6 +116,12 @@ class AgentSessionCreate(BaseModel):
     title: str = "新对话"
 
 
+class AgentSessionUpdate(BaseModel):
+    """会话属性更新：目前只允许切换数据源（同时落一条上下文边界标记）。"""
+
+    datasource_id: Optional[int] = None
+
+
 class AgentChatRequest(BaseModel):
     session_id: Optional[int] = None
     datasource_id: Optional[int] = None

@@ -104,6 +104,8 @@ export interface AIConfig {
   id: number;
   provider: string;
   has_key: boolean;
+  /** 已保存的 Key 能否解密：false 表示加密密钥已更换，需要重新填写 */
+  key_readable?: boolean;
   api_base: string;
   model_name: string;
   max_tokens: number;
@@ -275,6 +277,8 @@ export const agentApi = {
   createSession: (data: { datasource_id?: number | null; model_config_id?: number | null; title?: string }) =>
     http.post<{ id: number; title: string }>("/api/agent/sessions", data),
   listSessions: () => http.get<AgentSession[]>("/api/agent/sessions"),
+  updateSession: (id: number, datasource_id: number | null) =>
+    http.patch<{ id: number; datasource_id: number | null }>(`/api/agent/sessions/${id}`, { datasource_id }),
   deleteSession: (id: number) => http.del(`/api/agent/sessions/${id}`),
   messages: (id: number) => http.get<AgentMessage[]>(`/api/agent/sessions/${id}/messages`),
   confirm: (execution_id: string, confirmed: boolean) => http.post<SqlResult>("/api/agent/confirm", { execution_id, confirmed }),

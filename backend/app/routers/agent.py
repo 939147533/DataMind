@@ -11,7 +11,7 @@ from ..deps import get_client_ip
 from ..models import User
 from ..permissions import require_any_permission, require_permission
 from ..response import ok
-from ..schemas import AgentChatRequest, AgentChartCreate, AgentConfirmRequest, AgentSessionCreate, ExplainRequest
+from ..schemas import AgentChatRequest, AgentChartCreate, AgentConfirmRequest, AgentSessionCreate, AgentSessionUpdate, ExplainRequest
 from ..services import agent_service
 
 router = APIRouter(prefix="/api/agent", tags=["AI Agent"])
@@ -37,6 +37,13 @@ async def create_session(data: AgentSessionCreate, db: AsyncSession = Depends(ge
 @router.get("/sessions")
 async def list_sessions(db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("agent", "ai_query"))):
     return ok(await agent_service.list_sessions(db))
+
+
+@router.patch("/sessions/{session_id}")
+async def update_session(session_id: int, data: AgentSessionUpdate, db: AsyncSession = Depends(get_db), user: User = Depends(require_any_permission("agent", "ai_query"))):
+    """切换会话数据源：同步会话记录，并落一条上下文边界标记（历史 SQL 不跨数据源串味）。"""
+    session = await agent_service.switch_session_datasource(db, session_id, data.datasource_id)
+    return ok({"id": session.id, "datasource_id": session.datasource_id})
 
 
 @router.delete("/sessions/{session_id}")

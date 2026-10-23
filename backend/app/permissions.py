@@ -109,9 +109,14 @@ async def check_any_permission(db: AsyncSession, user, features) -> None:
     raise HTTPException(status_code=403, detail="无权限执行该操作")
 
 
-async def check_sql_permission(db: AsyncSession, user_id, op_type: str) -> None:
+async def check_sql_permission(db: AsyncSession, user_id: int, op_type: str) -> None:
+    """SQL 类型级鉴权：按语句风险等级校验 READ/DML/DDL 对应权限。
+
+    身份缺失时**直接拒绝**（fail-closed）：历史实现是 ``if not user_id: return``，
+    一旦某个调用点漏传 user_id，写操作会在完全不做鉴权的情况下执行且不留 denied 审计。
+    """
     if not user_id:
-        return
+        raise HTTPException(status_code=401, detail="未认证：缺少执行该操作的用户身份")
     user = (await db.execute(select(User).where(User.id == user_id))).scalar_one_or_none()
     if user is None:
         raise HTTPException(status_code=401, detail="用户不存在")

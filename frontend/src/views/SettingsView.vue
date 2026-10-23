@@ -28,7 +28,14 @@
               <div class="ai-meta">
                 <div>API Base：{{ c.api_base || "（默认地址）" }}</div>
                 <div>模型：{{ c.model_name || "—" }}</div>
-                <div>API Key：{{ c.has_key ? "已配置 🔒" : "未配置" }}</div>
+                <div>
+                  API Key：
+                  <template v-if="!c.has_key">未配置</template>
+                  <template v-else-if="c.key_readable === false">
+                    <n-tag size="small" type="error">已保存但无法解密（加密密钥可能已更换，请重新填写）</n-tag>
+                  </template>
+                  <template v-else>已配置 🔒</template>
+                </div>
                 <div>参数：max_tokens = {{ c.max_tokens }} · temperature = {{ c.temperature }}</div>
               </div>
             </n-card>

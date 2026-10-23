@@ -196,12 +196,9 @@ export const useAgentStore = defineStore("agent", {
         case "text":
           assistant.content += String(event.content || "");
           break;
-        case "execution_result":
-          this.items.push({
-            role: "assistant",
-            type: "execution_result",
-            content: `✅ 已执行：影响 ${(event.content as { affected_rows?: number })?.affected_rows ?? "?"} 行`,
-          });
+        case "warning":
+          // 后端降级提示（如 Schema 拉取失败、图表配置与结果列不匹配）
+          this.items.push({ role: "assistant", type: "warning", content: String(event.content || "") });
           break;
         case "authorization_required":
           this.items.push({

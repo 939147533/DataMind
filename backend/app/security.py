@@ -14,6 +14,10 @@ logger = logging.getLogger(__name__)
 _fernet: Fernet | None = None
 
 
+class SecretDecryptError(ValueError):
+    """密文无法解密（密钥被更换、密文损坏、格式非法）。"""
+
+
 def _warn_if_key_permissive(path) -> None:
     try:
         mode = path.stat().st_mode
@@ -70,12 +74,23 @@ def encrypt_text(plain: str | None) -> str:
     return _get_fernet().encrypt(plain.encode("utf-8")).decode("utf-8")
 
 
-def decrypt_text(token: str | None) -> str:
+def decrypt_text(token: str | None, *, purpose: str = "", strict: bool = False) -> str:
+    """解密一段密文；失败时默认返回空串（保持既有调用方行为），但会记告警。
+
+    「本来就是空」与「解密失败」必须可区分：密钥被更换或密文损坏时若静默返回空串，
+    对外只会表现为「数据库密码错误」「API Key 无效」，排查方向完全错。
+    ``strict=True`` 时改为抛 :class:`SecretDecryptError`，供「测试连接」这类
+    需要把真实原因回显给用户的场景使用。日志中不输出密文本身。
+    """
     if not token:
         return ""
     try:
         return _get_fernet().decrypt(token.encode("utf-8")).decode("utf-8")
-    except Exception:
+    except Exception as exc:  # noqa: BLE001
+        label = purpose or "密文"
+        logger.warning("%s 解密失败（加密密钥可能已更换，或密文损坏）：%s", label, exc)
+        if strict:
+            raise SecretDecryptError(f"{label} 解密失败：加密密钥可能已更换，请重新填写该字段") from exc
         return ""
 
 

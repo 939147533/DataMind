@@ -263,3 +263,80 @@ async def test_sql_retry_limit_is_configurable(auth_client, demo_ds_id, monkeypa
         assert provider.calls == expected_calls, (limit, types)
         assert ("retry" in types) is expect_retry, (limit, types)
         assert "error" in types and "done" in types
+
+
+class ChartThenFixProvider:
+    """首轮带 chart 配置但 SQL 必然报错；修正轮只返回 SQL（不带 chart）。"""
+
+    def __init__(self, config):
+        self.config = config
+        self.calls = 0
+
+    async def chat(self, messages, json_mode=False):
+        self.calls += 1
+        if self.calls == 1:
+            return json.dumps(
+                {
+                    "thought": "按用户数统计",
+                    "sql": "SELECT * FROM no_such_table_xyz LIMIT 1",
+                    "answer": "",
+                    "chart": {"type": "bar", "title": "用户数", "x_column": "c", "y_columns": ["c"]},
+                }
+            )
+        return json.dumps({"thought": "已修正", "sql": "SELECT COUNT(*) AS c FROM users", "answer": ""})
+
+    async def stream(self, messages):
+        yield "查询完成。"
+
+
+async def test_chart_survives_sql_fix_retry(auth_client, demo_ds_id, monkeypatch):
+    """F1：SQL 自动修正后图表配置不能丢（chart 必须在修正循环之前解析）。"""
+    provider = ChartThenFixProvider(None)
+    monkeypatch.setattr("app.services.agent_service.get_llm_provider", lambda cfg: provider)
+    sess = await auth_client.post("/api/agent/sessions", json={"datasource_id": demo_ds_id})
+    session_id = sess.json()["data"]["id"]
+
+    resp = await auth_client.post(
+        "/api/agent/chat",
+        json={"session_id": session_id, "message": "统计用户数量并画图"},
+    )
+    assert resp.status_code == 200
+    events = _events(resp.text)
+    types = [e["type"] for e in events]
+    assert "retry" in types, types
+    assert "chart" in types, types
+    chart = [e for e in events if e["type"] == "chart"][0]["content"]
+    assert chart["chart_type"] == "bar"
+    assert chart["x_column"] == "c"
+
+
+async def test_history_isolated_after_datasource_switch(auth_client, demo_ds_id):
+    """A1：会话内切换数据源后，历史上下文不再包含切换前的 SQL（避免方言串味）。"""
+    from app.database import SessionLocal
+    from app.models import AgentMessage
+    from app.services import agent_service
+
+    sess = await auth_client.post("/api/agent/sessions", json={"datasource_id": demo_ds_id})
+    session_id = sess.json()["data"]["id"]
+
+    async with SessionLocal() as db:
+        db.add(AgentMessage(session_id=session_id, role="user", content="看下订单", message_type="text"))
+        db.add(
+            AgentMessage(
+                session_id=session_id,
+                role="assistant",
+                content="SELECT * FROM orders LIMIT 5",
+                message_type="sql",
+            )
+        )
+        await db.commit()
+        assert len(await agent_service._load_history(db, session_id)) == 2
+
+        await agent_service.switch_session_datasource(db, session_id, None)
+        assert await agent_service._load_history(db, session_id) == []
+
+        # 切换后的新消息仍进入上下文
+        db.add(AgentMessage(session_id=session_id, role="user", content="换个库再问", message_type="text"))
+        await db.commit()
+        history = await agent_service._load_history(db, session_id)
+        assert [h["content"] for h in history] == ["换个库再问"]

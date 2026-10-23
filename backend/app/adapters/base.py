@@ -201,10 +201,18 @@ class BaseDBAdapter(ABC):
             return False
         return any(k in data_type for k in ("CHAR", "VARCHAR", "ENUM", "STRING", "TEXT", "CLOB"))
 
+    def summary_schemas(self) -> list[str]:
+        """Schema 摘要要覆盖的 schema 列表（默认取前 5 个）。
+
+        单库连接（MySQL / OceanBase 等）应覆写本方法：否则 information_schema、
+        mysql 这类系统库会按字母序排在前面，把真正的业务表挤出摘要。
+        """
+        return self.get_schemas()[:5]
+
     def schema_summary(self) -> str:
         """生成供 LLM 使用的 Schema 摘要文本。"""
         parts = []
-        for schema in self.get_schemas()[:5]:
+        for schema in self.summary_schemas():
             for table in self.get_tables(schema)[:20]:
                 cols = self.get_table_columns(table, schema)
                 col_desc = []

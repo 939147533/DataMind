@@ -5,11 +5,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_db
 from ..deps import get_client_ip
-from ..models import AuditLog, Role, User
+from ..models import Role, User
 from ..permissions import require_permission
 from ..response import ok, page_data
 from ..schemas import UserCreate, UserResetPassword, UserUpdate
 from ..security import hash_password
+from ..services.audit_service import record_audit
 
 router = APIRouter(prefix="/api/users", tags=["用户管理"])
 
@@ -35,17 +36,7 @@ def _user_out(user: User, role_names: dict | None = None) -> dict:
 
 
 async def _log(db: AsyncSession, actor: User, action: str, detail: str, request: Request) -> None:
-    db.add(
-        AuditLog(
-            user_id=actor.id,
-            action_type="user_manage",
-            sql_text=detail[:4000],
-            operation_type=action,
-            status="success",
-            client_ip=get_client_ip(request),
-        )
-    )
-    await db.commit()
+    await record_audit(db, actor.id, "user_manage", detail, action, None, "success", get_client_ip(request))
 
 
 async def _active_admin_count(db: AsyncSession) -> int:
@@ -122,8 +113,10 @@ async def create_user(
     db.add(target)
     await db.commit()
     await db.refresh(target)
+    # 先取好响应数据再写审计：审计失败会回滚会话，届时 ORM 对象属性会过期
+    out = _user_out(target, await _role_names(db))
     await _log(db, user, "create", "创建用户 " + username + "（角色: " + role_code + "）", request)
-    return ok(_user_out(target, await _role_names(db)), "创建成功")
+    return ok(out, "创建成功")
 
 
 @router.put("/{user_id}")
@@ -160,8 +153,9 @@ async def update_user(
         target.role = payload["role"]
     await db.commit()
     await db.refresh(target)
+    out = _user_out(target, await _role_names(db))
     await _log(db, actor, "update", "更新用户 " + target.username, request)
-    return ok(_user_out(target, await _role_names(db)), "更新成功")
+    return ok(out, "更新成功")
 
 
 @router.delete("/{user_id}")

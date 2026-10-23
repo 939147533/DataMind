@@ -10,6 +10,45 @@ def _import_pymysql():
         raise AdapterError("未安装 pymysql，请执行 pip install pymysql") from exc
 
 
+class _Row(dict):
+    """大小写无关的行字典。
+
+    pymysql 的 DictCursor 直接用服务端返回的字段名做键，而 MySQL / OceanBase 的
+    information_schema 列名是大写的（NUMERIC_PRECISION、NON_UNIQUE、COLUMN_NAME…）。
+    代码里按小写键取值会抛 KeyError，且报错信息只有列名、看不出是大小写问题。
+    这里保留原始键（SELECT * 的列名要原样展示），只在查找时忽略大小写。
+    """
+
+    __slots__ = ()
+
+    def _real_key(self, key):
+        if not isinstance(key, str):
+            return None
+        low = key.lower()
+        for k in super().keys():
+            if isinstance(k, str) and k.lower() == low:
+                return k
+        return None
+
+    def __getitem__(self, key):
+        try:
+            return super().__getitem__(key)
+        except KeyError:
+            real = self._real_key(key)
+            if real is None:
+                raise
+            return super().__getitem__(real)
+
+    def get(self, key, default=None):
+        try:
+            return self[key]
+        except KeyError:
+            return default
+
+    def __contains__(self, key):
+        return super().__contains__(key) or self._real_key(key) is not None
+
+
 class MySQLAdapter(BaseDBAdapter):
     db_type = "mysql"
     dialect_hint = "MySQL 方言：日期用 DATE_FORMAT(col, '%Y-%m-%d')，最近 N 天用 DATE_SUB(NOW(), INTERVAL N DAY)，取前 N 行用 LIMIT N，标识符用反引号"
@@ -47,7 +86,7 @@ class MySQLAdapter(BaseDBAdapter):
                 cur.execute(sql, params)
                 rows = list(cur.fetchall())
                 ok = True
-                return rows
+                return [_Row(r) for r in rows]
         except Exception as exc:  # noqa: BLE001
             raise AdapterError(f"SQL 执行错误: {exc}") from exc
         finally:
@@ -55,6 +94,16 @@ class MySQLAdapter(BaseDBAdapter):
 
     def _db(self) -> str:
         return self.conn.database_name or ""
+
+    # 系统库：不属于业务 Schema，不进 Schema 摘要
+    _SYSTEM_SCHEMAS = {"information_schema", "mysql", "performance_schema", "sys", "oceanbase"}
+
+    def summary_schemas(self) -> list[str]:
+        """单库连接优先只用 database_name，避免系统库按字母序挤占摘要名额。"""
+        db = self._db()
+        if db:
+            return [db]
+        return [s for s in self.get_schemas() if s.lower() not in self._SYSTEM_SCHEMAS][:5]
 
     def get_schemas(self) -> list[str]:
         rows = self._query(

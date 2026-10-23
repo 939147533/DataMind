@@ -6,15 +6,16 @@ from fastapi.responses import JSONResponse
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..config import SESSION_TTL_SECONDS
+from ..config import COOKIE_SECURE, SESSION_TTL_SECONDS
 from ..database import get_db
 from ..deps import SESSION_COOKIE, get_client_ip, get_current_user
-from ..models import AuditLog, Session as SessionModel
+from ..models import Session as SessionModel
 from ..models import User
 from ..permissions import get_user_permissions
 from ..response import ok
 from ..schemas import LoginRequest
 from ..security import generate_token, verify_password
+from ..services.audit_service import record_audit
 
 router = APIRouter(prefix="/api/auth", tags=["认证"])
 
@@ -46,18 +47,20 @@ async def login(data: LoginRequest, request: Request, db: AsyncSession = Depends
         )
     )
     user.last_login = datetime.now()
-    db.add(
-        AuditLog(
-            user_id=user.id,
-            action_type="login",
-            status="success",
-            client_ip=get_client_ip(request),
-        )
-    )
     await db.commit()
     perms = await get_user_permissions(db, user)
-    response = JSONResponse(content=ok({"token": token, "user": _user_dict(user, sorted(perms))}, "登录成功"))
-    response.set_cookie(SESSION_COOKIE, token, httponly=True, max_age=SESSION_TTL_SECONDS, samesite="lax")
+    await record_audit(db, user.id, "login", "", "", None, "success", get_client_ip(request))
+    # 响应体不回传 session token：前端全程依赖 HttpOnly Cookie，token 一旦进入 JS 可读的
+    # 响应体，HttpOnly 的保护就形同虚设（XSS 或记录响应体的中间层都能拿到会话）。
+    response = JSONResponse(content=ok({"user": _user_dict(user, sorted(perms))}, "登录成功"))
+    response.set_cookie(
+        SESSION_COOKIE,
+        token,
+        httponly=True,
+        max_age=SESSION_TTL_SECONDS,
+        samesite="lax",
+        secure=COOKIE_SECURE,
+    )
     return response
 
 

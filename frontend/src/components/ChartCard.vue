@@ -76,7 +76,7 @@ function fmt(n: number): string {
 }
 
 const firstValue = computed(() => {
-  const rows = props.data?.rows || [];
+  const rows = viewRows.value;
   const yi = colIdx(yCols.value[0] || props.chart.y_column);
   if (!rows.length || yi < 0) return 0;
   return num(rows[0][yi]);
@@ -95,8 +95,56 @@ const PALETTE_LIGHT = ["#5470c6", "#91cc75", "#fac858", "#ee6666", "#73c0de", "#
 const PALETTE_DARK = ["#4f8df9", "#36cfc9", "#b37feb", "#ff9f43", "#ff6b81", "#7bed9f", "#70a1ff", "#ffa502", "#2ed573"];
 const palette = computed(() => (isDark.value ? PALETTE_DARK : PALETTE_LIGHT));
 
-function categoryData(): string[] {
+const AGG_MODES = ["sum", "count", "avg", "max", "min"];
+
+// 聚合方式：none 表示直接用查询结果；其余按 X 轴类目合并同类多行。
+// AI 链路的 SQL 一般已 GROUP BY，每个类目只有一行，此时聚合是幂等的。
+const aggMode = computed(() => {
+  const v = String(props.chart.aggregation || "none").toLowerCase();
+  return AGG_MODES.includes(v) ? v : "none";
+});
+
+function aggregate(mode: string, values: number[]): number {
+  if (!values.length) return 0;
+  if (mode === "count") return values.length;
+  const total = values.reduce((a, b) => a + b, 0);
+  if (mode === "sum") return total;
+  if (mode === "avg") return total / values.length;
+  if (mode === "max") return Math.max(...values);
+  if (mode === "min") return Math.min(...values);
+  return values[0];
+}
+
+const viewRows = computed<unknown[][]>(() => {
   const rows = props.data?.rows || [];
+  const mode = aggMode.value;
+  if (mode === "none" || !rows.length) return rows;
+  const xi = colIdx(props.chart.x_column);
+  if (xi < 0) return rows;
+  const yIdx = yCols.value.map((c) => colIdx(c)).filter((i) => i >= 0);
+  if (!yIdx.length) return rows;
+  const buckets = new Map<string, unknown[][]>();
+  const order: string[] = [];
+  for (const r of rows) {
+    const key = String(r[xi] ?? "");
+    let bucket = buckets.get(key);
+    if (!bucket) {
+      bucket = [];
+      buckets.set(key, bucket);
+      order.push(key);
+    }
+    bucket.push(r);
+  }
+  return order.map((key) => {
+    const bucket = buckets.get(key) as unknown[][];
+    const out = bucket[0].slice();
+    for (const yi of yIdx) out[yi] = aggregate(mode, bucket.map((r) => num(r[yi])));
+    return out;
+  });
+});
+
+function categoryData(): string[] {
+  const rows = viewRows.value;
   const xi = colIdx(props.chart.x_column);
   return rows.map((r) => {
     const v = String(r[xi] ?? "");
@@ -112,8 +160,7 @@ function colIdx(colName: string): number {
 }
 
 function seriesValues(colName: string): number[] {
-  const cols = props.data?.columns || [];
-  const rows = props.data?.rows || [];
+  const rows = viewRows.value;
   const yi = colIdx(colName);
   return rows.map((r) => num(r[yi]));
 }

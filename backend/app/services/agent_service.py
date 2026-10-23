@@ -1,6 +1,7 @@
 """AI Agent 服务：会话管理、NL→SQL、SSE 事件流。"""
 import asyncio
 import json
+import logging
 from typing import AsyncIterator
 
 from fastapi import HTTPException
@@ -8,7 +9,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..config import AGENT_MAX_TOOL_ROUNDS, AGENT_SQL_MAX_ATTEMPTS
-from ..models import AIConfig, AgentMessage, AgentSession, AuditLog, DataSource
+from ..models import AIConfig, AgentMessage, AgentSession, DataSource
+from .audit_service import record_audit
 from .llm_providers import LLMError, build_messages, get_llm_provider
 from .sql_examples import build_few_shot_block
 from .sql_service import (
@@ -19,6 +21,12 @@ from .sql_service import (
     execute_sql,
     split_statements,
 )
+
+logger = logging.getLogger(__name__)
+
+# 数据源切换时插入的上下文边界标记：历史 SQL 只取最后一条标记之后的消息，
+# 避免在 MySQL 下聊过几轮后切到 Oracle，模型仍沿用上一轮的方言（如 LIMIT）。
+DS_SWITCH_TYPE = "ds_switch"
 
 SYSTEM_TEMPLATE = """你是数据库 Agent 助手，运行在数据库查询工具中，使用中文回复。
 当前数据库类型：{db_type}
@@ -112,7 +120,9 @@ async def delete_session(db: AsyncSession, session_id: int) -> None:
 async def list_messages(db: AsyncSession, session_id: int) -> list[dict]:
     rows = (
         await db.execute(
-            select(AgentMessage).where(AgentMessage.session_id == session_id).order_by(AgentMessage.id.asc())
+            select(AgentMessage)
+            .where(AgentMessage.session_id == session_id, AgentMessage.message_type != DS_SWITCH_TYPE)
+            .order_by(AgentMessage.id.asc())
         )
     ).scalars().all()
     return [
@@ -127,11 +137,30 @@ async def list_messages(db: AsyncSession, session_id: int) -> list[dict]:
     ]
 
 
+async def _last_switch_id(db: AsyncSession, session_id: int) -> int:
+    """取最近一次数据源切换标记的消息 id（无切换返回 0）。"""
+    row = (
+        await db.execute(
+            select(AgentMessage.id)
+            .where(AgentMessage.session_id == session_id, AgentMessage.message_type == DS_SWITCH_TYPE)
+            .order_by(AgentMessage.id.desc())
+            .limit(1)
+        )
+    ).scalar_one_or_none()
+    return int(row or 0)
+
+
 async def _load_history(db: AsyncSession, session_id: int, limit: int = 10) -> list[dict]:
+    """取最近 N 轮对话作为上下文；数据源切换点之前的消息不参与（方言隔离）。"""
+    since = await _last_switch_id(db, session_id)
     rows = (
         await db.execute(
             select(AgentMessage)
-            .where(AgentMessage.session_id == session_id, AgentMessage.role.in_(["user", "assistant"]))
+            .where(
+                AgentMessage.session_id == session_id,
+                AgentMessage.role.in_(["user", "assistant"]),
+                AgentMessage.id > since,
+            )
             .order_by(AgentMessage.id.desc())
             .limit(limit)
         )
@@ -143,10 +172,32 @@ async def _load_history(db: AsyncSession, session_id: int, limit: int = 10) -> l
     return history
 
 
+async def switch_session_datasource(db: AsyncSession, session_id: int, datasource_id: int | None) -> AgentSession:
+    """切换会话的数据源，并落一条上下文边界标记。"""
+    session = await _get_session(db, session_id)
+    if session.datasource_id != datasource_id:
+        db.add(
+            AgentMessage(
+                session_id=session.id,
+                role="system",
+                content=str(datasource_id or ""),
+                message_type=DS_SWITCH_TYPE,
+            )
+        )
+        session.datasource_id = datasource_id
+        await db.commit()
+    return session
+
+
 async def _schema_info(ds: DataSource | None) -> dict:
-    """取 Schema 摘要（阻塞的目标库调用放线程池，避免卡住事件循环）。"""
+    """取 Schema 摘要（阻塞的目标库调用放线程池，避免卡住事件循环）。
+
+    失败时仍降级继续（不因元数据拉取失败就让整个提问失败），但会把原因放进
+    ``warning`` 字段透给前端：否则模型既没有表结构也没有方言约束，用户只会看到
+    「结果不对」，完全无从判断是连不上库还是模型臆测了表名。
+    """
     if ds is None:
-        return {"schema": "（未选择数据源）", "db_type": "", "dialect_hint": ""}
+        return {"schema": "（未选择数据源）", "db_type": "", "dialect_hint": "", "warning": ""}
     db_type = getattr(ds, "db_type", "") or ""
     try:
         adapter = await build_adapter_async(ds)
@@ -155,9 +206,22 @@ async def _schema_info(ds: DataSource | None) -> dict:
             "schema": summary[:8000],
             "db_type": getattr(adapter, "db_type", db_type),
             "dialect_hint": getattr(adapter, "dialect_hint", "") or "",
+            "warning": "",
         }
-    except Exception:  # noqa: BLE001
-        return {"schema": "（Schema 获取失败）", "db_type": db_type, "dialect_hint": ""}
+    except Exception as exc:  # noqa: BLE001
+        logger.warning(
+            "Schema 摘要获取失败（数据源 id=%s type=%s）：%s",
+            getattr(ds, "id", None),
+            db_type,
+            exc,
+            exc_info=True,
+        )
+        return {
+            "schema": "（Schema 获取失败）",
+            "db_type": db_type,
+            "dialect_hint": "",
+            "warning": f"未能获取表结构与方言提示（{exc}），本次回答可能不准确；请确认数据源可连通后重试。",
+        }
 
 
 def _extract_json(text: str) -> dict:
@@ -228,8 +292,21 @@ def _parse_chart(raw) -> dict | None:
         "title": str(raw.get("title") or "").strip(),
         "x_column": x_column,
         "y_column": ", ".join(y_columns),
+        # 仅作记录性元数据：AI 链路的聚合已在 SQL 的 GROUP BY 中完成；
+        # 手动建图表时由 ChartCard 在渲染前对同类目多行做聚合
         "aggregation": aggregation,
     }
+
+
+def _chart_fits_columns(chart: dict | None, columns: list) -> bool:
+    """图表引用的列必须出现在结果里，否则前端只会画出全 0 的图。"""
+    if not chart:
+        return False
+    available = {str(c).upper() for c in columns}
+    if str(chart.get("x_column") or "").upper() not in available:
+        return False
+    y_cols = [c.strip().upper() for c in str(chart.get("y_column") or "").split(",") if c.strip()]
+    return any(c in available for c in y_cols)
 
 
 
@@ -317,6 +394,9 @@ async def agent_chat(
     session = await _get_session(db, session_id)
     if datasource_id is None:
         datasource_id = session.datasource_id
+    elif session.datasource_id != datasource_id:
+        # 会话内切换数据源：落一条上下文边界标记，后续历史只取标记之后的消息
+        await switch_session_datasource(db, session.id, datasource_id)
     ds = None
     if datasource_id:
         ds = (await db.execute(select(DataSource).where(DataSource.id == datasource_id))).scalar_one_or_none()
@@ -346,6 +426,9 @@ async def agent_chat(
             yield {"type": "done"}
             return
     schema_info = await _schema_info(ds)
+    if schema_info.get("warning"):
+        # 降级要可见：否则用户只会看到「结果不对」，无法判断是连不上库还是模型臆测了表名
+        yield {"type": "warning", "content": schema_info["warning"]}
     history = await _load_history(db, session.id)
     system = SYSTEM_TEMPLATE.format(
         db_type=schema_info["db_type"],
@@ -415,6 +498,9 @@ async def agent_chat(
     yield {"type": "sql", "content": sql, "operation_type": op_type, "need_confirm": op_type != "READ"}
 
     if op_type == "READ":
+        # 图表配置必须在「修正重试」之前解析：修正循环会用新响应整体覆盖 parsed，
+        # 若放在后面，SQL 一旦修正成功，chart 字段就丢了（表现为只有表格、没有图）。
+        chart = _parse_chart(parsed.get("chart"))
         result = None
         error_detail = ""
         for attempt in range(AGENT_SQL_MAX_ATTEMPTS):
@@ -465,7 +551,15 @@ async def agent_chat(
             },
             "truncated": truncated,
         }
-        chart = _parse_chart(parsed.get("chart"))
+        if chart and not _chart_fits_columns(chart, columns):
+            logger.info(
+                "图表配置与结果列不匹配，已跳过绘图：x=%s y=%s columns=%s",
+                chart.get("x_column"),
+                chart.get("y_column"),
+                columns,
+            )
+            chart = None
+            yield {"type": "warning", "content": "生成的图表配置与查询结果列不匹配，已跳过绘图，可直接查看结果表格。"}
         if chart:
             yield {"type": "chart", "content": chart}
         summary_messages = build_messages(
@@ -581,18 +675,8 @@ async def optimize_sql(db: AsyncSession, datasource_id: int | None, sql: str, us
 
 
 async def _record_audit(db: AsyncSession, user_id: int, action_type: str, sql: str, op_type: str, ds_id: int | None, status: str, client_ip: str) -> None:
-    db.add(
-        AuditLog(
-            user_id=user_id,
-            action_type=action_type,
-            sql_text=sql[:4000],
-            operation_type=op_type,
-            datasource_id=ds_id,
-            status=status,
-            client_ip=client_ip,
-        )
-    )
-    await db.commit()
+    """转调统一入口，保证审计字段口径（截断长度等）只维护一份。"""
+    await record_audit(db, user_id, action_type, sql, op_type, ds_id, status, client_ip)
 
 
 async def save_chart(db: AsyncSession, user_id: int, data) -> dict:
@@ -616,8 +700,8 @@ async def save_chart(db: AsyncSession, user_id: int, data) -> dict:
     db.add(chart)
     await db.commit()
     await db.refresh(chart)
-    await _record_audit(db, user_id, "chart_manage", data.sql_text, "CHART", data.datasource_id, "success", "")
-    return {
+    # 先取好响应数据再写审计：审计失败会回滚会话，届时 ORM 对象属性会过期
+    out = {
         "id": chart.id,
         "name": chart.name,
         "datasource_id": chart.datasource_id,
@@ -629,3 +713,5 @@ async def save_chart(db: AsyncSession, user_id: int, data) -> dict:
         "options": chart.options,
         "created_at": chart.created_at.isoformat() if chart.created_at else None,
     }
+    await _record_audit(db, user_id, "chart_manage", data.sql_text, "CHART", data.datasource_id, "success", "")
+    return out

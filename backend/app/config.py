@@ -41,6 +41,8 @@ def _env_float(name: str, default: float) -> float:
 
 
 SESSION_TTL_SECONDS = 24 * 60 * 60
+# 会话 Cookie 是否只允许 HTTPS 传输：本地/内网多为 HTTP，默认关闭；HTTPS 部署请设 DBAGENT_COOKIE_SECURE=true
+COOKIE_SECURE = os.environ.get("DBAGENT_COOKIE_SECURE", "").strip().lower() in ("1", "true", "yes", "on")
 EXECUTION_CONFIRM_TIMEOUT = 5 * 60
 SQL_EXECUTE_TIMEOUT = 30
 MAX_ROWS_PER_PAGE = 1000

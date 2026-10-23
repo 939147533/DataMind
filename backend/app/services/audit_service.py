@@ -1,6 +1,7 @@
-"""审计日志：导出与保留策略清理。"""
+"""审计日志：统一写入入口、导出与保留策略清理。"""
 import csv
 import io
+import logging
 from datetime import datetime, timedelta
 
 from fastapi import HTTPException
@@ -8,6 +9,13 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..models import AuditLog
+
+logger = logging.getLogger(__name__)
+
+# 审计失败策略：
+#   False（默认）= 尽力而为 —— 审计落库失败只告警，不让已经成功的业务操作变成 500；
+#   True         = 审计优先 —— 审计失败即抛出，适用于「无审计不得操作」的合规场景。
+AUDIT_FAIL_CLOSED = False
 
 
 async def record_audit(
@@ -20,7 +28,11 @@ async def record_audit(
     status: str,
     client_ip: str = "",
 ) -> None:
-    """写入一条审计日志（SQL 执行、Agent 动作、导出等所有敏感操作的统一入口）。"""
+    """写入一条审计日志（SQL 执行、Agent 动作、登录、用户/角色管理、导出等的统一入口）。
+
+    所有审计写入都必须经过本函数：字段口径（``sql_text`` 截断长度、``operation_type``
+    语义）只在这里维护一份，新增列时不必逐个调用点修改。
+    """
     db.add(
         AuditLog(
             user_id=user_id,
@@ -32,7 +44,23 @@ async def record_audit(
             client_ip=client_ip,
         )
     )
-    await db.commit()
+    try:
+        await db.commit()
+    except Exception:  # noqa: BLE001
+        logger.warning(
+            "审计日志写入失败（action_type=%s operation_type=%s status=%s）",
+            action_type,
+            operation_type,
+            status,
+            exc_info=True,
+        )
+        if AUDIT_FAIL_CLOSED:
+            raise
+        # 回滚失败的事务，避免会话停留在不可用状态影响后续操作
+        try:
+            await db.rollback()
+        except Exception:  # noqa: BLE001
+            logger.warning("审计写入失败后回滚会话也失败", exc_info=True)
 
 
 def _serialize(value):

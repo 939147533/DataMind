@@ -7,10 +7,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database import get_db
 from ..deps import get_client_ip
-from ..models import AuditLog, Role, User
+from ..models import Role, User
 from ..permissions import PERMISSION_NAMES, require_permission
 from ..response import ok
 from ..schemas import RoleCreate, RoleUpdate, RoleUsersUpdate
+from ..services.audit_service import record_audit
 
 router = APIRouter(prefix="/api/roles", tags=["角色管理"])
 
@@ -55,17 +56,7 @@ async def _active_admin_count(db: AsyncSession) -> int:
 
 
 async def _log(db: AsyncSession, actor: User, action: str, detail: str, request: Request) -> None:
-    db.add(
-        AuditLog(
-            user_id=actor.id,
-            action_type="role_manage",
-            sql_text=detail[:4000],
-            operation_type=action,
-            status="success",
-            client_ip=get_client_ip(request),
-        )
-    )
-    await db.commit()
+    await record_audit(db, actor.id, "role_manage", detail, action, None, "success", get_client_ip(request))
 
 
 async def _get_role(db: AsyncSession, role_id: int) -> Role:
@@ -115,8 +106,9 @@ async def create_role(
     db.add(role)
     await db.commit()
     await db.refresh(role)
+    out = _role_out(role, 0)
     await _log(db, user, "create", "创建角色 " + code + "（" + (data.name or code) + "）", request)
-    return ok(_role_out(role, 0), "创建成功")
+    return ok(out, "创建成功")
 
 
 @router.put("/{role_id}")
@@ -155,8 +147,9 @@ async def update_role(
         role.description = payload["description"]
     await db.commit()
     await db.refresh(role)
+    out = _role_out(role, await _user_count(db, role.code))
     await _log(db, user, "update", "更新角色 " + role.code, request)
-    return ok(_role_out(role, await _user_count(db, role.code)), "更新成功")
+    return ok(out, "更新成功")
 
 
 @router.delete("/{role_id}")
@@ -220,5 +213,6 @@ async def set_role_users(
     for u in users:
         u.role = role.code
     await db.commit()
-    await _log(db, user, "assign", "为角色 " + role.name + " 分配用户 %d 个" % len(users), request)
-    return ok(message="已为角色 " + role.name + " 分配 %d 个用户" % len(users))
+    role_name = role.name
+    await _log(db, user, "assign", "为角色 " + role_name + " 分配用户 %d 个" % len(users), request)
+    return ok(message="已为角色 " + role_name + " 分配 %d 个用户" % len(users))

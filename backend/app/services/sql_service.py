@@ -287,19 +287,20 @@ def quote_value(value) -> str:
 
 
 def build_connection_info(ds: DataSource) -> ConnectionInfo:
+    label = ds.name or f"#{ds.id}"
     return ConnectionInfo(
         db_type=ds.db_type,
         host=ds.host,
         port=ds.port,
         username=ds.username,
-        password=decrypt_text(ds.encrypted_password),
+        password=decrypt_text(ds.encrypted_password, purpose=f"数据源「{label}」的登录密码"),
         database_name=ds.database_name,
         ssh_enabled=ds.ssh_enabled,
         ssh_host=ds.ssh_host,
         ssh_port=ds.ssh_port,
         ssh_user=ds.ssh_user,
         ssh_auth_type=ds.ssh_auth_type,
-        ssh_private_key=decrypt_text(ds.ssh_private_key),
+        ssh_private_key=decrypt_text(ds.ssh_private_key, purpose=f"数据源「{label}」的 SSH 私钥"),
     )
 
 
@@ -351,7 +352,7 @@ async def _create_execution(
     ds_id: int,
     statements: list[str],
     op_type: str,
-    user_id: int | None,
+    user_id: int,
     session_id: int | None = None,
 ) -> str:
     """落库暂存待确认的写操作：重启或多副本部署下确认都不会丢。"""
@@ -508,7 +509,7 @@ def _preview_text(adapter, statements: list[str], op_type: str) -> str:
     return "；".join(parts) if parts else "将执行写操作"
 
 
-async def execute_sql(db: AsyncSession, ds: DataSource, sql: str, user_id: int | None, client_ip: str = "", session_id: int | None = None) -> dict:
+async def execute_sql(db: AsyncSession, ds: DataSource, sql: str, user_id: int, client_ip: str = "", session_id: int | None = None) -> dict:
     statements = split_statements(sql)
     if not statements:
         raise HTTPException(status_code=400, detail="SQL 为空")

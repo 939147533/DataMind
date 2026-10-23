@@ -77,6 +77,7 @@
         </n-grid>
         <n-form-item label="聚合方式">
           <n-select v-model:value="chartForm.aggregation" :options="aggOptions" />
+          <template #feedback>按 X 列合并同类多行后再绘图；SQL 里已 GROUP BY 时选「不聚合」即可</template>
         </n-form-item>
         <n-divider style="margin: 10px 0">展示配置</n-divider>
         <n-grid :cols="3" :x-gap="12">

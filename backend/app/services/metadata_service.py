@@ -169,7 +169,7 @@ def build_delete_sql(ds: DataSource, table: str, schema: str, where: dict) -> st
     return f"DELETE FROM {_qualified_table(table, schema, db_type)} WHERE {conds}"
 
 
-async def update_table_row(db: AsyncSession, ds_id: int, table: str, data, user_id: int | None = None) -> dict:
+async def update_table_row(db: AsyncSession, ds_id: int, table: str, data, user_id: int) -> dict:
     ds = await get_datasource(db, ds_id)
     sql = build_update_sql(ds, table, data.schema_name, data.set_values, data.where)
     result = await execute_sql(db, ds, sql, user_id, "")
@@ -177,7 +177,7 @@ async def update_table_row(db: AsyncSession, ds_id: int, table: str, data, user_
     return result
 
 
-async def insert_table_row(db: AsyncSession, ds_id: int, table: str, data, user_id: int | None = None) -> dict:
+async def insert_table_row(db: AsyncSession, ds_id: int, table: str, data, user_id: int) -> dict:
     ds = await get_datasource(db, ds_id)
     sql = build_insert_sql(ds, table, data.schema_name, data.values)
     result = await execute_sql(db, ds, sql, user_id, "")
@@ -185,7 +185,7 @@ async def insert_table_row(db: AsyncSession, ds_id: int, table: str, data, user_
     return result
 
 
-async def delete_table_row(db: AsyncSession, ds_id: int, table: str, data, user_id: int | None = None) -> dict:
+async def delete_table_row(db: AsyncSession, ds_id: int, table: str, data, user_id: int) -> dict:
     ds = await get_datasource(db, ds_id)
     sql = build_delete_sql(ds, table, data.schema_name, data.where)
     result = await execute_sql(db, ds, sql, user_id, "")
